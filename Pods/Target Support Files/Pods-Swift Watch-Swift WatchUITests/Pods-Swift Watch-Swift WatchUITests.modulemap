@@ -1,0 +1,6 @@
+framework module Pods_Swift_Watch_Swift_WatchUITests {
+  umbrella header "Pods-Swift Watch-Swift WatchUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
