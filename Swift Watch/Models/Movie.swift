@@ -8,15 +8,15 @@
 
 import Foundation
 
-struct Movie: Codable, Hashable {
+struct Movie: Codable {
     let id: Int
     let runtime: Int?
     let title: String
-    let genres: [Genre]
     let rateAvg: Double
+    let genres: [Genre]?
     let tagline: String?
     let overview: String?
-    let releaseDate: Date
+    let releaseDate: String
     let posterPath: String?
     let backdropPath: String?
     
@@ -27,7 +27,7 @@ struct Movie: Codable, Hashable {
         case tagline
         case runtime
         case overview
-        case rateAvg = "vote_avg"
+        case rateAvg = "vote_average"
         case posterPath = "poster_path"
         case releaseDate = "release_date"
         case backdropPath = "backdrop_path"
