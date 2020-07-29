@@ -1,2 +1,5 @@
 ${PODS_ROOT}/Target Support Files/Pods-Swift Watch-Swift WatchUITests/Pods-Swift Watch-Swift WatchUITests-frameworks.sh
-${BUILT_PRODUCTS_DIR}/PTCardTabBar/PTCardTabBar.framework
+${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework
+${BUILT_PRODUCTS_DIR}/PanModal/PanModal.framework
+${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework
+${BUILT_PRODUCTS_DIR}/PromisesSwift/Promises.framework

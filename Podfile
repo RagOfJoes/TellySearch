@@ -6,6 +6,9 @@ target 'Swift Watch' do
   use_frameworks!
   
   # Pods for Swift Watch
+  pod 'PanModal'
+  pod 'Kingfisher'
+  pod 'PromisesSwift'
 
   target 'Swift WatchTests' do
     inherit! :search_paths
