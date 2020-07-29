@@ -7,22 +7,32 @@
 //
 
 import UIKit
+import Promises
 
+// MARK: - MoviesViewController
 class MoviesViewController: UIViewController  {
-    lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 10
+    var inTheatresSection = MovieSection(title: "In Theatres")
+    var popularSection = MovieSection(title: "Popular")
+    var topRatedSection = MovieSection(title: "Top Rated")
+    var upcomingSection = MovieSection(title: "Upcoming")
+    
+    var page: [MovieSection] = [MovieSection(title: "In Theatres"), MovieSection(title: "Popular"), MovieSection(title: "Top Rated"), MovieSection(title: "Upcoming")]
+    
+    lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.separatorStyle = .none
+        tableView.allowsSelection = false
+        tableView.backgroundColor = .clear
+        tableView.tableHeaderView?.backgroundColor = .clear
         
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .clear
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.reuseIdentifier)
+        tableView.rowHeight = 195
+        tableView.estimatedRowHeight = 195
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        
-        return collectionView
+        tableView.register(MovieCollectionViewTableViewCell.self, forCellReuseIdentifier: "\(MovieCollectionViewTableViewCell.self)")
+        return tableView
     }()
     
     var movies = Movies(page: 1, totalPages: 1, results: [
@@ -39,41 +49,45 @@ class MoviesViewController: UIViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.addSubview(tableView)
+        tableView.fillSuperview()
         
-        view.addSubview(collectionView)
+        let promises = [inTheatresSection.fetchSection(with: .inTheatres), popularSection.fetchSection(with: .popular), topRatedSection.fetchSection(with: .topRated), upcomingSection.fetchSection(with: .upcoming)]
         
-        collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
-//        collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40).isActive = true
-        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
-        collectionView.heightAnchor.constraint(equalTo: collectionView.widthAnchor, multiplier: 0.5).isActive = true
-        
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        //        collectionView.reloadData()
     }
 }
 
-extension MoviesViewController: UICollectionViewDelegate {
+// MARK: - UITableViewDelegate
+extension MoviesViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = MovieSectionHeader()
+        
+        headerView.configure(with: page[section].title ?? "Blank")
+        return headerView
+    }
 }
 
-extension MoviesViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return movies.results.count
+// MARK: - UITableViewDataSource
+extension MoviesViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return page.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.reuseIdentifier, for: indexPath) as! MovieCell
-        cell.configure(with: movies.results[indexPath.item])
-        return cell
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
     }
-}
-
-extension MoviesViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        return CGSize(width: 90, height: collectionView.frame.width / 2)
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "\(MovieCollectionViewTableViewCell.self)", for: indexPath) as? MovieCollectionViewTableViewCell
+        {
+            let data = page[indexPath.section]
+            cell.configure(data)
+            
+            // After Configuring Cell
+            // Reload Data
+            cell.collectionView.reloadData()
+            return cell
+        }
+        return UITableViewCell()
     }
 }
