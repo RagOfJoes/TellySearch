@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class TabBarController: UITabBarController {
     let floatingTabBarView: FloatingTabBarView = FloatingTabBarView(items: ["movies", "shows"], backgroundColor: UIColor(named: "tabBarColor"))
@@ -14,11 +15,15 @@ class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set KingFisher Cache to only store images for a max of 1 day
+        KingfisherManager.shared.cache.diskStorage.config.expiration = StorageExpiration.days(1)
+        
         setupView()
         
         setupTabItems()
         setupTabBar()
     }
+    
     
     // MARK: - Setup Main View
     private func setupView() {
@@ -41,26 +46,30 @@ class TabBarController: UITabBarController {
     
     // MARK: - Setup Tab Items
     private func setupTabItems() {
-        let moviesVC = createNavViewController(viewController: MoviesViewController(), title: "Movies", imageName: "movies")
+        let moviesVC = createNavViewController(viewController: MoviesViewController(), title: "Movies")
         
-        let showsVC = createNavViewController(viewController: ShowsViewController(), title: "Shows", imageName: "shows")
+        let showsVC = createNavViewController(viewController: ShowsViewController(), title: "Shows")
         
         let tabBarList = [moviesVC, showsVC]
         
         viewControllers = tabBarList
     }
     
-    private func createNavViewController(viewController: UIViewController, title: String, imageName: String) -> UIViewController {
-
-           viewController.navigationItem.title = title
-
-           let navController = UINavigationController(rootViewController: viewController)
-           navController.navigationBar.prefersLargeTitles = true
-           navController.tabBarItem.title = title
-           navController.tabBarItem.image = UIImage(named: imageName)
-
-           return navController
-       }
+    private func createNavViewController(viewController: UIViewController, title: String) -> UIViewController {
+        
+        let navController = UINavigationController(rootViewController: viewController)
+        navController.tabBarItem.title = title
+        navController.navigationBar.isTranslucent = false
+        navController.navigationBar.prefersLargeTitles = true
+        navController.navigationBar.barTintColor = UIColor(named: "backgroundColor")
+        
+        // Shadow
+        navController.navigationBar.layer.borderColor = UIColor.black.cgColor
+        
+        viewController.navigationItem.title = title
+        
+        return navController
+    }
 }
 
 extension TabBarController: FloatingTabBarViewDelegate {
@@ -71,4 +80,8 @@ extension TabBarController: FloatingTabBarViewDelegate {
     func hideTabBar(hide: Bool) {
         floatingTabBarView.hideTabBar(hide)
     }
+}
+
+extension TabBarController: UINavigationControllerDelegate {
+    
 }
