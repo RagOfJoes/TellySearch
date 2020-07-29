@@ -22,6 +22,24 @@ extension UIView {
         }
     }
     
+    func pulse() {
+        let pulse = CASpringAnimation(keyPath: "transform.scale")
+        pulse.duration = 0.15
+        pulse.fromValue = 0.95
+        pulse.toValue = 1.0
+        
+        layer.add(pulse, forKey: "pulse")
+    }
+    
+    func pulse(duration: CFTimeInterval?, from: Double?, to: Double?) {
+        let pulse = CASpringAnimation(keyPath: "transform.scale")
+        pulse.duration = duration ?? 0.15
+        pulse.fromValue = from ?? 0.95
+        pulse.toValue = to ?? 1.0
+        
+        layer.add(pulse, forKey: "pulse")
+    }
+    
     // Reference: https://youtu.be/iqpAP7s3b-8
     @discardableResult
     func anchor(top: NSLayoutYAxisAnchor?, leading: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, trailing: NSLayoutXAxisAnchor?, padding: UIEdgeInsets = .zero, size: CGSize = .zero) -> AnchoredConstraints {
