@@ -35,17 +35,6 @@ class MoviesViewController: UIViewController  {
         return tableView
     }()
     
-    var movies = Movies(page: 1, totalPages: 1, results: [
-        Movie(id: 1, runtime: nil, title: "Avengers: Age Of Ultron", genres: [Genre(id: 1, name: "Comedy")], rateAvg: 6.8, tagline: nil, overview: nil, releaseDate: Date("2020-07-21", with: "YYYY-MM-DD"), posterPath: "testPoster", backdropPath: nil),
-        Movie(id: 2, runtime: nil, title: "Avengers: Age Of Ultron", genres: [Genre(id: 1, name: "Comedy")], rateAvg: 6.8, tagline: nil, overview: nil, releaseDate: Date("2020-07-21", with: "YYYY-MM-DD"), posterPath: "testPoster", backdropPath: nil),
-        Movie(id: 3, runtime: nil, title: "Eternal Sunshine of the Spotless Mind", genres: [Genre(id: 1, name: "Comedy")], rateAvg: 6.8, tagline: nil, overview: nil, releaseDate: Date("2020-07-21", with: "YYYY-MM-DD"), posterPath: "testPoster", backdropPath: nil),
-        Movie(id: 4, runtime: nil, title: "Scoob", genres: [Genre(id: 1, name: "Comedy")], rateAvg: 6.8, tagline: nil, overview: nil, releaseDate: Date("2020-07-21", with: "YYYY-MM-DD"), posterPath: "testPoster", backdropPath: nil),
-        Movie(id: 5, runtime: nil, title: "Scoob", genres: [Genre(id: 1, name: "Comedy")], rateAvg: 6.8, tagline: nil, overview: nil, releaseDate: Date("2020-07-21", with: "YYYY-MM-DD"), posterPath: "testPoster", backdropPath: nil),
-        Movie(id: 6, runtime: nil, title: "Scoob", genres: [Genre(id: 1, name: "Comedy")], rateAvg: 6.8, tagline: nil, overview: nil, releaseDate: Date("2020-07-21", with: "YYYY-MM-DD"), posterPath: "testPoster", backdropPath: nil),
-        Movie(id: 7, runtime: nil, title: "Scoob", genres: [Genre(id: 1, name: "Comedy")], rateAvg: 6.8, tagline: nil, overview: nil, releaseDate: Date("2020-07-21", with: "YYYY-MM-DD"), posterPath: "testPoster", backdropPath: nil),
-        
-    ], totalResults: 20)
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -54,6 +43,24 @@ class MoviesViewController: UIViewController  {
         
         let promises = [inTheatresSection.fetchSection(with: .inTheatres), popularSection.fetchSection(with: .popular), topRatedSection.fetchSection(with: .topRated), upcomingSection.fetchSection(with: .upcoming)]
         
+        all(promises)
+            .then { (results) in
+                self.inTheatresSection.set(results: results[0])
+                self.popularSection.set(results: results[1])
+                self.topRatedSection.set(results: results[2])
+                self.upcomingSection.set(results: results[3])
+                
+                DispatchQueue.main.async {
+                    // Set Correct Page DataSource
+                    self.page = [self.inTheatresSection, self.popularSection, self.topRatedSection, self.upcomingSection]
+                    
+                    // Reload TableView's Data
+                    self.tableView.reloadData()
+                }
+        }
+        .catch { (e) in
+            print(e)
+        }
     }
 }
 
