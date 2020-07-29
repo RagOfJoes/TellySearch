@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 protocol MovieConfigureCell: SelfConfiguringCell {
     func configure(with movie: Movie)
@@ -15,26 +16,30 @@ protocol MovieConfigureCell: SelfConfiguringCell {
 class MovieCell: UICollectionViewCell {
     lazy var title: UILabel = {
         let title = UILabel()
-        title.numberOfLines = 0
+        title.numberOfLines = 2
         title.textColor = UIColor(named: "primaryTextColor")
         title.translatesAutoresizingMaskIntoConstraints = false
-        title.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .bold))
+        title.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 12, weight: .medium))
+        
+        title.sizeToFit()
         return title
     }()
     
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 20
+        imageView.layer.cornerRadius = 10
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.heightAnchor.constraint(equalToConstant: 135).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        
         return imageView
     }()
     
     lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [imageView, title])
         stackView.axis = .vertical
+        stackView.setCustomSpacing(5, after: imageView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
@@ -43,11 +48,8 @@ class MovieCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        
         contentView.addSubview(stackView)
-        
         stackView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
         stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
     }
@@ -62,7 +64,19 @@ extension MovieCell: MovieConfigureCell {
     func configure(with movie: Movie) {
         title.text = movie.title
         
-        guard let safePath = movie.posterPath else { return }
-        imageView.image = UIImage(named: safePath)
+        guard let safePoster = movie.posterPath else {
+            imageView.image = UIImage(named: "placeholderPoster")
+            return
+        }
+        let url = URL(string: MovieSection.imageURL + safePoster)
+        imageView.kf.indicatorType = .activity
+        imageView.kf.setImage(
+            with: url,
+            placeholder: UIImage(named: "placeholderPoster"),
+            options: [
+                .scaleFactor(UIScreen.main.scale),
+                .transition(.fade(1)),
+                .cacheOriginalImage,
+        ])
     }
 }
