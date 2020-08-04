@@ -90,6 +90,7 @@ extension MoviesOverviewController: UITableViewDataSource {
 			let data = page[indexPath.section]
 			cell.delegate = self
 			cell.configure(data)
+			cell.section = indexPath.section
 			
 			return cell
 		}

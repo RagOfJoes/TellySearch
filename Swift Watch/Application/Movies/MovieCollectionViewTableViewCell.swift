@@ -13,6 +13,7 @@ protocol MovieCollectionViewTableViewCellDelegate: class {
 }
 
 class MovieCollectionViewTableViewCell: UITableViewCell {
+    var section: Int?
     var data: MovieSection?
     weak var delegate: MovieCollectionViewTableViewCellDelegate?
     
@@ -70,7 +71,9 @@ class MovieCollectionViewTableViewCell: UITableViewCell {
 
 extension MovieCollectionViewTableViewCell: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.delegate?.select(movie: indexPath)
+        let correctIndexPath = IndexPath(row: indexPath.row, section: section ?? indexPath.section)
+        self.delegate?.select(movie: correctIndexPath)
+        return
     }
 }
 
