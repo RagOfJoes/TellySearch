@@ -41,7 +41,7 @@ class TabBarController: UITabBarController {
         floatingTabBarView.centerXInSuperview()
         
         // Apply Floating Effect by lifting Tab Bar up
-        floatingTabBarView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -45).isActive = true
+        floatingTabBarView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -15).isActive = true
     }
     
     // MARK: - Setup Tab Items
