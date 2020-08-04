@@ -31,7 +31,7 @@ class MovieCell: UICollectionViewCell {
         imageView.layer.cornerRadius = 10
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 180).isActive = true
         
         return imageView
     }()
@@ -54,6 +54,12 @@ class MovieCell: UICollectionViewCell {
         stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
     }
     
+    override var isHighlighted: Bool {
+        didSet {
+            shrink(down: isHighlighted)
+        }
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -69,14 +75,24 @@ extension MovieCell: MovieConfigureCell {
             return
         }
         let url = URL(string: MovieSection.imageURL + safePoster)
+        let downsample = DownsamplingImageProcessor(size: imageView.frame.size)
         imageView.kf.indicatorType = .activity
         imageView.kf.setImage(
             with: url,
             placeholder: UIImage(named: "placeholderPoster"),
             options: [
+                .processor(downsample),
                 .scaleFactor(UIScreen.main.scale),
                 .transition(.fade(1)),
                 .cacheOriginalImage,
-        ])
+        ]) { [weak self] result in
+            switch result {
+            case .failure:
+                self?.imageView.image = UIImage(named: "placeholderPoster")
+                return
+            case .success(_):
+                return
+            }
+        }
     }
 }
