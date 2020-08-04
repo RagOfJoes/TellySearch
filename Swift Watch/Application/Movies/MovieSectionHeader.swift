@@ -13,7 +13,7 @@ class MovieSectionHeader: UIView {
         let title = UILabel()
         title.textColor = UIColor(named: "primaryTextColor")
         title.translatesAutoresizingMaskIntoConstraints = false
-        title.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 22, weight: .black))
+        title.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 22, weight: .bold))
         
         return title
     }()
@@ -25,7 +25,7 @@ class MovieSectionHeader: UIView {
     }
     
     func configure(with text: String) {
-        title.text = text.uppercased()
+        title.text = text
     }
     
     private func setupUI() {
