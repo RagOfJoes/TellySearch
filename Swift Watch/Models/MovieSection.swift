@@ -30,7 +30,7 @@ struct MovieFetchError: LocalizedError {
 // MARK: - MovieSection
 struct MovieSection: Codable {
     static let baseURL = "https://api.themoviedb.org/3/movie"
-    static let imageURL = "https://image.tmdb.org/t/p/original"
+    static let imageURL = "https://image.tmdb.org/t/p/w200"
     
     // Section Title
     let title: String?
@@ -47,50 +47,9 @@ struct MovieSection: Codable {
         self.results = results
     }
     
-    func fetchSection(with type: MovieFetchType, _ completion: @escaping ([Movie]?, Error?) -> Void) {
-        // Create URL
-        guard let url = URL(string: "\(MovieSection.baseURL)/\(type.rawValue)?api_key=\(K.tmdbApiKey)") else {
-            completion(nil, MovieFetchError(description: "URL Provided was invalid"))
-            return
-        }
-        
-        // Create Session
-        let session = URLSession(configuration: .default)
-        
-        // Give Session a task
-        // completionHandler looks for a closure
-        // which acts similarly to JS closure
-        // let task = session.dataTask(with: url, completionHandler: handle(data:response:error:))
-        let task = session.dataTask(with: url, completionHandler: { (data, response, error) in
-            if error != nil, let e = error {
-                completion(nil, e)
-                return
-            }
-            
-            if let safeData = data {
-                // Inside a closure we must provide
-                // "self." to call an external function
-                if let payload = self.parseJSON(safeData) {
-                    
-                    completion(payload, nil)
-                } else {
-                    completion(nil, MovieFetchError(description: "An Error has occured parsing fetched Movie Data"))
-                }
-            } else {
-                completion(nil, MovieFetchError(description: "An Error has occured fetching Movie Data"))
-            }
-            
-        })
-        
-        // Start the Task
-        task.resume()
-    }
-    
     func fetchSection(with type: MovieFetchType) -> Promise<[Movie]> {
         let promise = Promise<[Movie]>.pending()
-        // Create URL
         if let url = URL(string: "\(MovieSection.baseURL)/\(type.rawValue)?api_key=\(K.tmdbApiKey)&region=US") {
-            // Create Session
             let session = URLSession(configuration: .default)
             
             session.dataTask(with: url, completionHandler: { (data, response, error) in
@@ -99,8 +58,6 @@ struct MovieSection: Codable {
                 }
                 
                 if let safeData = data {
-                    // Inside a closure we must provide
-                    // "self." to call an external function
                     if let payload = self.parseJSON(safeData) {
                         
                         promise.fulfill(payload)
