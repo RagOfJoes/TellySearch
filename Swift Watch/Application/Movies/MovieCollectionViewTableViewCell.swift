@@ -8,8 +8,13 @@
 
 import UIKit
 
+protocol MovieCollectionViewTableViewCellDelegate: class {
+    func select(movie: IndexPath)
+}
+
 class MovieCollectionViewTableViewCell: UITableViewCell {
     var data: MovieSection?
+    weak var delegate: MovieCollectionViewTableViewCellDelegate?
     
     lazy var collectionView: UICollectionView = {
         // Setup Layout
@@ -64,6 +69,9 @@ class MovieCollectionViewTableViewCell: UITableViewCell {
 }
 
 extension MovieCollectionViewTableViewCell: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.delegate?.select(movie: indexPath)
+    }
 }
 
 extension MovieCollectionViewTableViewCell: UICollectionViewDataSource {
