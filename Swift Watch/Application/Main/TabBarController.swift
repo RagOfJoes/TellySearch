@@ -46,7 +46,7 @@ class TabBarController: UITabBarController {
     
     // MARK: - Setup Tab Items
     private func setupTabItems() {
-        let moviesVC = createNavViewController(viewController: MoviesViewController(), title: "Movies")
+        let moviesVC = createNavViewController(viewController: MoviesOverviewController(), title: "Movies")
         
         let showsVC = createNavViewController(viewController: ShowsViewController(), title: "Shows")
         
