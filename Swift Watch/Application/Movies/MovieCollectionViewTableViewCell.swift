@@ -23,6 +23,7 @@ class MovieCollectionViewTableViewCell: UITableViewCell {
         collectionView.dataSource = self
         collectionView.clipsToBounds = true
         collectionView.backgroundColor = .clear
+        collectionView.delaysContentTouches = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -40,7 +41,7 @@ class MovieCollectionViewTableViewCell: UITableViewCell {
         collectionView.topAnchor.constraint(equalTo: topAnchor , constant: 10).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
-        collectionView.heightAnchor.constraint(equalTo: collectionView.widthAnchor, multiplier: 0.5).isActive = true
+        collectionView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -49,6 +50,12 @@ class MovieCollectionViewTableViewCell: UITableViewCell {
     
     func configure(_ movieSection: MovieSection) {
         data = movieSection
+        
+        // After Configuring Cell
+        // Reload Data
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -62,11 +69,6 @@ extension MovieCollectionViewTableViewCell: UICollectionViewDelegate {
 extension MovieCollectionViewTableViewCell: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) as? MovieCell else { return }
-        cell.pulse()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -91,7 +93,6 @@ extension MovieCollectionViewTableViewCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        return CGSize(width: 100, height: collectionView.frame.width / 2)
+        return CGSize(width: 120, height: frame.height)
     }
 }
