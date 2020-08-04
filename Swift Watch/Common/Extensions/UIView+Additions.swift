@@ -40,6 +40,18 @@ extension UIView {
         layer.add(pulse, forKey: "pulse")
     }
     
+    func shrink(down: Bool) {
+        UIView.animate(withDuration: 0.1) {
+            self.transform = down ? CGAffineTransform(scaleX: 0.96, y: 0.96) : .identity
+        }
+    }
+    
+    func shrink(down: Bool, scale: CGFloat) {
+        UIView.animate(withDuration: 0.1) {
+            self.transform = down ? CGAffineTransform(scaleX: scale, y: scale) : .identity
+        }
+    }
+    
     // Reference: https://youtu.be/iqpAP7s3b-8
     @discardableResult
     func anchor(top: NSLayoutYAxisAnchor?, leading: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, trailing: NSLayoutXAxisAnchor?, padding: UIEdgeInsets = .zero, size: CGSize = .zero) -> AnchoredConstraints {
