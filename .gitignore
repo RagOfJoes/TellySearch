@@ -92,3 +92,4 @@ iOSInjectionProject/
 # PList
 
 Keys.plist
+*.xcscheme
