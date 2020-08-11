@@ -9,11 +9,11 @@
 import UIKit
 import Kingfisher
 
-protocol MovieConfigureCell: SelfConfiguringCell {
-    func configure(with movie: Movie)
+protocol OverviewConfigureCell: SelfConfiguringCell {
+    func configure(name: String, poster: String?)
 }
 
-class MovieCell: UICollectionViewCell {
+class OverviewCell: UICollectionViewCell {
     lazy var title: UILabel = {
         let title = UILabel()
         title.numberOfLines = 2
@@ -30,6 +30,7 @@ class MovieCell: UICollectionViewCell {
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 10
         imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "placeholderPoster")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.heightAnchor.constraint(equalToConstant: 180).isActive = true
         
@@ -64,35 +65,18 @@ class MovieCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
-extension MovieCell: MovieConfigureCell {
-    static let reuseIdentifier: String = "Movie Cell"
+extension OverviewCell: OverviewConfigureCell {
+    static var reuseIdentifier = "OverviewCell"
     
-    func configure(with movie: Movie) {
-        title.text = movie.title
+    func configure(name: String, poster: String? = nil) {
+        title.text = name
         
-        guard let safePoster = movie.posterPath else {
-            imageView.image = UIImage(named: "placeholderPoster")
-            return
+        if let safePoster = poster {
+            let url = URL(string: safePoster)
+            let placeholder = UIImage(named: "placeholderPoster")
+            let downsample = DownsamplingImageProcessor(size: CGSize(width: imageView.frame.width, height: 180))
+            self.imageView.kfSetImage(with: url, using: placeholder, processor: downsample)
         }
-        let url = URL(string: MovieSection.imageURL + safePoster)
-        let downsample = DownsamplingImageProcessor(size: imageView.frame.size)
-        imageView.kf.indicatorType = .activity
-        imageView.kf.setImage(
-            with: url,
-            placeholder: UIImage(named: "placeholderPoster"),
-            options: [
-                .processor(downsample),
-                .scaleFactor(UIScreen.main.scale),
-                .transition(.fade(1)),
-                .cacheOriginalImage,
-        ]) { [weak self] result in
-            switch result {
-            case .failure:
-                self?.imageView.image = UIImage(named: "placeholderPoster")
-                return
-            case .success(_):
-                return
-            }
-        }
+        
     }
 }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MovieSectionHeader: UIView {
+class OverviewHeader: UIView {
     lazy var title: UILabel = {
         let title = UILabel()
         title.textColor = UIColor(named: "primaryTextColor")
@@ -38,6 +38,7 @@ class MovieSectionHeader: UIView {
             title.heightAnchor.constraint(equalToConstant: 30),
             title.bottomAnchor.constraint(equalTo: bottomAnchor),
             title.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            title.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20)
         ])
     }
     
