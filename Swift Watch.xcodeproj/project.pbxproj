@@ -30,7 +30,6 @@
 		D6464FD224CA306F00C4497E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6464FD024CA306F00C4497E /* LaunchScreen.storyboard */; };
 		D6464FDD24CA306F00C4497E /* Swift_WatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6464FDC24CA306F00C4497E /* Swift_WatchTests.swift */; };
 		D6464FE824CA306F00C4497E /* Swift_WatchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6464FE724CA306F00C4497E /* Swift_WatchUITests.swift */; };
-		D64FB54F24CE919700C03A98 /* OverviewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64FB54E24CE919700C03A98 /* OverviewHeader.swift */; };
 		D64FB55124CF391100C03A98 /* MovieCollectionViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64FB55024CF391100C03A98 /* MovieCollectionViewTableViewCell.swift */; };
 		D650B97C24CB855300DD1E61 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = D650B97B24CB855300DD1E61 /* Genre.swift */; };
 		D650B97E24CB858100DD1E61 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = D650B97D24CB858100DD1E61 /* Movie.swift */; };
@@ -51,6 +50,7 @@
 		D669601524CA369000FF0758 /* MoviesOverviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D669601424CA369000FF0758 /* MoviesOverviewController.swift */; };
 		D669601724CA36A000FF0758 /* ShowsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D669601624CA36A000FF0758 /* ShowsViewController.swift */; };
 		D6A0548E24E30530009C87B2 /* String+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A0548D24E30530009C87B2 /* String+Additions.swift */; };
+		D6A0549024E33BE0009C87B2 /* OverviewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A0548F24E33BE0009C87B2 /* OverviewHeader.swift */; };
 		D6E3686624CA737A00863736 /* UIImage+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E3686524CA737A00863736 /* UIImage+Additions.swift */; };
 		D6EE65A024CAAE9C0033C9F2 /* shows.pdf in Resources */ = {isa = PBXBuildFile; fileRef = D6EE659E24CAAE9C0033C9F2 /* shows.pdf */; };
 		D6EE65A124CAAE9C0033C9F2 /* movies.pdf in Resources */ = {isa = PBXBuildFile; fileRef = D6EE659F24CAAE9C0033C9F2 /* movies.pdf */; };
@@ -106,7 +106,6 @@
 		D6464FE324CA306F00C4497E /* Swift WatchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Swift WatchUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6464FE724CA306F00C4497E /* Swift_WatchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Swift_WatchUITests.swift; sourceTree = "<group>"; };
 		D6464FE924CA306F00C4497E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D64FB54E24CE919700C03A98 /* OverviewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OverviewHeader.swift; path = ../../Application/Movies/OverviewHeader.swift; sourceTree = "<group>"; };
 		D64FB55024CF391100C03A98 /* MovieCollectionViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCollectionViewTableViewCell.swift; sourceTree = "<group>"; };
 		D650B97B24CB855300DD1E61 /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 		D650B97D24CB858100DD1E61 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
@@ -127,6 +126,7 @@
 		D669601424CA369000FF0758 /* MoviesOverviewController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = MoviesOverviewController.swift; sourceTree = "<group>"; tabWidth = 2; usesTabs = 1; };
 		D669601624CA36A000FF0758 /* ShowsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowsViewController.swift; sourceTree = "<group>"; };
 		D6A0548D24E30530009C87B2 /* String+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Additions.swift"; sourceTree = "<group>"; };
+		D6A0548F24E33BE0009C87B2 /* OverviewHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverviewHeader.swift; sourceTree = "<group>"; };
 		D6E3686524CA737A00863736 /* UIImage+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Additions.swift"; sourceTree = "<group>"; };
 		D6EE659E24CAAE9C0033C9F2 /* shows.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = shows.pdf; sourceTree = "<group>"; };
 		D6EE659F24CAAE9C0033C9F2 /* movies.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = movies.pdf; sourceTree = "<group>"; };
@@ -333,7 +333,7 @@
 			isa = PBXGroup;
 			children = (
 				D60921B624CB514A001339EE /* FloatingTabBarView.swift */,
-				D64FB54E24CE919700C03A98 /* OverviewHeader.swift */,
+				D6A0548F24E33BE0009C87B2 /* OverviewHeader.swift */,
 				D6040F3124DCB02F0020815B /* BackdropDetail.swift */,
 				D650B98724CB9C5700DD1E61 /* SelfConfiguringCell.swift */,
 				D6689DC624DB4CAF0061C45C /* OverviewCell.swift */,
@@ -617,7 +617,6 @@
 				D636CC5524CFB6C000361614 /* MovieDetail.swift in Sources */,
 				D6464FC624CA306E00C4497E /* AppDelegate.swift in Sources */,
 				D611F76324CA753700B3FE6A /* UIView+Additions.swift in Sources */,
-				D64FB54F24CE919700C03A98 /* OverviewHeader.swift in Sources */,
 				D636CC5924CFBCB300361614 /* Constants.swift in Sources */,
 				D6040F3624DDFB920020815B /* CastCollectionView.swift in Sources */,
 				D650B99024CBB63500DD1E61 /* MovieSection.swift in Sources */,
@@ -632,6 +631,7 @@
 				D650B98624CB99AF00DD1E61 /* Crew.swift in Sources */,
 				D6E3686624CA737A00863736 /* UIImage+Additions.swift in Sources */,
 				D650B97E24CB858100DD1E61 /* Movie.swift in Sources */,
+				D6A0549024E33BE0009C87B2 /* OverviewHeader.swift in Sources */,
 				D650B97C24CB855300DD1E61 /* Genre.swift in Sources */,
 				D6A0548E24E30530009C87B2 /* String+Additions.swift in Sources */,
 			);
