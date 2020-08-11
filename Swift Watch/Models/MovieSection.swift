@@ -42,7 +42,7 @@ struct MovieSection: Codable {
         self.results = results
     }
     
-    func fetchSection(with type: MovieFetchType) -> Promise<[Movie]> {
+    func fetchSection(with type: MovieSectionType) -> Promise<[Movie]> {
         let promise = Promise<[Movie]>.pending()
         if let url = URL(string: "\(MovieSection.baseURL)/\(type.rawValue)?api_key=\(K.tmdbApiKey)&region=US") {
             let session = URLSession(configuration: .default)

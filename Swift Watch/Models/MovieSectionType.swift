@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum MovieFetchType: String {
+enum MovieSectionType: String {
     case detail
     case popular = "popular"
     case upcoming = "upcoming"
