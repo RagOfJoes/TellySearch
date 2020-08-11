@@ -22,24 +22,6 @@ extension UIView {
         }
     }
     
-    func pulse() {
-        let pulse = CASpringAnimation(keyPath: "transform.scale")
-        pulse.duration = 0.15
-        pulse.fromValue = 0.95
-        pulse.toValue = 1.0
-        
-        layer.add(pulse, forKey: "pulse")
-    }
-    
-    func pulse(duration: CFTimeInterval?, from: Double?, to: Double?) {
-        let pulse = CASpringAnimation(keyPath: "transform.scale")
-        pulse.duration = duration ?? 0.15
-        pulse.fromValue = from ?? 0.95
-        pulse.toValue = to ?? 1.0
-        
-        layer.add(pulse, forKey: "pulse")
-    }
-    
     func shrink(down: Bool) {
         UIView.animate(withDuration: 0.1) {
             self.transform = down ? CGAffineTransform(scaleX: 0.96, y: 0.96) : .identity
