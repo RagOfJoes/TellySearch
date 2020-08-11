@@ -7,14 +7,16 @@
 //
 
 import UIKit
+import SkeletonView
 
 protocol MovieCollectionViewTableViewCellDelegate: class {
     func select(movie: IndexPath)
 }
 
+// MARK: - MovieCollectionViewTableViewCell
 class MovieCollectionViewTableViewCell: UITableViewCell {
     var section: Int?
-    var data: MovieSection?
+    var data: [Movie]? = nil
     weak var delegate: MovieCollectionViewTableViewCellDelegate?
     
     lazy var collectionView: UICollectionView = {
@@ -33,8 +35,11 @@ class MovieCollectionViewTableViewCell: UITableViewCell {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
+        collectionView.isSkeletonable = true
+        
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.reuseIdentifier)
+        
+        collectionView.register(OverviewCell.self, forCellWithReuseIdentifier: OverviewCell.reuseIdentifier)
         return collectionView
     }()
     
@@ -44,24 +49,15 @@ class MovieCollectionViewTableViewCell: UITableViewCell {
         backgroundColor = .clear
         addSubview(collectionView)
         
-        collectionView.topAnchor.constraint(equalTo: topAnchor , constant: 10).isActive = true
-        collectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
-        collectionView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
+        setupAnchors()
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
     
-    func configure(_ movieSection: MovieSection) {
-        data = movieSection
-        
-        // After Configuring Cell
-        // Reload Data
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
-        }
+    func configure(_ movies: [Movie]) {
+        data = movies
     }
     
     required init?(coder: NSCoder) {
@@ -69,6 +65,20 @@ class MovieCollectionViewTableViewCell: UITableViewCell {
     }
 }
 
+// MARK: - Helper Functions
+extension MovieCollectionViewTableViewCell {
+    private func setupAnchors() {
+        let collectionViewConstraints: [NSLayoutConstraint] = [
+            collectionView.heightAnchor.constraint(equalTo: heightAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            collectionView.topAnchor.constraint(equalTo: topAnchor , constant: 10)
+        ]
+        NSLayoutConstraint.activate(collectionViewConstraints)
+    }
+}
+
+// MARK: - UICollectionViewDelegate
 extension MovieCollectionViewTableViewCell: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let correctIndexPath = IndexPath(row: indexPath.row, section: section ?? indexPath.section)
@@ -78,12 +88,8 @@ extension MovieCollectionViewTableViewCell: UICollectionViewDelegate {
 }
 
 extension MovieCollectionViewTableViewCell: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let count = data?.results?.count {
+        if let count = data?.count {
             return count
         }
         
@@ -91,15 +97,20 @@ extension MovieCollectionViewTableViewCell: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.reuseIdentifier, for: indexPath) as! MovieCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OverviewCell.reuseIdentifier, for: indexPath) as! OverviewCell
         
-        if let movie = data?.results?[indexPath.row] {
-            cell.configure(with: movie)
+        if let movie = data?[indexPath.row] {
+            if let poster = movie.posterPath {
+                cell.configure(name: movie.title, poster: MovieSection.posterURL + poster)
+            } else {
+                cell.configure(name: movie.title)
+            }
         }
         return cell
     }
 }
 
+// MARK: - UICollectionViewLayout
 extension MovieCollectionViewTableViewCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
