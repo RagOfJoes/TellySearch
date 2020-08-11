@@ -72,9 +72,7 @@ class CastCollectionView: UIView {
         
         header.configure(with: "Top Billed Cast")
         header.title.textColor = colors?.primary
-        
-        collectionView.reloadData()
-        
+                
         collectionView.hideSkeleton()
     }
     
