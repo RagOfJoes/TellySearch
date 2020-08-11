@@ -9,6 +9,8 @@
 import Foundation
 
 struct Cast: Codable {
+    static let profileURL = "https://image.tmdb.org/t/p/w200"
+    
     let id: Int
     let name: String
     let character: String
