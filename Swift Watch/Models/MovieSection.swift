@@ -30,19 +30,14 @@ struct MovieFetchError: LocalizedError {
 // MARK: - MovieSection
 struct MovieSection: Codable {
     static let baseURL = "https://api.themoviedb.org/3/movie"
-    static let imageURL = "https://image.tmdb.org/t/p/w200"
+    static let posterURL = "https://image.tmdb.org/t/p/w200"
+    static let backdropURL = "https://image.tmdb.org/t/p/original"
     
     // Section Title
     let title: String?
+    let results: [Movie]?
     
-    // Actual Payload
-    var results: [Movie]?
-    
-    init(title: String) {
-        self.title = title
-    }
-    
-    init(title: String, results: [Movie]) {
+    init(title: String, results: [Movie]? = nil) {
         self.title = title
         self.results = results
     }
@@ -78,7 +73,6 @@ struct MovieSection: Codable {
     
     enum CodingKeys: String, CodingKey {
         case title
-        
         case results
     }
 }
@@ -87,18 +81,11 @@ struct MovieSection: Codable {
 extension MovieSection {
     func parseJSON(_ movieData: Data) -> [Movie]? {
         let decoder = JSONDecoder()
-        
-        // ".self" after the WeatherData refers to the Type of
-        // the Decodable struct
         do {
             let decodedMovieSection = try decoder.decode(MovieSection.self, from: movieData)
             return decodedMovieSection.results
         } catch {
             return nil
         }
-    }
-    
-    mutating func set(results: [Movie]) {
-        self.results = results
     }
 }
