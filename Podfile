@@ -6,8 +6,10 @@ target 'Swift Watch' do
   use_frameworks!
   
   # Pods for Swift Watch
+  pod 'Cache'
   pod 'PanModal'
   pod 'Kingfisher'
+  pod 'SkeletonView'
   pod 'PromisesSwift'
 
   target 'Swift WatchTests' do

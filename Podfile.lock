@@ -1,4 +1,5 @@
 PODS:
+  - Cache (5.3.0)
   - Kingfisher (5.14.1):
     - Kingfisher/Core (= 5.14.1)
   - Kingfisher/Core (5.14.1)
@@ -6,25 +7,32 @@ PODS:
   - PromisesObjC (1.2.9)
   - PromisesSwift (1.2.9):
     - PromisesObjC (= 1.2.9)
+  - SkeletonView (1.8.7)
 
 DEPENDENCIES:
+  - Cache
   - Kingfisher
   - PanModal
   - PromisesSwift
+  - SkeletonView
 
 SPEC REPOS:
   trunk:
+    - Cache
     - Kingfisher
     - PanModal
     - PromisesObjC
     - PromisesSwift
+    - SkeletonView
 
 SPEC CHECKSUMS:
+  Cache: 48762993ec44e1d93483c4d4a13edd18452326f4
   Kingfisher: 8050bc6f7f68cbf3908bd04df7ccbac188f6d6d6
   PanModal: 3e16ead1a907fb06f4df3f13492fd00149fa4974
   PromisesObjC: b48e0338dbbac2207e611750777895f7a5811b75
   PromisesSwift: 991ad88e9851c45410d6697d1fe5df88fd3deb08
+  SkeletonView: ba5370f41280b2f0a76918bb143c1294232bb4f4
 
-PODFILE CHECKSUM: fca1ee89b1f169de16355e6f547752937d087aa0
+PODFILE CHECKSUM: f9c0e987870372a83a1b64325f09cacdab521c84
 
 COCOAPODS: 1.9.3
