@@ -16,6 +16,8 @@ class TabBarController: UITabBarController {
         super.viewDidLoad()
         
         // Set KingFisher Cache to only store images for a max of 1 day
+//        KingfisherManager.shared.cache.clearDiskCache()
+//        KingfisherManager.shared.cache.clearMemoryCache()
         KingfisherManager.shared.cache.diskStorage.config.expiration = StorageExpiration.days(1)
         
         setupView()
@@ -58,13 +60,11 @@ class TabBarController: UITabBarController {
     private func createNavViewController(viewController: UIViewController, title: String) -> UIViewController {
         
         let navController = UINavigationController(rootViewController: viewController)
-        navController.tabBarItem.title = title
-        navController.navigationBar.isTranslucent = false
         navController.navigationBar.prefersLargeTitles = true
+        navController.navigationBar.tintColor = .systemOrange
+        navController.navigationBar.layer.borderColor = UIColor.black.cgColor
         navController.navigationBar.barTintColor = UIColor(named: "backgroundColor")
         
-        // Shadow
-        navController.navigationBar.layer.borderColor = UIColor.black.cgColor
         
         viewController.navigationItem.title = title
         
