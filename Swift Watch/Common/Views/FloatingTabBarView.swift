@@ -22,11 +22,12 @@ class FloatingTabBarView: UIView {
     
     var buttons: [UIButton] = []
     
-    init(items: [String], backgroundColor bgColor: UIColor?) {
+    init(items: [String], backgroundColor bgColor: UIColor? = .systemBackground, shouldBlur: Bool = true) {
         super.init(frame: .zero)
         
-        backgroundColor = bgColor ?? .white
-        setupStackView(with: items)
+        backgroundColor = bgColor
+        
+        setupStackView(with: items, shouldBlur: shouldBlur)
         updateUI(selectedIndex: 0)
     }
     
@@ -38,7 +39,7 @@ class FloatingTabBarView: UIView {
         layer.cornerRadius = cornerRadius
     }
     
-    private func setupStackView(with items: [String]) {
+    private func setupStackView(with items: [String], shouldBlur: Bool) {
         for (index, item) in items.enumerated() {
             let normalImage = UIImage(named: item)?.withRenderingMode(.alwaysTemplate) ?? UIImage()
             let selectedImage = UIImage(named: "\(item).fill")?.withRenderingMode(.alwaysTemplate) ?? normalImage
@@ -52,6 +53,25 @@ class FloatingTabBarView: UIView {
         
         addSubview(stackView)
         stackView.fillSuperview(padding: .init(top: 0, left: 16, bottom: 0, right: 16))
+        
+        if shouldBlur {
+            backgroundColor = self.backgroundColor?.withAlphaComponent(0.2)
+            
+            var blurEffect: UIBlurEffect!
+            
+            if #available(iOS 10.0, *) {
+                blurEffect = UIBlurEffect(style: .dark)
+            } else {
+                blurEffect = UIBlurEffect(style: .light)
+            }
+            
+            let blurView = UIVisualEffectView(effect: blurEffect)
+            blurView.frame = self.bounds
+            blurView.roundCorners(.allCorners, radius: 20)
+            blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            
+            insertSubview(blurView, at: 0)
+        }
     }
     
     @objc private func changeTab(_ sender: UIButton) {
