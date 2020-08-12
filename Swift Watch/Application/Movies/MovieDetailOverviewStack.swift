@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 class MovieDetailOverviewStack: UIStackView {
     private lazy var overviewTitle: UILabel = {
@@ -15,9 +16,7 @@ class MovieDetailOverviewStack: UIStackView {
         overviewTitle.numberOfLines = 1
         overviewTitle.translatesAutoresizingMaskIntoConstraints = false
         overviewTitle.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 18, weight: .bold))
-        
-        overviewTitle.heightAnchor.constraint(equalToConstant: 22).isActive = true
-        
+                
         return overviewTitle
     }()
     
@@ -34,30 +33,34 @@ class MovieDetailOverviewStack: UIStackView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         axis = .vertical
-        addArrangedSubview(overviewTitle)
-        addArrangedSubview(overviewText)
-        setCustomSpacing(5, after: overviewTitle)
         translatesAutoresizingMaskIntoConstraints = false
+        heightAnchor.constraint(greaterThanOrEqualToConstant: 50).isActive = true
         
         isSkeletonable = true
         skeletonCornerRadius = 5
-        showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))
+        showAnimatedGradientSkeleton()
+        
+        addArrangedSubview(overviewTitle)
+        addArrangedSubview(overviewText)
+        setCustomSpacing(5, after: overviewTitle)
     }
     
     func configure(title: String, text: String?, colors: UIImageColors) {
-        var height: CGFloat
-        if  let safeText = text {
-            height = safeText.height(font: overviewText.font)
-        } else {
-            height = 0
-        }
         overviewTitle.text = title
         overviewTitle.textColor = colors.primary
         
         overviewText.text = text
         overviewText.textColor = colors.primary
         
-        overviewText.heightAnchor.constraint(equalToConstant: height).isActive = true
+        hideSkeleton()
+    }
+    
+    func overviewHeight() -> CGFloat {
+        if let text = overviewText.text {
+            return text.height(font: overviewText.font)
+        }
+        
+        return 0
     }
     
     required init(coder: NSCoder) {
