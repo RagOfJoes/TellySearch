@@ -36,6 +36,8 @@ class MovieCollectionViewTableViewCell: UITableViewCell {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         collectionView.isSkeletonable = true
+        collectionView.skeletonCornerRadius = 5
+        collectionView.showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))
         
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         
@@ -58,6 +60,7 @@ class MovieCollectionViewTableViewCell: UITableViewCell {
     
     func configure(_ movies: [Movie]) {
         data = movies
+        collectionView.hideSkeleton()
     }
     
     required init?(coder: NSCoder) {
@@ -110,11 +113,25 @@ extension MovieCollectionViewTableViewCell: UICollectionViewDataSource {
     }
 }
 
+extension MovieCollectionViewTableViewCell: SkeletonCollectionViewDataSource {
+    func numSections(in collectionSkeletonView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 3
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
+        return OverviewCell.reuseIdentifier
+    }
+}
+
 // MARK: - UICollectionViewLayout
 extension MovieCollectionViewTableViewCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 120, height: frame.height)
+        return CGSize(width: K.Overview.widthConstant, height: K.Overview.heightConstant)
     }
 }
