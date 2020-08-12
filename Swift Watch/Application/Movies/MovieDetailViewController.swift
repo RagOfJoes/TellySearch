@@ -23,57 +23,8 @@ class MovieDetailViewController: UIViewController {
         return backdropDetail
     }()
     
-    private lazy var overviewTitle: UILabel = {
-        let overviewTitle = UILabel()
-        overviewTitle.alpha = 0.4
-        overviewTitle.numberOfLines = 1
-        overviewTitle.translatesAutoresizingMaskIntoConstraints = false
-        overviewTitle.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 18, weight: .bold))
-        
-        overviewTitle.heightAnchor.constraint(equalToConstant: 22).isActive = true
-        
-        return overviewTitle
-    }()
-    
-    private lazy var overview: UILabel = {
-        let overview = UILabel()
-        let font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .semibold))
-        overview.font = font
-        overview.numberOfLines = 0
-        overview.translatesAutoresizingMaskIntoConstraints = false
-        
-        var height: CGFloat
-        if  let overview = movie?.overview {
-            height = overview.height(font: font)
-        } else {
-            height = 0
-        }
-        
-        overview.heightAnchor.constraint(equalToConstant: height).isActive = true
-        
-        return overview
-    }()
-    
-    private lazy var overviewStack: UIStackView = {
-        let overviewStack = UIStackView(arrangedSubviews: [overviewTitle, overview])
-        overviewStack.axis = .vertical
-        overviewStack.setCustomSpacing(5, after: overviewTitle)
-        overviewStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        overviewStack.isSkeletonable = true
-        overviewStack.skeletonCornerRadius = 5
-        overviewStack.showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))
-        
-        return overviewStack
-    }()
-    
-    private lazy var creditsCollectionView: CastCollectionView = {
-        let creditsCollectionView = CastCollectionView()
-        creditsCollectionView.backgroundColor = .clear
-        creditsCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        return creditsCollectionView
-    }()
+    private lazy var overviewStack = MovieDetailOverviewStack()
+    private lazy var creditsCollectionView = CastCollectionView()    
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -224,11 +175,7 @@ extension MovieDetailViewController {
     
     // MARK: - Colors UI
     private func setupUIColors(with colors: UIImageColors) {
-        
         view.backgroundColor = colors.background
-        
-        overview.textColor = colors.primary
-        overviewTitle.textColor = colors.primary
         navigationController?.navigationBar.tintColor = colors.primary
     }
     
@@ -287,8 +234,7 @@ extension MovieDetailViewController: BackdropDetailDelegate {
                 UIView.animate(withDuration: 0.27) {
                     self.setupUIColors(with: colors)
                     
-                    self.overviewTitle.text = "Overview"
-                    self.overview.text = self.movie?.overview
+                    self.overviewStack.configure(title: "Overview", text: self.movie?.overview, colors: colors)
                 }
             }
             
