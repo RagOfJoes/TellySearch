@@ -23,9 +23,9 @@ class MoviesOverviewController: UIViewController  {
 		tableView.backgroundColor = .clear
 		tableView.delaysContentTouches = false
 		
-		tableView.rowHeight = 225
-		tableView.estimatedRowHeight = 225
-		
+		tableView.rowHeight = K.Overview.heightConstant
+		tableView.estimatedRowHeight = K.Overview.heightConstant
+
 		for (index, section) in sections.enumerated() {
 			let identifier = "MovieCollectionViewTableViewCell+\(index)"
 			tableView.register(MovieCollectionViewTableViewCell.self, forCellReuseIdentifier: identifier)
@@ -37,6 +37,9 @@ class MoviesOverviewController: UIViewController  {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		let backBarButton = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
+		
+		self.navigationItem.backBarButtonItem = backBarButton
 		view.backgroundColor = UIColor(named: "backgroundColor")
 		view.addSubview(tableView)
 		tableView.fillSuperview()
@@ -46,12 +49,11 @@ class MoviesOverviewController: UIViewController  {
 		all(promises)
 			.then { (results) in
 				// Loop through all the results
-				// and set them to the their respected
-				// MovieSection
+				// and append to movies array
 				for data in results {
 					self.movies.append(data)
 				}
-				
+
 				// Reload TableView's Data
 				// in the Main Thread
 				DispatchQueue.main.async {
@@ -74,7 +76,7 @@ extension MoviesOverviewController: UITableViewDelegate {
 // MARK: - UITableViewDataSource
 extension MoviesOverviewController: UITableViewDataSource {
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return movies.count
+		return sections.count
 	}
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -84,9 +86,9 @@ extension MoviesOverviewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let identifier = "MovieCollectionViewTableViewCell+\(indexPath.section)"
 		let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! MovieCollectionViewTableViewCell
-		cell.delegate = self
-		
-		if let data = movies[indexPath.section] {
+
+		if movies.count > indexPath.section, let data = movies[indexPath.section] {
+			cell.delegate = self
 			cell.configure(data)
 			cell.section = indexPath.section
 		}
@@ -98,12 +100,11 @@ extension MoviesOverviewController: UITableViewDataSource {
 // Passes up the Index Path of the selected Movie
 extension MoviesOverviewController: MovieCollectionViewTableViewCellDelegate {
 	func select(movie: IndexPath) {
-		let detailVC = MovieDetailController()
+		let detailVC = MovieDetailViewController()
 		
 		if let safeMovie = movies[movie.section]?[movie.row] {
 			detailVC.configure(with: safeMovie)
 		}
-		
 		navigationController?.pushViewController(detailVC, animated: true)
 	}
 }
