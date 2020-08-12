@@ -16,13 +16,8 @@ struct MovieFetchError: LocalizedError {
     var failureReason: String? { return description }
     var errorDescription: String? { return description }
     
-    init(title: String?, description: String) {
-        self.description = description
-        self.title = title ?? "MovieFetchError"
-    }
-    
-    init(description: String) {
-        self.title = "MovieFetchError"
+    init(title: String = "MovieFetchError", description: String) {
+        self.title = title
         self.description = description
     }
 }

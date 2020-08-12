@@ -1,5 +1,5 @@
 //
-//  MovieDetailController.swift
+//  MovieDetailViewController.swift
 //  Swift Watch
 //
 //  Created by Victor Ragojos on 7/30/20.
@@ -11,10 +11,9 @@ import Promises
 import Kingfisher
 import SkeletonView
 
-class MovieDetailController: UIViewController {
+class MovieDetailViewController: UIViewController {
     
     var movie: Movie?
-    
     // MARK: - Views Declaration
     private lazy var backdropDetail: BackdropDetail = {
         let backdropDetail = BackdropDetail()
@@ -64,7 +63,7 @@ class MovieDetailController: UIViewController {
         overviewStack.isSkeletonable = true
         overviewStack.skeletonCornerRadius = 5
         overviewStack.showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))
-                
+        
         return overviewStack
     }()
     
@@ -78,7 +77,7 @@ class MovieDetailController: UIViewController {
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-//        scrollView.delegate = self
+        scrollView.delegate = self
         scrollView.frame = self.view.bounds
         scrollView.delaysContentTouches = false
         scrollView.contentInsetAdjustmentBehavior = .never
@@ -92,10 +91,10 @@ class MovieDetailController: UIViewController {
         scrollView.showsHorizontalScrollIndicator = false
         
         let screen = UIScreen.main.bounds
-
+        
         scrollView.contentOffset = CGPoint(x: 0, y: 0)
         scrollView.contentSize = CGSize(width: screen.width, height: screen.height)
-            
+        
         return scrollView
     }()
     
@@ -159,7 +158,7 @@ class MovieDetailController: UIViewController {
 }
 
 // MARK: - UI Setup
-extension MovieDetailController {
+extension MovieDetailViewController {
     // MARK: - Nav
     private func setupNav(by disappearing: Bool) {
         if disappearing {
@@ -171,7 +170,7 @@ extension MovieDetailController {
         } else {
             self.navigationController?.navigationBar.shadowImage = nil
             self.navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
-
+            
             UIView.animate(withDuration: 0.25) {
                 self.navigationController?.navigationBar.prefersLargeTitles = true
             }
@@ -202,8 +201,7 @@ extension MovieDetailController {
         let backdropDetailConstraints: [NSLayoutConstraint] = [
             backdropDetail.topAnchor.constraint(equalTo: containerView.topAnchor),
             backdropDetail.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            backdropDetail.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            backdropDetail.heightAnchor.constraint(equalToConstant: K.BackdropDetail.heightConstant),
+            backdropDetail.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
         ]
         NSLayoutConstraint.activate(backdropDetailConstraints)
         
@@ -272,8 +270,14 @@ extension MovieDetailController {
     }
 }
 
+// MARK: - Section Header
+extension MovieDetailViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    }
+}
+
 // MARK: - BackdropDetailDelegate
-extension MovieDetailController: BackdropDetailDelegate {
+extension MovieDetailViewController: BackdropDetailDelegate {
     func didSetupUI(colors: UIImageColors) {
         self.movie?.fetchCredits().then({ (credits) in
             self.creditsCollectionView.configure(with: credits, _colors: colors)
@@ -282,7 +286,7 @@ extension MovieDetailController: BackdropDetailDelegate {
                 self.overviewStack.hideSkeleton(transition: .crossDissolve(0.25))
                 UIView.animate(withDuration: 0.27) {
                     self.setupUIColors(with: colors)
-
+                    
                     self.overviewTitle.text = "Overview"
                     self.overview.text = self.movie?.overview
                 }
