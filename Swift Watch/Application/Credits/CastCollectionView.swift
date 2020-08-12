@@ -61,6 +61,9 @@ class CastCollectionView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         clipsToBounds = true
+        backgroundColor = .clear
+        translatesAutoresizingMaskIntoConstraints = false
+        
         addSubview(header)
         addSubview(collectionView)
         setupAnchors()
