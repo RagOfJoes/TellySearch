@@ -13,9 +13,6 @@ class CastCollectionView: UIView {
     var credits: Credits?
     var colors: UIImageColors?
     
-    static var collectionViewHeight: CGFloat = 235
-    static var collectionViewCellWidth: CGFloat = 135
-    
     lazy var header: CastCollectionViewHeader = {
         let header = CastCollectionViewHeader()
         header.translatesAutoresizingMaskIntoConstraints = false
@@ -69,7 +66,7 @@ class CastCollectionView: UIView {
         setupAnchors()
     }
     
-    func configure(with _credits: Credits, _colors: UIImageColors) {
+    func configure(with _credits: Credits, colors _colors: UIImageColors) {
         self.credits = _credits
         self.colors = _colors
         
@@ -96,7 +93,7 @@ extension CastCollectionView {
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 5),
-            collectionView.heightAnchor.constraint(equalToConstant: CastCollectionView.collectionViewHeight),
+            collectionView.heightAnchor.constraint(equalToConstant: K.Cast.topBilledCellHeight),
         ])
     }
 }
@@ -106,7 +103,7 @@ extension CastCollectionView: UICollectionViewDelegate, UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: CastCollectionView.collectionViewCellWidth, height: CastCollectionView.collectionViewHeight)
+        return CGSize(width: K.Cast.topBilledCellWidth, height: K.Cast.topBilledCellHeight)
     }
 }
 

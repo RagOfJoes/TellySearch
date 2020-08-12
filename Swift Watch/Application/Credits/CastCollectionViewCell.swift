@@ -19,15 +19,9 @@ class CastCollectionViewCell: UICollectionViewCell {
         photo.roundCorners([.topLeft, .topRight], radius: 10)
         photo.translatesAutoresizingMaskIntoConstraints = false
         
-        DispatchQueue.main.async {
-            photo.isSkeletonable = true
-            photo.skeletonCornerRadius = 10
-            photo.showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))            
-        }
-        
         NSLayoutConstraint.activate([
-            photo.heightAnchor.constraint(equalToConstant: 160),
-            photo.widthAnchor.constraint(equalToConstant: CastCollectionView.collectionViewCellWidth),
+            photo.widthAnchor.constraint(equalToConstant: K.Cast.topBilledCellWidth),
+            photo.heightAnchor.constraint(equalToConstant: K.Cast.topBilledPosterHeight)
         ])
         
         return photo
@@ -45,6 +39,7 @@ class CastCollectionViewCell: UICollectionViewCell {
     lazy var secondaryText: UILabel = {
         let secondaryText = UILabel()
         secondaryText.numberOfLines = 0
+        secondaryText.clipsToBounds = true
         secondaryText.translatesAutoresizingMaskIntoConstraints = false
         secondaryText.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 12, weight: .medium))
         
@@ -53,11 +48,14 @@ class CastCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         contentView.addSubview(photo)
         contentView.addSubview(primaryText)
         contentView.addSubview(secondaryText)
         setupAnchors()
+        
+        isSkeletonable = true
+        skeletonCornerRadius = 10
+        showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))
     }
     
     override var isHighlighted: Bool {
@@ -78,7 +76,13 @@ class CastCollectionViewCell: UICollectionViewCell {
             
             self.contentView.layer.cornerRadius = 10
             self.contentView.backgroundColor = colors.primary.withAlphaComponent(0.26)
+            
+            let posterHeight = K.Cast.topBilledPosterHeight + 15
+            let primaryTextHeight = cast.name.height(font: self.primaryText.font)
+            let secondaryTextHeightConstraint: CGFloat = K.Cast.topBilledCellHeight - posterHeight - primaryTextHeight
+            self.secondaryText.heightAnchor.constraint(lessThanOrEqualToConstant: secondaryTextHeightConstraint).isActive = true
         }
+        
         
         guard let profilePath = cast.profilePath else {
             photo.image = UIImage(named: "placeholderPoster")
@@ -93,19 +97,26 @@ class CastCollectionViewCell: UICollectionViewCell {
     }
     
     private func setupAnchors() {
-        NSLayoutConstraint.activate([
+        let photoConstraints: [NSLayoutConstraint] = [
             photo.topAnchor.constraint(equalTo: contentView.topAnchor),
             photo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            photo.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            
+            photo.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+        ]
+        NSLayoutConstraint.activate(photoConstraints)
+        
+        let primaryTextConstraints: [NSLayoutConstraint] = [
             primaryText.topAnchor.constraint(equalTo: photo.bottomAnchor, constant: 10),
             primaryText.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
-            primaryText.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
-            
+            primaryText.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5)
+        ]
+        NSLayoutConstraint.activate(primaryTextConstraints)
+        
+        let secondaryTextConstraints: [NSLayoutConstraint] = [
             secondaryText.topAnchor.constraint(equalTo: primaryText.bottomAnchor),
             secondaryText.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
-            secondaryText.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
-        ])
+            secondaryText.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5)
+        ]
+        NSLayoutConstraint.activate(secondaryTextConstraints)
     }
     
     required init?(coder: NSCoder) {
