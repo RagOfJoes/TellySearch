@@ -13,11 +13,15 @@ struct MovieDetail: Codable {
     let rateAvg: Double
     let genres: [Genre]?
     let tagline: String?
+    let credits: Credits?
+    let recommendations: MovieSection?
     
     enum CodingKeys: String, CodingKey {
         case genres
         case tagline
         case runtime
+        case credits
+        case recommendations
         case rateAvg = "vote_average"
     }
 }
