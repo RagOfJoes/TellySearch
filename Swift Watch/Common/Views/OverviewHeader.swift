@@ -37,8 +37,8 @@ class OverviewHeader: UIView {
             heightAnchor.constraint(equalToConstant: 65),
             title.heightAnchor.constraint(equalToConstant: 30),
             title.bottomAnchor.constraint(equalTo: bottomAnchor),
-            title.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            title.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20)
+            title.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            title.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20)
         ])
     }
     

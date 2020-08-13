@@ -8,6 +8,7 @@
 
 import UIKit
 import Kingfisher
+import SkeletonView
 
 protocol OverviewConfigureCell: SelfConfiguringCell {
     func configure(name: String, poster: String?)
@@ -20,8 +21,7 @@ class OverviewCell: UICollectionViewCell {
         title.textColor = UIColor(named: "primaryTextColor")
         title.translatesAutoresizingMaskIntoConstraints = false
         title.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 12, weight: .medium))
-        
-        title.sizeToFit()
+                
         return title
     }()
     
@@ -33,6 +33,12 @@ class OverviewCell: UICollectionViewCell {
         imageView.image = UIImage(named: "placeholderPoster")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.heightAnchor.constraint(equalToConstant: 180).isActive = true
+        
+        DispatchQueue.main.async {
+            imageView.isSkeletonable = true
+            imageView.skeletonCornerRadius = 10
+            imageView.showAnimatedGradientSkeleton()
+        }
         
         return imageView
     }()
@@ -69,13 +75,19 @@ extension OverviewCell: OverviewConfigureCell {
     static var reuseIdentifier = "OverviewCell"
     
     func configure(name: String, poster: String? = nil) {
-        title.text = name
+        DispatchQueue.main.async {
+            self.imageView.hideSkeleton()
+            self.title.text = name
+        }
         
         if let safePoster = poster {
             let url = URL(string: safePoster)
             let placeholder = UIImage(named: "placeholderPoster")
             let downsample = DownsamplingImageProcessor(size: CGSize(width: imageView.frame.width, height: 180))
-            self.imageView.kfSetImage(with: url, using: placeholder, processor: downsample)
+            
+            DispatchQueue.main.async {
+                self.imageView.kfSetImage(with: url, using: placeholder, processor: downsample)                
+            }
         }
         
     }

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Promises
 import Kingfisher
 import SkeletonView
 
@@ -55,7 +54,7 @@ class CastCollectionViewCell: UICollectionViewCell {
         
         isSkeletonable = true
         skeletonCornerRadius = 10
-        showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))
+        showAnimatedGradientSkeleton()
     }
     
     override var isHighlighted: Bool {

@@ -17,11 +17,9 @@ class CastCollectionView: UIView {
         let header = CastCollectionViewHeader()
         header.translatesAutoresizingMaskIntoConstraints = false
         
-        DispatchQueue.main.async {
-            header.isSkeletonable = true
-            header.skeletonCornerRadius = 5
-            header.showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))            
-        }
+        header.isSkeletonable = true
+        header.skeletonCornerRadius = 5
+        header.showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))
         
         return header
     }()
@@ -44,12 +42,10 @@ class CastCollectionView: UIView {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        
-        DispatchQueue.main.async {
-            collectionView.isSkeletonable = true
-            collectionView.skeletonCornerRadius = 5
-            collectionView.showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))
-        }
+
+        collectionView.isSkeletonable = true
+        collectionView.skeletonCornerRadius = 5
+        collectionView.showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))
         
         collectionView.register(CastCollectionViewCell.self, forCellWithReuseIdentifier: CastCollectionViewCell.reuseIdentifier)
         return collectionView
@@ -72,7 +68,8 @@ class CastCollectionView: UIView {
         
         header.configure(with: "Top Billed Cast")
         header.title.textColor = colors?.primary
-                
+        
+        header.hideSkeleton()
         collectionView.hideSkeleton()
     }
     
@@ -87,8 +84,8 @@ extension CastCollectionView {
         NSLayoutConstraint.activate([
             header.topAnchor.constraint(equalTo: topAnchor),
             header.heightAnchor.constraint(equalToConstant: 30),
-            header.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            header.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            header.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            header.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -140,6 +137,6 @@ extension CastCollectionView: SkeletonCollectionViewDataSource {
     }
     
     func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return 3
     }
 }

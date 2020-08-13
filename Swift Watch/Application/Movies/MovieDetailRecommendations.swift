@@ -52,7 +52,7 @@ class MovieDetailRecommendations: UIView {
         
         collectionView.isSkeletonable = true
         collectionView.skeletonCornerRadius = 5
-        collectionView.showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))
+        collectionView.showAnimatedGradientSkeleton()
         
         collectionView.register(OverviewCell.self, forCellWithReuseIdentifier: OverviewCell.reuseIdentifier)
         return collectionView
@@ -95,8 +95,8 @@ extension MovieDetailRecommendations {
         NSLayoutConstraint.activate([
             header.topAnchor.constraint(equalTo: topAnchor),
             header.heightAnchor.constraint(equalToConstant: 30),
-            header.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            header.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            header.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            header.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),

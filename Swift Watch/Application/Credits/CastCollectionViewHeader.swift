@@ -27,7 +27,6 @@ class CastCollectionViewHeader: UIView {
     
     func configure(with text: String) {
         title.text = text
-        self.hideSkeleton()
     }
     
     private func setupUI() {

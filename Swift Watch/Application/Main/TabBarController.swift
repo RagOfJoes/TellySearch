@@ -65,7 +65,6 @@ class TabBarController: UITabBarController {
         navController.navigationBar.layer.borderColor = UIColor.black.cgColor
         navController.navigationBar.barTintColor = UIColor(named: "backgroundColor")
         
-        
         viewController.navigationItem.title = title
         
         return navController
