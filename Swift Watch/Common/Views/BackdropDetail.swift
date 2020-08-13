@@ -24,15 +24,15 @@ class BackdropDetail: UIView {
         backdrop.clipsToBounds = true
         backdrop.contentMode = .scaleAspectFill
         backdrop.translatesAutoresizingMaskIntoConstraints = false
-        backdrop.roundCorners([.bottomLeft, .bottomRight], radius: 20)
-        
-        // Setup Skeleton
-        DispatchQueue.main.async {
-            backdrop.isSkeletonable = true
-            backdrop.showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))            
-        }
-        
+                
         return backdrop
+    }()
+    
+    lazy var gradientLayer: CAGradientLayer = {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [UIColor.clear.cgColor]
+        
+        return gradientLayer
     }()
     
     lazy var title: UILabel = {
@@ -72,7 +72,7 @@ class BackdropDetail: UIView {
     }()
     
     lazy var titleStack: UIStackView = {
-        let titleStack = UIStackView(arrangedSubviews: [title, genres])
+        let titleStack = UIStackView(arrangedSubviews: [title])
         titleStack.axis = .vertical
         titleStack.translatesAutoresizingMaskIntoConstraints = false
         
@@ -84,44 +84,63 @@ class BackdropDetail: UIView {
 
         addSubview(backdrop)
         addSubview(titleStack)
-        addSubview(runtime)
         addSubview(releaseDate)
+        layer.insertSublayer(gradientLayer, at: 1)
+        roundCorners([.bottomLeft, .bottomRight], radius: 20)
+        
+        isSkeletonable = true
+        showAnimatedGradientSkeleton()
+        
+        setupAnchors()
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        setupAnchors()
+        gradientLayer.frame = bounds
     }
     
     // MARK: - Configure
-    func configure(url: String?, title _title: String?, genres _genres: String?, runtime _runtime: String?, releaseDate _releaseDate: String?) {
+    func configure(url: String? = nil, title _title: String?, genres _genres: String?, runtime _runtime: String?, releaseDate _releaseDate: String?, completionHandler: ((_ colors: UIImageColors) -> Void)? = nil) {
+        if _runtime != nil {
+           setupRuntimeView()
+        }
+        
+        if _genres != nil {
+            setupGenresView()
+        }
+        
         if let urlString = url {
             setBackdrop(urlString: urlString).then { (colors) in
-                
                 DispatchQueue.main.async {
                     self.setupText(title: _title, genres: _genres, runtime: _runtime, releaseDate: _releaseDate)
                     self.setupColor(colors: colors)
+                    self.hideSkeleton()
                 }
                 
+                if let safeHandler = completionHandler {
+                    safeHandler(colors)
+                }
                 self.delegate?.didSetupUI(colors: colors)
             }
         } else {
             self.backdrop.image = UIImage(named: "placeholderBackdrop")
             
-            DispatchQueue.main.async {
-                if let safeBackdrop = self.backdrop.image {
-                    safeBackdrop.getColors() { colors in
-                        DispatchQueue.main.async {
-                            self.setupText(title: _title, genres: _genres, runtime: _runtime, releaseDate: _releaseDate)
-                            
-                            if let safeColors = colors {
-                                self.setupColor(colors: safeColors)
-                            }
-                        }
+            if let safeBackdrop = self.backdrop.image {
+                safeBackdrop.getColors() { colors in
+                    DispatchQueue.main.async {
+                        self.setupText(title: _title, genres: _genres, runtime: _runtime, releaseDate: _releaseDate)
                         
                         if let safeColors = colors {
-                            self.delegate?.didSetupUI(colors: safeColors)
+                            self.setupColor(colors: safeColors)
                         }
+                        self.hideSkeleton()
+                    }
+                    
+                    if let safeColors = colors {
+                        if let safeHandler = completionHandler {
+                            safeHandler(safeColors)
+                        }
+                        self.delegate?.didSetupUI(colors: safeColors)
                     }
                 }
             }
@@ -167,22 +186,25 @@ extension BackdropDetail {
         
         if let safeRuntime = _runtime {
             runtime.text = safeRuntime
-        } else {
-            runtime.text = "Runtime not provided"
         }
         
         var releaseMonth: String?
+        var releaseDay: Int?
         var releaseYear: Int?
         if let dateString = _releaseDate {
-            let date = Date(dateString, with: "YYYY-MM-DD")
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "LLL"
-            releaseMonth = dateFormatter.string(from: date)
-            releaseYear = Calendar.current.component(.year, from: date)
+            let date = Date(dateString, with: "YYYY-MM-dd")
+            
+            let monthFormatter = DateFormatter()
+            monthFormatter.dateFormat = "LLL"
+            releaseMonth = monthFormatter.string(from: date)
+            
+            let calendar = Calendar.current.dateComponents([.day, .year], from: date)
+            releaseDay = calendar.day
+            releaseYear = calendar.year
         }
         
-        if releaseMonth != nil && releaseYear != nil {
-            releaseDate.text = "\(releaseMonth!) \(releaseYear!)"
+        if releaseMonth != nil && releaseYear != nil && releaseDay != nil {
+            releaseDate.text = "\(releaseMonth!) \(releaseDay!), \(releaseYear!)"
         }
     }
     
@@ -192,10 +214,7 @@ extension BackdropDetail {
         runtime.textColor = colors.secondary
         releaseDate.textColor = colors.secondary
         
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = self.backdrop.bounds
         gradientLayer.colors = [UIColor.clear.cgColor, colors.background.cgColor]
-        backdrop.layer.insertSublayer(gradientLayer, at: 0)
         
         backdrop.hideSkeleton(transition: .crossDissolve(0.25))
     }
@@ -205,7 +224,6 @@ extension BackdropDetail {
         
         let backdropConstraints: [NSLayoutConstraint] = [
             backdrop.topAnchor.constraint(equalTo: topAnchor),
-            backdrop.widthAnchor.constraint(equalTo: widthAnchor),
             backdrop.heightAnchor.constraint(equalTo: heightAnchor),
             backdrop.leadingAnchor.constraint(equalTo: leadingAnchor),
             backdrop.trailingAnchor.constraint(equalTo: trailingAnchor)
@@ -213,22 +231,31 @@ extension BackdropDetail {
         NSLayoutConstraint.activate(backdropConstraints)
         
         let releaseDateConstraints: [NSLayoutConstraint] = [
-            releaseDate.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            releaseDate.bottomAnchor.constraint(equalTo: backdrop.bottomAnchor, constant: -20)
+            releaseDate.bottomAnchor.constraint(equalTo: backdrop.bottomAnchor, constant: -35),
+            releaseDate.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            releaseDate.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20)
         ]
         NSLayoutConstraint.activate(releaseDateConstraints)
         
-        let runtimeConstraints: [NSLayoutConstraint] = [
-            runtime.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            runtime.topAnchor.constraint(equalTo: releaseDate.bottomAnchor, constant: 5)
-        ]
-        NSLayoutConstraint.activate(runtimeConstraints)
-        
         let titleStackConstraints: [NSLayoutConstraint] = [
-            titleStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            titleStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            titleStack.bottomAnchor.constraint(equalTo: releaseDate.topAnchor, constant: -20)
+            titleStack.bottomAnchor.constraint(equalTo: releaseDate.topAnchor, constant: -35),
+            titleStack.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            titleStack.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20)
         ]
         NSLayoutConstraint.activate(titleStackConstraints)
+    }
+    
+    private func setupRuntimeView() {
+        insertSubview(runtime, aboveSubview: releaseDate)
+        let runtimeConstraints: [NSLayoutConstraint] = [
+            runtime.topAnchor.constraint(equalTo: releaseDate.bottomAnchor, constant: 5),
+            runtime.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            runtime.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20)
+        ]
+        NSLayoutConstraint.activate(runtimeConstraints)
+    }
+    
+    private func setupGenresView() {
+        titleStack.insertArrangedSubview(genres, at: 1)
     }
 }
