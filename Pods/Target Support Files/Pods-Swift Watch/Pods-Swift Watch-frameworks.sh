@@ -199,7 +199,6 @@ fi
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Cache/Cache.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/PanModal/PanModal.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PromisesSwift/Promises.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SkeletonView/SkeletonView.framework"
@@ -207,7 +206,6 @@ fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Cache/Cache.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/PanModal/PanModal.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PromisesSwift/Promises.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SkeletonView/SkeletonView.framework"

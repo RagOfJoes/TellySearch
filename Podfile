@@ -7,7 +7,6 @@ target 'Swift Watch' do
   
   # Pods for Swift Watch
   pod 'Cache'
-  pod 'PanModal'
   pod 'Kingfisher'
   pod 'SkeletonView'
   pod 'PromisesSwift'
