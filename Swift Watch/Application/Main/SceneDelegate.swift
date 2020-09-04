@@ -9,6 +9,7 @@
 import UIKit
 import SkeletonView
 
+@available(iOS 13, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 

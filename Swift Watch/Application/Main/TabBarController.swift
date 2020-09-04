@@ -16,8 +16,8 @@ class TabBarController: UITabBarController {
         super.viewDidLoad()
         
         // Set KingFisher Cache to only store images for a max of 1 day
-//        KingfisherManager.shared.cache.clearDiskCache()
-//        KingfisherManager.shared.cache.clearMemoryCache()
+        //        KingfisherManager.shared.cache.clearDiskCache()
+        //        KingfisherManager.shared.cache.clearMemoryCache()
         KingfisherManager.shared.cache.diskStorage.config.expiration = StorageExpiration.days(1)
         
         setupView()
@@ -25,7 +25,6 @@ class TabBarController: UITabBarController {
         setupTabItems()
         setupTabBar()
     }
-    
     
     // MARK: - Setup Main View
     private func setupView() {
@@ -58,12 +57,11 @@ class TabBarController: UITabBarController {
     }
     
     private func createNavViewController(viewController: UIViewController, title: String) -> UIViewController {
-        
         let navController = UINavigationController(rootViewController: viewController)
         navController.navigationBar.prefersLargeTitles = true
         navController.navigationBar.tintColor = .systemOrange
-        navController.navigationBar.layer.borderColor = UIColor.black.cgColor
-        navController.navigationBar.barTintColor = UIColor(named: "backgroundColor")
+        navController.navigationBar.layer.borderColor = UIColor.clear.cgColor
+        navController.navigationBar.barTintColor = UIColor(named: "backgroundColor")?.withAlphaComponent(0.2)
         
         viewController.navigationItem.title = title
         
@@ -79,8 +77,4 @@ extension TabBarController: FloatingTabBarViewDelegate {
     func hideTabBar(hide: Bool) {
         floatingTabBarView.hideTabBar(hide)
     }
-}
-
-extension TabBarController: UINavigationControllerDelegate {
-    
 }
