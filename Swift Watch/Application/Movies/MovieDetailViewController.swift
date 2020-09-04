@@ -8,63 +8,56 @@
 
 import UIKit
 import Promises
-import Kingfisher
 
 class MovieDetailViewController: UIViewController {
-    
-    var movie: Movie?
+    let movie: Movie
     var colors: UIImageColors?
-    // MARK: - Views Declaration
-    private lazy var backdropDetail: BackdropDetail = {
-        let backdropDetail = BackdropDetail()
-        backdropDetail.translatesAutoresizingMaskIntoConstraints = false
-        
-        return backdropDetail
+    // MARK: - View Declarations
+    var containerView: UIView
+    var scrollView: UIScrollView
+    private lazy var backdropDetail = BackdropDetail()
+    private lazy var overviewStack: InfoStackView = {
+        let overviewStack = InfoStackView(fontSize: (18, 14))
+        return overviewStack
     }()
     
-    private lazy var overviewStack = MovieDetailOverviewStack()
-    private lazy var castCollectionView = CastCollectionView()
+    private lazy var castCollectionView: CastCollectionView = {
+        let castCollectionView = CastCollectionView()
+        castCollectionView.delegate = self
+        return castCollectionView
+    }()
+    
     private lazy var recommendationsView: MovieDetailRecommendations = {
         let recommendationsView = MovieDetailRecommendations()
         recommendationsView.delegate = self
-        
         return recommendationsView
     }()
     
-    private lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.frame = self.view.bounds
-        scrollView.delaysContentTouches = false
-        scrollView.contentInsetAdjustmentBehavior = .never
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [castCollectionView, recommendationsView])
+        stackView.axis = .vertical
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Style Props
-        scrollView.bounces = true
-        scrollView.bouncesZoom = true
-        scrollView.alwaysBounceVertical = true
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.showsHorizontalScrollIndicator = false
+        stackView.setCustomSpacing(20, after: castCollectionView)
+        stackView.setCustomSpacing(20, after: recommendationsView)
         
-        let screen = UIScreen.main.bounds
-        
-        scrollView.contentOffset = CGPoint(x: 0, y: 0)
-        scrollView.contentSize = CGSize(width: screen.width, height: screen.height)
-        
-        return scrollView
+        return stackView
     }()
     
-    private lazy var containerView: UIView = {
-        let containerView = UIView()
-        containerView.clipsToBounds = true
-        containerView.translatesAutoresizingMaskIntoConstraints = false
+    // MARK: - Init
+    init(with movie: Movie) {
+        self.movie = movie
         
-        return containerView
-    }()
+        let (sV, cV) = UIView.createScrollView()
+        self.scrollView = sV
+        self.containerView = cV
+        
+        super.init(nibName: nil, bundle: nil)
+    }
     
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         let backBarButton = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
         navigationItem.backBarButtonItem = backBarButton
         
@@ -73,8 +66,7 @@ class MovieDetailViewController: UIViewController {
         scrollView.addSubview(containerView)
         containerView.addSubview(backdropDetail)
         containerView.addSubview(overviewStack)
-        containerView.addSubview(castCollectionView)
-        containerView.addSubview(recommendationsView)
+        containerView.addSubview(stackView)
         
         setupAnchors()
         setupDetailUI()
@@ -82,9 +74,10 @@ class MovieDetailViewController: UIViewController {
     
     // MARK: - viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
+        AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
         super.viewWillAppear(animated)
-        
         setupNav(by: true)
+        view.layoutIfNeeded()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -106,34 +99,21 @@ class MovieDetailViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        setupNav(by: false)
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.updateContentSize()
+        if(isMovingFromParent) {
+            setupNav(by: false)
+            AppUtility.lockOrientation(.all)
         }
     }
     
-    // MARK: - Configure
-    func configure(with data: Movie) {
-        guard let safeMovie = movie else {
-            movie = data
-            return
-        }
-        
-        if data.id != safeMovie.id {
-            movie = data
-        }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
 // MARK: - UI Setup
 extension MovieDetailViewController {
     // MARK: - Nav
-    private func setupNav(by disappearing: Bool) {
+    func setupNav(by disappearing: Bool) {
         if disappearing {
             self.navigationController?.navigationBar.shadowImage = UIImage()
             self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
@@ -171,9 +151,6 @@ extension MovieDetailViewController {
         ]
         NSLayoutConstraint.activate(containerViewConstraints)
         
-        let containerViewLeadingAnchor = containerView.safeAreaLayoutGuide.leadingAnchor
-        let containerViewTrailingAnchor = containerView.safeAreaLayoutGuide.trailingAnchor
-        
         let backdropDetailConstraints: [NSLayoutConstraint] = [
             backdropDetail.topAnchor.constraint(equalTo: containerView.topAnchor),
             backdropDetail.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
@@ -181,41 +158,28 @@ extension MovieDetailViewController {
         ]
         NSLayoutConstraint.activate(backdropDetailConstraints)
         
-        let overviewConstraints: [NSLayoutConstraint] = [
+        let overviewStackConstraints: [NSLayoutConstraint] = [
             overviewStack.topAnchor.constraint(equalTo: backdropDetail.bottomAnchor, constant: 20),
-            overviewStack.leadingAnchor.constraint(equalTo: containerViewLeadingAnchor, constant: 20),
-            overviewStack.trailingAnchor.constraint(equalTo: containerViewTrailingAnchor, constant: -20),
+            overviewStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+            overviewStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20)
         ]
-        NSLayoutConstraint.activate(overviewConstraints)
+        NSLayoutConstraint.activate(overviewStackConstraints)
         
-        let castCollectionViewHeight: CGFloat = K.Cast.topBilledCellHeight + 35
-        let castCollectionViewConstraints: [NSLayoutConstraint] = [
-            castCollectionView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            castCollectionView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            castCollectionView.heightAnchor.constraint(equalToConstant: castCollectionViewHeight),
-            castCollectionView.topAnchor.constraint(equalTo: overviewStack.bottomAnchor, constant: 25),
+        var stackViewLeadingAnchor: NSLayoutConstraint!
+        var stackViewTrailingAnhor: NSLayoutConstraint!
+        if #available(iOS 11, *) {
+            stackViewLeadingAnchor = stackView.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor)
+            stackViewTrailingAnhor = stackView.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor)
+        } else {
+            stackViewLeadingAnchor = stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor)
+            stackViewTrailingAnhor = stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
+        }
+        let stackViewConstraints: [NSLayoutConstraint] = [
+            stackViewLeadingAnchor,
+            stackViewTrailingAnhor,
+            stackView.topAnchor.constraint(equalTo: overviewStack.bottomAnchor, constant: 20)
         ]
-        NSLayoutConstraint.activate(castCollectionViewConstraints)
-        
-        setupRecommendationsConstraints()
-    }
-    
-    // MARK: - RecommendationsConstraints
-    private func setupRecommendationsConstraints() {
-        let isCastInView: Bool = castCollectionView.isDescendant(of: containerView)
-        
-        let recommendationsUnderCast: NSLayoutConstraint = recommendationsView.topAnchor.constraint(equalTo: castCollectionView.bottomAnchor, constant: 25)
-        let recommendationsUnderOverview: NSLayoutConstraint = recommendationsView.topAnchor.constraint(equalTo: overviewStack.bottomAnchor, constant: 25)
-        let recommendationsViewTopConstraint: NSLayoutConstraint = isCastInView ? recommendationsUnderCast : recommendationsUnderOverview
-        
-        let recommendationsViewHeight: CGFloat = K.Overview.heightConstant + 35
-        let recommendationsConstraints: [NSLayoutConstraint] = [
-            recommendationsViewTopConstraint,
-            recommendationsView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            recommendationsView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            recommendationsView.heightAnchor.constraint(equalToConstant: recommendationsViewHeight)
-        ]
-        NSLayoutConstraint.activate(recommendationsConstraints)
+        NSLayoutConstraint.activate(stackViewConstraints)
     }
     
     // MARK: - Colors UI
@@ -226,16 +190,17 @@ extension MovieDetailViewController {
     
     // MARK: - Detail UI
     private func setupDetailUI() {
-        movie?.fetchDetail().then({ detail -> Promise<Void> in
+        self.movie.fetchDetail().then({ detail -> Promise<Void> in
             let (genres, runtime) = self.setupBackdropText(with: detail)
             
-            let title = self.movie?.title
-            let releaseDate = self.movie?.releaseDate
-            let backdropURL = self.movie?.backdropPath != nil ? MovieSection.backdropURL + (self.movie?.backdropPath!)! : nil
+            let title = self.movie.title
+            let releaseDate = self.movie.releaseDate
+            let posterURL = self.movie.posterPath != nil ? MovieSection.posterURL + (self.movie.posterPath!) : nil
+            let backdropURL = self.movie.backdropPath != nil ? MovieSection.backdropURL + (self.movie.backdropPath!) : nil
             
             // Return Void Promise to allow Recommendations to setup UI
-            return Promise(on: .main) { (fulfill, reject) -> Void in
-                self.backdropDetail.configure(url: backdropURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate) { colors in
+            return Promise { (fulfill, reject) -> Void in
+                self.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate) { colors in
                     if let credits = detail.credits {
                         self.setupCastCollectionView(with: credits, using: colors)
                     }
@@ -247,12 +212,15 @@ extension MovieDetailViewController {
                 }
             }
         }).always {
-            self.updateContentSize()
+            DispatchQueue.main.async {
+                self.updateContentSize()                
+            }
         }
     }
     
     private func setupRecommendationsView(with movies: [Movie], using colors: UIImageColors) {
         if movies.count <= 0 {
+            stackView.removeArrangedSubview(recommendationsView)
             recommendationsView.removeFromSuperview()
             return
         }
@@ -266,21 +234,20 @@ extension MovieDetailViewController {
                 
                 self.setupUIColors(with: colors)
             }
-            self.overviewStack.configure(title: "Overview", text: self.movie?.overview, colors: colors)
+            self.overviewStack.setup(title: "Overview", value: self.movie.overview ?? "-", colors: colors)
         }
         
         if credits.cast == nil {
+            stackView.removeArrangedSubview(castCollectionView)
             castCollectionView.removeFromSuperview()
-            recommendationsView.updateConstraints()
             return
         } else if let safeCast = credits.cast {
             if safeCast.count <= 0 {
+                stackView.removeArrangedSubview(castCollectionView)
                 castCollectionView.removeFromSuperview()
-                recommendationsView.updateConstraints()
                 return
             }
         }
-        
         castCollectionView.configure(with: credits, colors: colors)
     }
     
@@ -322,49 +289,31 @@ extension MovieDetailViewController {
     
     // MARK: - Update ScrollVIewContentSize
     private func updateContentSize() {
-        let offsetHeight:CGFloat = 25
+        let offsetHeight:CGFloat = 90
         let screen = UIScreen.main.bounds
         
-        let isRecommendationsInView: Bool = recommendationsView.isDescendant(of: containerView)
-        if isRecommendationsInView {
-            let recommendationsY = recommendationsView.frame.maxY + offsetHeight
-            if recommendationsY > screen.height {
-                scrollView.contentSize = CGSize(width: screen.width, height: recommendationsY)
-            } else {
-                scrollView.contentSize = CGSize(width: screen.width, height: screen.height)
-            }
-            return
-        }
-        
-        let isCastInView: Bool = castCollectionView.isDescendant(of: containerView)
-        if isCastInView {
-            let castY = castCollectionView.frame.maxY + offsetHeight
-            if castY > screen.height {
-                scrollView.contentSize = CGSize(width: screen.width, height: castY)
-            } else {
-                scrollView.contentSize = CGSize(width: screen.width, height: screen.height)
-            }
+        let stackViewY = stackView.frame.maxY + offsetHeight
+        if stackViewY > screen.height {
+            scrollView.contentSize = CGSize(width: screen.width, height: stackViewY)
         } else {
-            let overviewY = overviewStack.frame.maxY + offsetHeight
-            if overviewY > screen.height {
-                scrollView.contentSize = CGSize(width: screen.width, height: overviewY)
-            } else {
-                scrollView.contentSize = CGSize(width: screen.width, height: screen.height)
-            }
+            scrollView.contentSize = CGSize(width: screen.width, height: screen.height)
         }
+    }
+}
+
+// MARK: - CastCollectionViewDelegate
+extension MovieDetailViewController: CastCollectionViewDelegate {
+    func select(cast: Cast) {
+        guard let safeColors = self.colors else { return }
+        let creditModal = CreditDetailModal(with: cast, using: safeColors)
+        self.present(creditModal, animated: true)
     }
 }
 
 // MARK: - MovieDetailRecommendationsDelegate
 extension MovieDetailViewController: MovieDetailRecommendationsDelegate {
     func select(movie: Movie) {
-        let detailVC = MovieDetailViewController()
-        
-        detailVC.configure(with: movie)
+        let detailVC = MovieDetailViewController(with: movie)
         navigationController?.pushViewController(detailVC, animated: true)
-    }
-    
-    func didUpdateConstraints() {
-        setupRecommendationsConstraints()
     }
 }

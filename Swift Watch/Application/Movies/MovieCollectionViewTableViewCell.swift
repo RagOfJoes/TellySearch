@@ -16,31 +16,13 @@ protocol MovieCollectionViewTableViewCellDelegate: class {
 // MARK: - MovieCollectionViewTableViewCell
 class MovieCollectionViewTableViewCell: UITableViewCell {
     var section: Int?
-    var data: [Movie]? = nil
+    var movies: [Movie]? = nil
     weak var delegate: MovieCollectionViewTableViewCellDelegate?
     
     lazy var collectionView: UICollectionView = {
-        // Setup Layout
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 15
-        layout.scrollDirection = .horizontal
-        
-        // Setup CollectionView
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collectionView = UICollectionView.createHorizontalCollectionView(minimumLineSpacing: 10)
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.clipsToBounds = true
-        collectionView.backgroundColor = .clear
-        collectionView.delaysContentTouches = false
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        collectionView.isSkeletonable = true
-        collectionView.skeletonCornerRadius = 5
-        collectionView.showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))
-        
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        
         collectionView.register(OverviewCell.self, forCellWithReuseIdentifier: OverviewCell.reuseIdentifier)
         return collectionView
     }()
@@ -50,7 +32,9 @@ class MovieCollectionViewTableViewCell: UITableViewCell {
         
         backgroundColor = .clear
         addSubview(collectionView)
-        
+        collectionView.prepareSkeleton { (done) in
+            self.collectionView.showAnimatedGradientSkeleton()
+        }
         setupAnchors()
     }
     
@@ -58,9 +42,10 @@ class MovieCollectionViewTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    func configure(_ movies: [Movie]) {
-        data = movies
-        collectionView.hideSkeleton()
+    func configure(movies: [Movie], section: Int) {
+        self.movies = movies
+        self.section = section
+        self.collectionView.hideSkeleton()
     }
     
     required init?(coder: NSCoder) {
@@ -71,10 +56,21 @@ class MovieCollectionViewTableViewCell: UITableViewCell {
 // MARK: - Helper Functions
 extension MovieCollectionViewTableViewCell {
     private func setupAnchors() {
+        var collectionViewLeading: NSLayoutConstraint!
+        var collectionViewTrailing: NSLayoutConstraint!
+        
+        if #available(iOS 11, *) {
+            collectionViewLeading = collectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor)
+            collectionViewTrailing = collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
+        } else {
+            collectionViewLeading = collectionView.leadingAnchor.constraint(equalTo: leadingAnchor)
+            collectionViewTrailing = collectionView.trailingAnchor.constraint(equalTo: trailingAnchor)
+        }
+        
         let collectionViewConstraints: [NSLayoutConstraint] = [
+            collectionViewLeading,
+            collectionViewTrailing,
             collectionView.heightAnchor.constraint(equalTo: heightAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: topAnchor , constant: 10)
         ]
         NSLayoutConstraint.activate(collectionViewConstraints)
@@ -92,7 +88,7 @@ extension MovieCollectionViewTableViewCell: UICollectionViewDelegate {
 
 extension MovieCollectionViewTableViewCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let count = data?.count {
+        if let count = movies?.count {
             return count
         }
         
@@ -102,22 +98,20 @@ extension MovieCollectionViewTableViewCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OverviewCell.reuseIdentifier, for: indexPath) as! OverviewCell
         
-        if let movie = data?[indexPath.row] {
+        if let movie = movies?[indexPath.row] {
             if let poster = movie.posterPath {
-                cell.configure(name: movie.title, poster: MovieSection.posterURL + poster)
+                cell.configure(name: movie.title, image: MovieSection.posterURL + poster)
+                return cell
             } else {
                 cell.configure(name: movie.title)
             }
         }
+        
         return cell
     }
 }
 
 extension MovieCollectionViewTableViewCell: SkeletonCollectionViewDataSource {
-    func numSections(in collectionSkeletonView: UICollectionView) -> Int {
-        return 1
-    }
-    
     func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3
     }
@@ -132,6 +126,7 @@ extension MovieCollectionViewTableViewCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: K.Overview.widthConstant, height: K.Overview.heightConstant)
+        let height = collectionView.frame.height
+        return CGSize(width: K.Poster.width, height: height)
     }
 }

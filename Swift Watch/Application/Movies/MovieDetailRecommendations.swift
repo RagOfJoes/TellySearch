@@ -11,7 +11,6 @@ import SkeletonView
 
 protocol MovieDetailRecommendationsDelegate: class {
     func select(movie: Movie)
-    func didUpdateConstraints()
 }
 
 class MovieDetailRecommendations: UIView {
@@ -23,37 +22,15 @@ class MovieDetailRecommendations: UIView {
     private lazy var header: CastCollectionViewHeader = {
         let header = CastCollectionViewHeader()
         header.translatesAutoresizingMaskIntoConstraints = false
-        
         header.isSkeletonable = true
         header.skeletonCornerRadius = 5
-        header.showAnimatedGradientSkeleton()
-        
         return header
     }()
     
     private lazy var collectionView: UICollectionView = {
-        // Setup Layout
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 5
-        layout.scrollDirection = .horizontal
-        
-        // Setup CollectionView
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collectionView = UICollectionView.createHorizontalCollectionView(minimumLineSpacing: 10)
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.delaysContentTouches = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        collectionView.clipsToBounds = true
-        collectionView.backgroundColor = .clear
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        
-        collectionView.isSkeletonable = true
-        collectionView.skeletonCornerRadius = 5
-        collectionView.showAnimatedGradientSkeleton()
-        
         collectionView.register(OverviewCell.self, forCellWithReuseIdentifier: OverviewCell.reuseIdentifier)
         return collectionView
     }()
@@ -66,22 +43,21 @@ class MovieDetailRecommendations: UIView {
         
         addSubview(header)
         addSubview(collectionView)
+        isSkeletonable = true
+        collectionView.prepareSkeleton { (done) in
+            self.showAnimatedGradientSkeleton()
+        }
         setupAnchors()
     }
     
-    override func updateConstraints() {
-        super.updateConstraints()
-        self.delegate?.didUpdateConstraints()
-    }
-    
-    func configure(with _movies: [Movie], colors _colors: UIImageColors) {
-        self.movies = _movies
-        self.colors = _colors
-        header.configure(with: "Recommendations")
-        header.title.textColor = colors?.primary
+    func configure(with movies: [Movie], colors: UIImageColors) {
+        self.movies = movies
+        self.colors = colors
         
-        header.hideSkeleton()
-        collectionView.hideSkeleton()
+        header.configure(with: "Recommendations")
+        header.title.textColor = self.colors?.primary
+        
+        self.hideSkeleton()
     }
     
     required init?(coder: NSCoder) {
@@ -93,31 +69,49 @@ class MovieDetailRecommendations: UIView {
 extension MovieDetailRecommendations {
     private func setupAnchors() {
         NSLayoutConstraint.activate([
+            heightAnchor.constraint(equalToConstant: K.Poster.height + 80),
+            
             header.topAnchor.constraint(equalTo: topAnchor),
             header.heightAnchor.constraint(equalToConstant: 30),
-            header.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            header.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            
-            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            collectionView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 5),
-            collectionView.heightAnchor.constraint(equalToConstant: K.Overview.heightConstant),
+            header.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            header.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
         ])
+    
+        var collectionViewLeading: NSLayoutConstraint!
+        var collectionViewTrailing: NSLayoutConstraint!
+        
+        if #available(iOS 11, *) {
+            collectionViewLeading = collectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor)
+            collectionViewTrailing = collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
+        } else {
+            collectionViewLeading = collectionView.leadingAnchor.constraint(equalTo: leadingAnchor)
+            collectionViewTrailing = collectionView.trailingAnchor.constraint(equalTo: trailingAnchor)
+        }
+        
+        let collectionViewConstraints: [NSLayoutConstraint] = [
+            collectionViewLeading,
+            collectionViewTrailing,
+            collectionView.heightAnchor.constraint(equalTo: heightAnchor, constant: -35),
+            collectionView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 5),
+        ]
+        NSLayoutConstraint.activate(collectionViewConstraints)
     }
 }
 
 // MARK: - UICollectionViewDelegate
-extension MovieDetailRecommendations: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+extension MovieDetailRecommendations: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let safeMovie = movies?[indexPath.item] {
             self.delegate?.select(movie: safeMovie)
         }
     }
-    
+}
+
+extension MovieDetailRecommendations: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: K.Overview.widthConstant, height: K.Overview.heightConstant)
+        return CGSize(width: K.Poster.width, height: collectionView.frame.height)
     }
 }
 
@@ -134,13 +128,13 @@ extension MovieDetailRecommendations: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OverviewCell.reuseIdentifier, for: indexPath) as! OverviewCell
         
+        cell.title.textColor = colors?.primary
         if let movie = movies?[indexPath.row] {
             if let safePoster = movie.posterPath {
-                cell.configure(name: movie.title, poster: MovieSection.posterURL + safePoster)
+                cell.configure(name: movie.title, image: MovieSection.posterURL + safePoster)
             } else {
                 cell.configure(name: movie.title)
             }
-            cell.title.textColor = colors?.primary
         }
         
         return cell
@@ -150,12 +144,12 @@ extension MovieDetailRecommendations: UICollectionViewDataSource {
 
 // MARK: - SkeletonCollectionViewDataSource
 extension MovieDetailRecommendations: SkeletonCollectionViewDataSource {
-    func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
-        return OverviewCell.reuseIdentifier
-    }
-    
     func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
+        return OverviewCell.reuseIdentifier
     }
 }
 
