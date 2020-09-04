@@ -15,12 +15,12 @@ class CastCollectionViewCell: UICollectionViewCell {
         let photo = UIImageView()
         photo.clipsToBounds = true
         photo.contentMode = .scaleAspectFill
-        photo.roundCorners([.topLeft, .topRight], radius: 10)
+        photo.roundCorners([.topLeft, .topRight], radius: 5)
         photo.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            photo.widthAnchor.constraint(equalToConstant: K.Cast.topBilledCellWidth),
-            photo.heightAnchor.constraint(equalToConstant: K.Cast.topBilledPosterHeight)
+            photo.widthAnchor.constraint(equalToConstant: K.Poster.width),
+            photo.heightAnchor.constraint(equalToConstant: K.Poster.height)
         ])
         
         return photo
@@ -30,7 +30,7 @@ class CastCollectionViewCell: UICollectionViewCell {
         let primaryText = UILabel()
         primaryText.numberOfLines = 0
         primaryText.translatesAutoresizingMaskIntoConstraints = false
-        primaryText.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 12, weight: .bold))
+        primaryText.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .bold))
         
         return primaryText
     }()
@@ -40,21 +40,23 @@ class CastCollectionViewCell: UICollectionViewCell {
         secondaryText.numberOfLines = 0
         secondaryText.clipsToBounds = true
         secondaryText.translatesAutoresizingMaskIntoConstraints = false
-        secondaryText.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 12, weight: .medium))
+        secondaryText.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 13, weight: .medium))
         
         return secondaryText
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        contentView.clipsToBounds = true
+        contentView.layer.cornerRadius = 5
+        
         contentView.addSubview(photo)
         contentView.addSubview(primaryText)
         contentView.addSubview(secondaryText)
         setupAnchors()
         
         isSkeletonable = true
-        skeletonCornerRadius = 10
-        showAnimatedGradientSkeleton()
+        skeletonCornerRadius = 5
     }
     
     override var isHighlighted: Bool {
@@ -64,35 +66,29 @@ class CastCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(with cast: Cast, colors: UIImageColors) {
-        DispatchQueue.main.async {
-            self.hideSkeleton()
-            
+        DispatchQueue.main.async {            
             self.primaryText.text = cast.name
             self.secondaryText.text = cast.character
             
             self.primaryText.textColor = colors.primary
             self.secondaryText.textColor = colors.secondary
             
-            self.contentView.layer.cornerRadius = 10
             self.contentView.backgroundColor = colors.primary.withAlphaComponent(0.26)
-            
-            let posterHeight = K.Cast.topBilledPosterHeight + 15
-            let primaryTextHeight = cast.name.height(font: self.primaryText.font)
-            let secondaryTextHeightConstraint: CGFloat = K.Cast.topBilledCellHeight - posterHeight - primaryTextHeight
-            self.secondaryText.heightAnchor.constraint(lessThanOrEqualToConstant: secondaryTextHeightConstraint).isActive = true
         }
-        
-        
+                
+        let placeholder = UIImage(named: "placeholderPoster")
         guard let profilePath = cast.profilePath else {
-            photo.image = UIImage(named: "placeholderPoster")
+            photo.image = placeholder
             return
         }
         
-        let url = URL(string: Cast.profileURL + profilePath)
-        
-        DispatchQueue.main.async {
-            self.photo.kfSetImage(with: url, using: UIImage(named: "placeholderPoster"))            
-        }
+        let url = URL(string: K.Credits.profileURL + profilePath)
+        let options: KingfisherOptionsInfo = [
+            .scaleFactor(UIScreen.main.scale),
+            .transition(.fade(1)),
+            .cacheOriginalImage,
+        ]
+        self.photo.kfSetImage(with: url, using: placeholder, options: options)
     }
     
     private func setupAnchors() {

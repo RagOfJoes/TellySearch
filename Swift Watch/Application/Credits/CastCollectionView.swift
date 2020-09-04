@@ -9,9 +9,14 @@
 import UIKit
 import SkeletonView
 
+protocol CastCollectionViewDelegate: class {
+    func select(cast: Cast)
+}
+
 class CastCollectionView: UIView {
     var credits: Credits?
     var colors: UIImageColors?
+    weak var delegate: CastCollectionViewDelegate?
     
     lazy var header: CastCollectionViewHeader = {
         let header = CastCollectionViewHeader()
@@ -19,34 +24,14 @@ class CastCollectionView: UIView {
         
         header.isSkeletonable = true
         header.skeletonCornerRadius = 5
-        header.showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))
         
         return header
     }()
     
     lazy var collectionView: UICollectionView = {
-        // Setup Layout
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 5
-        layout.scrollDirection = .horizontal
-        
-        // Setup CollectionView
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collectionView = UICollectionView.createHorizontalCollectionView(minimumLineSpacing: 10)
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.delaysContentTouches = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-                
-        collectionView.clipsToBounds = true
-        collectionView.backgroundColor = .clear
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-
-        collectionView.isSkeletonable = true
-        collectionView.skeletonCornerRadius = 5
-        collectionView.showAnimatedGradientSkeleton(transition: .crossDissolve(0.25))
-        
         collectionView.register(CastCollectionViewCell.self, forCellWithReuseIdentifier: CastCollectionViewCell.reuseIdentifier)
         return collectionView
     }()
@@ -59,18 +44,21 @@ class CastCollectionView: UIView {
         
         addSubview(header)
         addSubview(collectionView)
+        isSkeletonable = true
+        collectionView.prepareSkeleton { (done) in
+            self.showAnimatedGradientSkeleton()
+        }
         setupAnchors()
     }
     
-    func configure(with _credits: Credits, colors _colors: UIImageColors) {
-        self.credits = _credits
-        self.colors = _colors
+    func configure(with credits: Credits, colors: UIImageColors) {
+        self.credits = credits
+        self.colors = colors
         
         header.configure(with: "Top Billed Cast")
-        header.title.textColor = colors?.primary
+        header.title.textColor = self.colors?.primary
         
-        header.hideSkeleton()
-        collectionView.hideSkeleton()
+        self.hideSkeleton()
     }
     
     required init?(coder: NSCoder) {
@@ -82,25 +70,47 @@ class CastCollectionView: UIView {
 extension CastCollectionView {
     private func setupAnchors() {
         NSLayoutConstraint.activate([
+            heightAnchor.constraint(equalToConstant: K.Poster.height + 135),
+            
             header.topAnchor.constraint(equalTo: topAnchor),
             header.heightAnchor.constraint(equalToConstant: 30),
-            header.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            header.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            
-            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            collectionView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 5),
-            collectionView.heightAnchor.constraint(equalToConstant: K.Cast.topBilledCellHeight),
+            header.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            header.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
         ])
+        
+        var collectionViewLeading: NSLayoutConstraint!
+        var collectionViewTrailing: NSLayoutConstraint!
+        
+        if #available(iOS 11, *) {
+            collectionViewLeading = collectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor)
+            collectionViewTrailing = collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
+        } else {
+            collectionViewLeading = collectionView.leadingAnchor.constraint(equalTo: leadingAnchor)
+            collectionViewTrailing = collectionView.trailingAnchor.constraint(equalTo: trailingAnchor)
+        }
+        
+        let collectionViewConstraints: [NSLayoutConstraint] = [
+            collectionViewLeading,
+            collectionViewTrailing,
+            collectionView.heightAnchor.constraint(equalTo: heightAnchor, constant: -35),
+            collectionView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 5),
+        ]
+        NSLayoutConstraint.activate(collectionViewConstraints)
     }
 }
 
 // MARK: - UICollectionViewDelegate
 extension CastCollectionView: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let cast = credits?.cast?[indexPath.row] {
+            self.delegate?.select(cast: cast)
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: K.Cast.topBilledCellWidth, height: K.Cast.topBilledCellHeight)
+        return CGSize(width: K.Poster.width, height: collectionView.frame.height)
     }
 }
 

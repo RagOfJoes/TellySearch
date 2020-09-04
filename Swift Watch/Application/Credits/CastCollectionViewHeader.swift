@@ -11,7 +11,6 @@ import UIKit
 class CastCollectionViewHeader: UIView {
     lazy var title: UILabel = {
         let title = UILabel()
-        title.alpha = 0.4
         title.textColor = UIColor(named: "primaryTextColor")
         title.translatesAutoresizingMaskIntoConstraints = false
         title.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 18, weight: .bold))
@@ -35,7 +34,8 @@ class CastCollectionViewHeader: UIView {
         addSubview(title)
         
         NSLayoutConstraint.activate([
-            title.heightAnchor.constraint(equalToConstant: 30),
+            heightAnchor.constraint(equalToConstant: 30),
+            title.heightAnchor.constraint(equalTo: heightAnchor),
             title.bottomAnchor.constraint(equalTo: bottomAnchor),
             title.leadingAnchor.constraint(equalTo: leadingAnchor),
             title.trailingAnchor.constraint(equalTo: trailingAnchor)
