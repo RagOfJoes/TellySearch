@@ -10,35 +10,22 @@ import UIKit
 import Kingfisher
 
 extension UIImageView {
-    func kfSetImage(with url: URL?, using placeholder: UIImage?) -> Void {
+    func kfSetImage(with url: URL?, using placeholder: UIImage?, options: KingfisherOptionsInfo? = [.scaleFactor(UIScreen.main.scale), .transition(.fade(1)), .cacheOriginalImage], completionHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)? = nil) -> Void {
+        
         self.kf.indicatorType = .activity
-        self.kf.setImage(
-            with: url,
-            placeholder: placeholder,
-            options: [
-                .scaleFactor(UIScreen.main.scale),
-                .transition(.fade(1)),
-                .cacheOriginalImage,
-        ]) { result in
-            switch result {
-            case .failure:
-                return
-            case .success(_):
-                return
+        
+        if completionHandler != nil {
+            self.kf.setImage(with: url, placeholder: placeholder, options: options, completionHandler: completionHandler)
+        } else {
+            self.kf.setImage(with: url, placeholder: placeholder, options: options) { result in
+                switch result {
+                case .success:
+                    return
+                case .failure:
+                    self.image = placeholder
+                    return
+                }
             }
         }
-    }
-    
-    func kfSetImage(with url: URL?, using placeholder: UIImage?, processor: ImageProcessor, completionHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)? = nil) -> Void {
-        self.kf.indicatorType = .activity
-        
-        let options: KingfisherOptionsInfo = [
-            .processor(processor),
-            .scaleFactor(UIScreen.main.scale),
-            .transition(.fade(1)),
-            .cacheOriginalImage,
-        ]
-        
-        self.kf.setImage(with: url, placeholder: placeholder, options: options, completionHandler: completionHandler)
     }
 }

@@ -11,7 +11,7 @@ import Kingfisher
 import SkeletonView
 
 protocol OverviewConfigureCell: SelfConfiguringCell {
-    func configure(name: String, poster: String?)
+    func configure(name: String, image: String?)
 }
 
 class OverviewCell: UICollectionViewCell {
@@ -20,7 +20,7 @@ class OverviewCell: UICollectionViewCell {
         title.numberOfLines = 2
         title.textColor = UIColor(named: "primaryTextColor")
         title.translatesAutoresizingMaskIntoConstraints = false
-        title.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 12, weight: .medium))
+        title.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .semibold))
                 
         return title
     }()
@@ -28,17 +28,12 @@ class OverviewCell: UICollectionViewCell {
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 10
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "placeholderPoster")
+        imageView.contentMode = .scaleAspectFill
+        imageView.roundCorners(.allCorners, radius: 5)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.heightAnchor.constraint(equalToConstant: 180).isActive = true
         
-        DispatchQueue.main.async {
-            imageView.isSkeletonable = true
-            imageView.skeletonCornerRadius = 10
-            imageView.showAnimatedGradientSkeleton()
-        }
+        imageView.isSkeletonable = true
+        imageView.skeletonCornerRadius = 5
         
         return imageView
     }()
@@ -46,7 +41,6 @@ class OverviewCell: UICollectionViewCell {
     lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [imageView, title])
         stackView.axis = .vertical
-        stackView.setCustomSpacing(5, after: imageView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
@@ -54,11 +48,19 @@ class OverviewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        clipsToBounds = true
         contentView.addSubview(stackView)
-        stackView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        let stackViewConstraints: [NSLayoutConstraint] = [
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            stackView.heightAnchor.constraint(equalTo: contentView.heightAnchor),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            imageView.heightAnchor.constraint(equalTo: stackView.heightAnchor, constant: -45),
+        ]
+        NSLayoutConstraint.activate(stackViewConstraints)
+        
+        isSkeletonable = true
+        skeletonCornerRadius = 10
     }
     
     override var isHighlighted: Bool {
@@ -74,21 +76,23 @@ class OverviewCell: UICollectionViewCell {
 extension OverviewCell: OverviewConfigureCell {
     static var reuseIdentifier = "OverviewCell"
     
-    func configure(name: String, poster: String? = nil) {
+    func configure(name: String, image: String? = nil) {
+        hideSkeleton()
         DispatchQueue.main.async {
-            self.imageView.hideSkeleton()
             self.title.text = name
         }
         
-        if let safePoster = poster {
+        if let safePoster = image {
             let url = URL(string: safePoster)
             let placeholder = UIImage(named: "placeholderPoster")
-            let downsample = DownsamplingImageProcessor(size: CGSize(width: imageView.frame.width, height: 180))
-            
-            DispatchQueue.main.async {
-                self.imageView.kfSetImage(with: url, using: placeholder, processor: downsample)                
-            }
+            let options: KingfisherOptionsInfo = [
+                .scaleFactor(UIScreen.main.scale),
+                .transition(.fade(1)),
+                .cacheOriginalImage,
+            ]
+            self.imageView.kfSetImage(with: url, using: placeholder, options: options)
+        } else {
+            imageView.image = UIImage(named: "placeholderPoster")
         }
-        
     }
 }

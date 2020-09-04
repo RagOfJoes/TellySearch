@@ -22,10 +22,24 @@ class FloatingTabBarView: UIView {
     
     var buttons: [UIButton] = []
     
-    init(items: [String], backgroundColor bgColor: UIColor? = .systemBackground, shouldBlur: Bool = true) {
+    init(items: [String], backgroundColor bgColor: UIColor?, shouldBlur: Bool = true) {
         super.init(frame: .zero)
+        var _bgColor: UIColor!
+        if bgColor == nil {
+            if #available(iOS 13, *) {
+                _bgColor = .systemBackground
+            } else {
+                if #available(iOS 12, *), self.traitCollection.userInterfaceStyle == .dark {
+                    _bgColor = .black
+                } else {
+                    _bgColor = .white
+                }
+            }
+        } else {
+            _bgColor = bgColor
+        }
         
-        backgroundColor = bgColor
+        backgroundColor = _bgColor
         
         setupStackView(with: items, shouldBlur: shouldBlur)
         updateUI(selectedIndex: 0)

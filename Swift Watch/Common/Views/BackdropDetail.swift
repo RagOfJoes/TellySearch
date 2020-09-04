@@ -24,7 +24,7 @@ class BackdropDetail: UIView {
         backdrop.clipsToBounds = true
         backdrop.contentMode = .scaleAspectFill
         backdrop.translatesAutoresizingMaskIntoConstraints = false
-                
+        
         return backdrop
     }()
     
@@ -35,11 +35,27 @@ class BackdropDetail: UIView {
         return gradientLayer
     }()
     
+    lazy var poster: UIImageView = {
+        let poster = UIImageView()
+        poster.clipsToBounds = true
+        poster.layer.cornerRadius = 5
+        poster.contentMode = .scaleAspectFill
+        poster.translatesAutoresizingMaskIntoConstraints = false
+        
+        let posterConstraints: [NSLayoutConstraint] = [
+            poster.widthAnchor.constraint(equalToConstant: 100),
+            poster.heightAnchor.constraint(equalToConstant: 150)
+        ]
+        NSLayoutConstraint.activate(posterConstraints)
+        
+        return poster
+    }()
+    
     lazy var title: UILabel = {
         let title = UILabel()
         title.numberOfLines = 0
         title.translatesAutoresizingMaskIntoConstraints = false
-        title.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 32, weight: .bold))
+        title.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 24, weight: .bold))
         
         return title
     }()
@@ -48,7 +64,7 @@ class BackdropDetail: UIView {
         let genres = UILabel()
         genres.numberOfLines = 0
         genres.translatesAutoresizingMaskIntoConstraints = false
-        genres.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 16, weight: .bold))
+        genres.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .bold))
         
         return genres
     }()
@@ -72,21 +88,31 @@ class BackdropDetail: UIView {
     }()
     
     lazy var titleStack: UIStackView = {
-        let titleStack = UIStackView(arrangedSubviews: [title])
+        let titleStack = UIStackView(arrangedSubviews: [title, releaseDate])
         titleStack.axis = .vertical
+        titleStack.setCustomSpacing(35, after: title)
         titleStack.translatesAutoresizingMaskIntoConstraints = false
         
         return titleStack
     }()
     
+    lazy var metaStack: UIStackView = {
+        let metaStack = UIStackView(arrangedSubviews: [poster, titleStack])
+        metaStack.axis = .horizontal
+        metaStack.alignment = .bottom
+        metaStack.setCustomSpacing(5, after: poster)
+        metaStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        return metaStack
+    }()
+    
     init() {
         super.init(frame: .zero)
-
+        translatesAutoresizingMaskIntoConstraints = false
+        
         addSubview(backdrop)
-        addSubview(titleStack)
-        addSubview(releaseDate)
+        addSubview(metaStack)
         layer.insertSublayer(gradientLayer, at: 1)
-        roundCorners([.bottomLeft, .bottomRight], radius: 20)
         
         isSkeletonable = true
         showAnimatedGradientSkeleton()
@@ -100,50 +126,30 @@ class BackdropDetail: UIView {
     }
     
     // MARK: - Configure
-    func configure(url: String? = nil, title _title: String?, genres _genres: String?, runtime _runtime: String?, releaseDate _releaseDate: String?, completionHandler: ((_ colors: UIImageColors) -> Void)? = nil) {
-        if _runtime != nil {
-           setupRuntimeView()
+    func configure(backdropURL: String? = nil, posterURL: String? = nil, title: String?, genres: String?, runtime: String?, releaseDate: String?, completionHandler: ((_ colors: UIImageColors) -> Void)? = nil) {
+        if runtime != nil {
+            setupRuntimeView()
         }
         
-        if _genres != nil {
+        if genres != nil {
             setupGenresView()
         }
         
-        if let urlString = url {
-            setBackdrop(urlString: urlString).then { (colors) in
-                DispatchQueue.main.async {
-                    self.setupText(title: _title, genres: _genres, runtime: _runtime, releaseDate: _releaseDate)
-                    self.setupColor(colors: colors)
-                    self.hideSkeleton()
-                }
-                
-                if let safeHandler = completionHandler {
-                    safeHandler(colors)
-                }
-                self.delegate?.didSetupUI(colors: colors)
+        // Set Poster
+        setImage(urlString: posterURL, imageView: poster, placeholder: UIImage(named: "placeholderPoster"))
+        
+        // Sets Backdrop
+        setImageWithPromise(urlString: backdropURL, imageView: backdrop, placeholder: UIImage(named: "placeholderBackdrop")).then { (colors) in
+            DispatchQueue.main.async {
+                self.setupText(title: title, genres: genres, runtime: runtime, releaseDate: releaseDate)
+                self.setupColor(colors: colors)
+                self.hideSkeleton()
             }
-        } else {
-            self.backdrop.image = UIImage(named: "placeholderBackdrop")
             
-            if let safeBackdrop = self.backdrop.image {
-                safeBackdrop.getColors() { colors in
-                    DispatchQueue.main.async {
-                        self.setupText(title: _title, genres: _genres, runtime: _runtime, releaseDate: _releaseDate)
-                        
-                        if let safeColors = colors {
-                            self.setupColor(colors: safeColors)
-                        }
-                        self.hideSkeleton()
-                    }
-                    
-                    if let safeColors = colors {
-                        if let safeHandler = completionHandler {
-                            safeHandler(safeColors)
-                        }
-                        self.delegate?.didSetupUI(colors: safeColors)
-                    }
-                }
+            if let safeHandler = completionHandler {
+                safeHandler(colors)
             }
+            self.delegate?.didSetupUI(colors: colors)
         }
     }
     
@@ -154,17 +160,49 @@ class BackdropDetail: UIView {
 
 // MARK: - Setup Functions
 extension BackdropDetail {
-    private func setBackdrop(urlString: String) -> Promise<UIImageColors> {
+    private func setImage(urlString: String?, imageView: UIImageView, placeholder: UIImage?) {
+        guard let safeUrlString = urlString else { return }
+        
+        let url = URL(string: safeUrlString)
+        let downsample = DownsamplingImageProcessor(size: imageView.bounds.size)
+        let options: KingfisherOptionsInfo = [
+            .processor(downsample),
+            .scaleFactor(UIScreen.main.scale),
+            .transition(.fade(1)),
+            .cacheOriginalImage,
+        ]
+        imageView.kfSetImage(with: url, using: placeholder, options: options)
+    }
+    
+    private func setImageWithPromise(urlString: String?, imageView: UIImageView, placeholder: UIImage?) -> Promise<UIImageColors> {
         let promise = Promise<UIImageColors>.pending()
         
-        let url = URL(string: urlString)
-        let downsample = DownsamplingImageProcessor(size: bounds.size)
+        guard let safeUrlString = urlString else {
+            imageView.image = placeholder
+            
+            if let safeBackdrop = self.backdrop.image {
+                safeBackdrop.getColors() { colors in
+                    guard let safeColors = colors else { return }
+                    promise.fulfill(safeColors)
+                }
+            }
+            
+            return promise
+        }
         
-        backdrop.kfSetImage(with: url, using: UIImage(named: "placeholderBackdrop"), processor: downsample) { result in
+        let url = URL(string: safeUrlString)
+        let downsample = DownsamplingImageProcessor(size: imageView.bounds.size)
+        let options: KingfisherOptionsInfo = [
+            .processor(downsample),
+            .scaleFactor(UIScreen.main.scale),
+            .transition(.fade(1)),
+            .cacheOriginalImage,
+        ]
+        imageView.kfSetImage(with: url, using: placeholder, options: options) { result in
             switch result {
             case .success:
-                if let backdropImage = self.backdrop.image {
-                    backdropImage.getColors() { colors in
+                if let safeImage = imageView.image {
+                    safeImage.getColors() { colors in
                         guard let safeColors = colors else { return }
                         promise.fulfill(safeColors)
                     }
@@ -230,32 +268,22 @@ extension BackdropDetail {
         ]
         NSLayoutConstraint.activate(backdropConstraints)
         
-        let releaseDateConstraints: [NSLayoutConstraint] = [
-            releaseDate.bottomAnchor.constraint(equalTo: backdrop.bottomAnchor, constant: -35),
-            releaseDate.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            releaseDate.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20)
+        let metsStackConstraints: [NSLayoutConstraint] = [
+            metaStack.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor, constant: -35),
+            metaStack.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            metaStack.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20)
         ]
-        NSLayoutConstraint.activate(releaseDateConstraints)
-        
-        let titleStackConstraints: [NSLayoutConstraint] = [
-            titleStack.bottomAnchor.constraint(equalTo: releaseDate.topAnchor, constant: -35),
-            titleStack.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            titleStack.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20)
-        ]
-        NSLayoutConstraint.activate(titleStackConstraints)
+        NSLayoutConstraint.activate(metsStackConstraints)
     }
     
     private func setupRuntimeView() {
-        insertSubview(runtime, aboveSubview: releaseDate)
-        let runtimeConstraints: [NSLayoutConstraint] = [
-            runtime.topAnchor.constraint(equalTo: releaseDate.bottomAnchor, constant: 5),
-            runtime.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            runtime.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20)
-        ]
-        NSLayoutConstraint.activate(runtimeConstraints)
+        titleStack.setCustomSpacing(5, after: releaseDate)
+        titleStack.insertArrangedSubview(runtime, at: 2)
     }
     
     private func setupGenresView() {
         titleStack.insertArrangedSubview(genres, at: 1)
+        titleStack.setCustomSpacing(0, after: title)
+        titleStack.setCustomSpacing(35, after: genres)
     }
 }

@@ -9,6 +9,31 @@
 import UIKit
 
 extension UIView {
+    static func createScrollView() -> (scrollView: UIScrollView, containerView: UIView) {
+        let scrollView = UIScrollView()
+        scrollView.delaysContentTouches = false
+        scrollView.contentInsetAdjustmentBehavior = .never
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Style Props
+        scrollView.bounces = true
+        scrollView.bouncesZoom = true
+        scrollView.alwaysBounceVertical = true
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        
+        let screen = UIScreen.main.bounds
+        
+        scrollView.contentOffset = CGPoint(x: 0, y: 0)
+        scrollView.contentSize = CGSize(width: screen.width, height: screen.height)
+        
+        let containerView = UIView()
+        containerView.clipsToBounds = true
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return (scrollView, containerView)
+    }
+    
     func roundCorners(_ corners: UIRectCorner, radius: CGFloat) {
         if #available(iOS 11.0, *) {
             clipsToBounds = true
