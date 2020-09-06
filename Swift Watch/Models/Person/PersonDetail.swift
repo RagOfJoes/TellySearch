@@ -64,23 +64,38 @@ struct PersonDetail: Codable {
         }
     }
     var numberOfWorks: Int {
-        return self.combinedCredits.cast.count + self.combinedCredits.cast.count
+        return self.combinedCredits.cast.count + self.combinedCredits.crew.count
     }
     var notableWorks:  [Media]?  {
         if self.numberOfWorks < 4 {
             return nil
         }
         
+        var range: Int
+        var arr: [Media] = []
+        var sortByVoteCount: [Media]
         if self.knownFor == "Acting" {
-            var arr: [Media] = []
-            let range = self.combinedCredits.cast.count > 6 ? 6 : self.combinedCredits.cast.count
-            for index in 0..<range {
-                arr.append(self.combinedCredits.cast[index])
+            range = self.combinedCredits.cast.count > 10 ? 10 : self.combinedCredits.cast.count
+            
+            sortByVoteCount = self.combinedCredits.cast.sorted {
+                return $0.voteCount > $1.voteCount
             }
-            return arr
+        } else {
+            range = self.combinedCredits.crew.count > 10 ? 10 : self.combinedCredits.crew.count
+            
+            let knownForArray = self.combinedCredits.crew.filter {
+                return $0.department == self.knownFor
+            }
+            
+            sortByVoteCount = knownForArray.sorted {
+                return $0.voteCount > $1.voteCount
+            }
         }
         
-        return nil
+        for index in 0..<range {
+            arr.append(sortByVoteCount[index])
+        }
+        return arr
     }
     
     enum CodingKeys: String, CodingKey {

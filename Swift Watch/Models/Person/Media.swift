@@ -17,6 +17,7 @@ struct Media: Codable {
     let id: Int
     let name: String?
     let title: String?
+    let voteCount: Int
     let posterPath: String?
     let releaseDate: String?
     let firstAirDate: String?
@@ -37,6 +38,7 @@ struct Media: Codable {
         case title
         case character
         case department
+        case voteCount = "vote_count"
         case mediaType = "media_type"
         case posterPath = "poster_path"
         case releaseDate = "release_date"

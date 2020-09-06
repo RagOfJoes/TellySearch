@@ -8,12 +8,7 @@
 
 import Foundation
 
-enum OverviewSectionCellType {
-    case regular
-    case featured
-}
-
 struct MovieSectionCell {
     let section: MovieSection
-    let type: OverviewSectionCellType
+    let type: K.Overview.CellType
 }

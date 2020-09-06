@@ -25,8 +25,6 @@ struct MovieFetchError: LocalizedError {
 // MARK: - MovieSection
 struct MovieSection: Codable {
     static let baseURL = "https://api.themoviedb.org/3/movie"
-    static let posterURL = "https://image.tmdb.org/t/p/w300"
-    static let backdropURL = "https://image.tmdb.org/t/p/original"
     
     // Section Title
     let title: String?
