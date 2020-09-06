@@ -30,11 +30,11 @@ class MoviesOverviewController: UIViewController  {
 		tableView.delaysContentTouches = false
 		for (index, section) in sections.enumerated() {
 			if section.type == .featured {
-				let identifier = "MovieCollectionViewTableViewFeaturedCell+\(index)"
-				tableView.register(MovieCollectionViewTableViewFeaturedCell.self, forCellReuseIdentifier: identifier)
+				let identifier = "MovieFeaturedCollectionView+\(index)"
+				tableView.register(MovieFeaturedCollectionView.self, forCellReuseIdentifier: identifier)
 			} else {
-				let identifier = "MovieCollectionViewTableViewCell+\(index)"
-				tableView.register(MovieCollectionViewTableViewCell.self, forCellReuseIdentifier: identifier)				
+				let identifier = "MovieCollectionView+\(index)"
+				tableView.register(MovieCollectionView.self, forCellReuseIdentifier: identifier)				
 			}
 		}
 		
@@ -111,8 +111,8 @@ extension MoviesOverviewController: UITableViewDataSource {
 		let cellType = sections[indexPath.section].type
 		
 		if cellType == .featured {
-			let identifier = "MovieCollectionViewTableViewFeaturedCell+\(indexPath.section)"
-			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! MovieCollectionViewTableViewFeaturedCell
+			let identifier = "MovieFeaturedCollectionView+\(indexPath.section)"
+			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! MovieFeaturedCollectionView
 			
 			if movies.count > indexPath.section, let data = movies[indexPath.section] {
 				cell.delegate = self
@@ -122,8 +122,8 @@ extension MoviesOverviewController: UITableViewDataSource {
 			}
 			return cell
 		} else {
-			let identifier = "MovieCollectionViewTableViewCell+\(indexPath.section)"
-			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! MovieCollectionViewTableViewCell
+			let identifier = "MovieCollectionView+\(indexPath.section)"
+			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! MovieCollectionView
 			
 			if movies.count > indexPath.section, let data = movies[indexPath.section] {
 				cell.delegate = self

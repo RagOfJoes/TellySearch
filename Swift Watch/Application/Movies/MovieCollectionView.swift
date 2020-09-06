@@ -1,5 +1,5 @@
 //
-//  MovieCollectionViewTableViewCell.swift
+//  MovieCollectionView.swift
 //  Swift Watch
 //
 //  Created by Victor Ragojos on 7/27/20.
@@ -13,8 +13,8 @@ protocol MovieCollectionViewTableViewCellDelegate: class {
     func select(movie: IndexPath)
 }
 
-// MARK: - MovieCollectionViewTableViewCell
-class MovieCollectionViewTableViewCell: UITableViewCell {
+// MARK: - MovieCollectionView
+class MovieCollectionView: UITableViewCell {
     var section: Int?
     var movies: [Movie]? = nil
     weak var delegate: MovieCollectionViewTableViewCellDelegate?
@@ -54,7 +54,7 @@ class MovieCollectionViewTableViewCell: UITableViewCell {
 }
 
 // MARK: - Helper Functions
-extension MovieCollectionViewTableViewCell {
+extension MovieCollectionView {
     private func setupAnchors() {
         var collectionViewLeading: NSLayoutConstraint!
         var collectionViewTrailing: NSLayoutConstraint!
@@ -78,7 +78,7 @@ extension MovieCollectionViewTableViewCell {
 }
 
 // MARK: - UICollectionViewDelegate
-extension MovieCollectionViewTableViewCell: UICollectionViewDelegate {
+extension MovieCollectionView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let correctIndexPath = IndexPath(row: indexPath.row, section: section ?? indexPath.section)
         self.delegate?.select(movie: correctIndexPath)
@@ -86,7 +86,7 @@ extension MovieCollectionViewTableViewCell: UICollectionViewDelegate {
     }
 }
 
-extension MovieCollectionViewTableViewCell: UICollectionViewDataSource {
+extension MovieCollectionView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let count = movies?.count {
             return count
@@ -100,7 +100,7 @@ extension MovieCollectionViewTableViewCell: UICollectionViewDataSource {
         
         if let movie = movies?[indexPath.row] {
             if let poster = movie.posterPath {
-                cell.configure(name: movie.title, image: MovieSection.posterURL + poster)
+                cell.configure(name: movie.title, image: K.Poster.URL + poster)
                 return cell
             } else {
                 cell.configure(name: movie.title)
@@ -111,7 +111,7 @@ extension MovieCollectionViewTableViewCell: UICollectionViewDataSource {
     }
 }
 
-extension MovieCollectionViewTableViewCell: SkeletonCollectionViewDataSource {
+extension MovieCollectionView: SkeletonCollectionViewDataSource {
     func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3
     }
@@ -122,7 +122,7 @@ extension MovieCollectionViewTableViewCell: SkeletonCollectionViewDataSource {
 }
 
 // MARK: - UICollectionViewLayout
-extension MovieCollectionViewTableViewCell: UICollectionViewDelegateFlowLayout {
+extension MovieCollectionView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {

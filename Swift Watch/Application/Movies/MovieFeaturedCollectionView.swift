@@ -1,5 +1,5 @@
 //
-//  MovieCollectionViewTableViewFeaturedCell.swift
+//  MovieFeaturedCollectionView.swift
 //  Swift Watch
 //
 //  Created by Victor Ragojos on 8/18/20.
@@ -9,8 +9,8 @@
 import UIKit
 import SkeletonView
 
-// MARK: - MovieCollectionViewTableViewCell
-class MovieCollectionViewTableViewFeaturedCell: UITableViewCell {
+// MARK: - MovieFeaturedCollectionView
+class MovieFeaturedCollectionView: UITableViewCell {
     var section: Int?
     var movies: [Movie]? = nil
     weak var delegate: MovieCollectionViewTableViewCellDelegate?
@@ -50,7 +50,7 @@ class MovieCollectionViewTableViewFeaturedCell: UITableViewCell {
 }
 
 // MARK: - Helper Functions
-extension MovieCollectionViewTableViewFeaturedCell {
+extension MovieFeaturedCollectionView {
     private func setupAnchors() {
         var collectionViewLeading: NSLayoutConstraint!
         var collectionViewTrailing: NSLayoutConstraint!
@@ -74,14 +74,14 @@ extension MovieCollectionViewTableViewFeaturedCell {
 }
 
 // MARK: - UICollectionViewDelegate
-extension MovieCollectionViewTableViewFeaturedCell: UICollectionViewDelegate {
+extension MovieFeaturedCollectionView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let correctIndexPath = IndexPath(row: indexPath.row, section: section ?? indexPath.section)
         self.delegate?.select(movie: correctIndexPath)
     }
 }
 
-extension MovieCollectionViewTableViewFeaturedCell: UICollectionViewDataSource {
+extension MovieFeaturedCollectionView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let count = movies?.count {
             return count
@@ -95,7 +95,7 @@ extension MovieCollectionViewTableViewFeaturedCell: UICollectionViewDataSource {
         
         if let movie = movies?[indexPath.row] {
             if let backdrop = movie.backdropPath {
-                cell.configure(name: movie.title, image: MovieSection.backdropURL + backdrop)
+                cell.configure(name: movie.title, image: K.Backdrop.URL + backdrop)
                 return cell
             } else {
                 cell.configure(name: movie.title)
@@ -106,7 +106,7 @@ extension MovieCollectionViewTableViewFeaturedCell: UICollectionViewDataSource {
     }
 }
 
-extension MovieCollectionViewTableViewFeaturedCell: SkeletonCollectionViewDataSource {
+extension MovieFeaturedCollectionView: SkeletonCollectionViewDataSource {
     func numSections(in collectionSkeletonView: UICollectionView) -> Int {
         return 1
     }
@@ -121,7 +121,7 @@ extension MovieCollectionViewTableViewFeaturedCell: SkeletonCollectionViewDataSo
 }
 
 // MARK: - UICollectionViewLayout
-extension MovieCollectionViewTableViewFeaturedCell: UICollectionViewDelegateFlowLayout {
+extension MovieFeaturedCollectionView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
