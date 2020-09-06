@@ -258,7 +258,7 @@ extension BackdropDetail {
     }
     
     private func setupAnchors() {
-        heightAnchor.constraint(equalToConstant: K.BackdropDetail.heightConstant).isActive = true
+        heightAnchor.constraint(equalToConstant: K.Backdrop.heightConstant).isActive = true
         
         let backdropConstraints: [NSLayoutConstraint] = [
             backdrop.topAnchor.constraint(equalTo: topAnchor),
