@@ -87,6 +87,8 @@ extension OverviewFeaturedCell: OverviewFeaturedConfigureCell {
                 .cacheOriginalImage,
             ]
             self.imageView.kfSetImage(with: url, using: placeholder, options: options)
+        } else {
+            imageView.image = UIImage(named: "placeholderBackdrop")
         }
     }
 }

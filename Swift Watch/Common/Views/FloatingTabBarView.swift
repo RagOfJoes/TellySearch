@@ -42,7 +42,10 @@ class FloatingTabBarView: UIView {
         backgroundColor = _bgColor
         
         setupStackView(with: items, shouldBlur: shouldBlur)
-        updateUI(selectedIndex: 0)
+        
+        UIView.animate(withDuration: 0.2) {
+            self.updateUI(selectedIndex: 0)
+        }
     }
     
     override func layoutSubviews() {
@@ -90,7 +93,10 @@ class FloatingTabBarView: UIView {
     
     @objc private func changeTab(_ sender: UIButton) {
         delegate?.did(selectIndex: sender.tag)
-        updateUI(selectedIndex: sender.tag)
+        // updateUI(selectedIndex: sender.tag)
+        UIView.animate(withDuration: 0.2) {
+            self.updateUI(selectedIndex: sender.tag)
+        }
     }
     
     private func updateUI(selectedIndex: Int) {
