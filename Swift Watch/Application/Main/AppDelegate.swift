@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Cache
 import SkeletonView
 
 @UIApplicationMain

@@ -131,7 +131,7 @@ extension MovieDetailRecommendations: UICollectionViewDataSource {
         cell.title.textColor = colors?.primary
         if let movie = movies?[indexPath.row] {
             if let safePoster = movie.posterPath {
-                cell.configure(name: movie.title, image: MovieSection.posterURL + safePoster)
+                cell.configure(name: movie.title, image: K.Poster.URL + safePoster)
             } else {
                 cell.configure(name: movie.title)
             }

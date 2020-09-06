@@ -133,7 +133,7 @@ extension CreditDetailNotableWorks: UICollectionViewDataSource {
                 }
 
                 if let safePoster = media.posterPath {
-                    cell.configure(name: textStr, image: MovieSection.posterURL + safePoster)
+                    cell.configure(name: textStr, image: K.Poster.URL + safePoster)
                 } else {
                     cell.configure(name: textStr)
                 }
