@@ -74,16 +74,14 @@ struct PersonDetail: Codable {
         var range: Int
         var arr: [Media] = []
         var sortByVoteCount: [Media]
-        if self.knownFor == "Acting" {
-            range = self.combinedCredits.cast.count > 10 ? 10 : self.combinedCredits.cast.count
-            
-            sortByVoteCount = self.combinedCredits.cast.sorted {
+        if self.knownFor == "Acting" {            
+            let uniqueArray = self.combinedCredits.cast.unique(on: \Media.id)
+            sortByVoteCount = uniqueArray.sorted {
                 return $0.voteCount > $1.voteCount
             }
         } else {
-            range = self.combinedCredits.crew.count > 10 ? 10 : self.combinedCredits.crew.count
-            
-            let knownForArray = self.combinedCredits.crew.filter {
+            let uniqueArray = self.combinedCredits.crew.unique(on: \Media.id)
+            let knownForArray = uniqueArray.filter {
                 return $0.department == self.knownFor
             }
             
@@ -91,6 +89,7 @@ struct PersonDetail: Codable {
                 return $0.voteCount > $1.voteCount
             }
         }
+        range = sortByVoteCount.count > 10 ? 10 : sortByVoteCount.count
         
         for index in 0..<range {
             arr.append(sortByVoteCount[index])

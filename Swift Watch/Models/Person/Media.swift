@@ -13,11 +13,12 @@ enum MediaType: String, Codable {
     case movie = "movie"
 }
 
-struct Media: Codable {
+struct Media: Codable, Hashable, Equatable {
     let id: Int
     let name: String?
     let title: String?
     let voteCount: Int
+    let overview: String
     let posterPath: String?
     let releaseDate: String?
     let firstAirDate: String?
@@ -36,6 +37,7 @@ struct Media: Codable {
         case job
         case name
         case title
+        case overview
         case character
         case department
         case voteCount = "vote_count"

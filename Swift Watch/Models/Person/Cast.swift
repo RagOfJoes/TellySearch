@@ -48,7 +48,7 @@ extension Cast {
             // promise.fulfill(cachedDetail)
             // return promise
         // }
-        let urlString = "\(K.Credits.baseURL)/\(id)?api_key=\(K.tmdbApiKey)&language=en-US&append_to_response=combined_credits"
+        let urlString = "\(K.Credits.baseURL)/\(id)\(K.CommonQuery)&append_to_response=combined_credits"
         if let url  = URL(string: urlString) {
             let session = URLSession(configuration: .default)
             
@@ -87,8 +87,7 @@ extension Cast {
         do {
             let decodedDetail = try decoder.decode(PersonDetail.self, from: data)
             return decodedDetail
-        } catch let e {
-            print(e)
+        } catch {
             return nil
         }
     }
