@@ -9,7 +9,8 @@
 import UIKit
 
 struct K {
-    static let tmdbApiKey: String = {
+    static let CommonQuery: String = "?api_key=\(K.TmdbApiKey)&region=\(K.User.country)&language=\(K.User.language)"
+    static let TmdbApiKey: String = {
         if let path = Bundle.main.path(forResource: "Keys", ofType: "plist") {
             let obj = NSDictionary(contentsOfFile: path)
             
@@ -22,6 +23,12 @@ struct K {
         
         return ""
     }()
+    
+    struct User {
+        static let country: String = Locale.current.regionCode ?? "US"
+        static let language: String = Locale.current.languageCode ?? "en"
+        static let timezone: String = TimeZone.current.abbreviation() ?? "EST"
+    }
     
     struct Poster {
         static let URL = "https://image.tmdb.org/t/p/w300"
@@ -55,6 +62,29 @@ struct K {
         enum CellType {
             case regular
             case featured
+        }
+        
+        static var regularHeight: CGFloat {
+            get {
+                let placeholder = "Lorem"
+                let primaryFont = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .bold))
+                
+                let primaryHeight = placeholder.height(font: primaryFont) * 2
+                
+                return primaryHeight + K.Poster.height + 5
+            }
+        }
+        static var regularHeightWithSecondary: CGFloat {
+            get {
+                let placeholder = "Lorem"
+                let primaryFont = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .bold))
+                let secondaryFont = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 13, weight: .medium))
+                
+                let primaryHeight = placeholder.height(font: primaryFont) * 2
+                let secondaryHeight = placeholder.height(font: secondaryFont)
+                
+                return primaryHeight + secondaryHeight + K.Poster.height + 5
+            }
         }
         
         static let featuredImageRatio: CGFloat = (16/9)
