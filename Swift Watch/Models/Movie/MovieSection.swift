@@ -9,19 +9,6 @@
 import Promises
 import Foundation
 
-struct MovieFetchError: LocalizedError {
-    private var description: String
-    
-    var title: String?
-    var failureReason: String? { return description }
-    var errorDescription: String? { return description }
-    
-    init(title: String = "MovieFetchError", description: String) {
-        self.title = title
-        self.description = description
-    }
-}
-
 // MARK: - MovieSection
 struct MovieSection: Codable {
     static let baseURL = "https://api.themoviedb.org/3/movie"
@@ -37,7 +24,7 @@ struct MovieSection: Codable {
     
     func fetchSection(with type: FetchTypes) -> Promise<[Movie]> {
         let promise = Promise<[Movie]>.pending()
-        if let url = URL(string: "\(MovieSection.baseURL)/\(type.rawValue)?api_key=\(K.tmdbApiKey)&region=US") {
+        if let url = URL(string: "\(MovieSection.baseURL)/\(type.rawValue)\(K.CommonQuery)") {
             let session = URLSession(configuration: .default)
             
             session.dataTask(with: url, completionHandler: { (data, response, error) in

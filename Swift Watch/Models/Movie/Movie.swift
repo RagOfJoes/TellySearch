@@ -10,6 +10,19 @@ import Cache
 import Promises
 import Foundation
 
+struct MovieFetchError: LocalizedError {
+    private var description: String
+    
+    var title: String?
+    var failureReason: String? { return description }
+    var errorDescription: String? { return description }
+    
+    init(title: String = "MovieFetchError", description: String) {
+        self.title = title
+        self.description = description
+    }
+}
+
 struct Movie: Codable {
     let id: Int
     let title: String
@@ -52,7 +65,7 @@ extension Movie {
             promise.fulfill(cachedDetail)
             return promise
         }
-        let urlString = "\(MovieSection.baseURL)/\(id)?api_key=\(K.tmdbApiKey)&language=en-US&append_to_response=credits,recommendations"
+        let urlString = "\(MovieSection.baseURL)/\(id)\(K.CommonQuery)&append_to_response=credits,recommendations"
         if let url  = URL(string: urlString) {
             let session = URLSession(configuration: .default)
             

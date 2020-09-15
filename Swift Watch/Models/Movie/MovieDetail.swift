@@ -13,8 +13,18 @@ struct MovieDetail: Codable {
     let rateAvg: Double
     let genres: [Genre]?
     let tagline: String?
-    let credits: Credits?
+    let credits: Credits
     let recommendations: MovieSection?
+    
+    var directors: [Crew]? {
+        get {
+            let directors = self.credits.crew?.filter({ (crew) -> Bool in
+                return crew.job == "Director"
+            })
+            
+            return directors
+        }
+    }
     
     enum CodingKeys: String, CodingKey {
         case genres
