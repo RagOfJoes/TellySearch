@@ -10,6 +10,19 @@ import Cache
 import Promises
 import Foundation
 
+struct ShowFetchError: LocalizedError {
+    private var description: String
+    
+    var title: String?
+    var failureReason: String? { return description }
+    var errorDescription: String? { return description }
+    
+    init(title: String = "ShowFetchError", description: String) {
+        self.title = title
+        self.description = description
+    }
+}
+
 struct Show: Codable {
     let id: Int
     let name: String
@@ -40,59 +53,59 @@ struct Show: Codable {
     }
 }
 
-// MARK: - Movie Detail Handler
-//extension Show {
-//    func fetchDetail() -> Promise<MovieDetail> {
+// MARK: - Show Detail Handler
+extension Show {
+    func fetchDetail() -> Promise<ShowDetail> {
 //        let cacheKey = "movie:\(self.id):detail"
-//        let promise = Promise<MovieDetail>.pending()
-//
-//        // Check if cached
-////        if let cachedDetail = try? detailStorage?.object(forKey: cacheKey) {
-////            // Fulfill Promise and return early
-////            promise.fulfill(cachedDetail)
-////            return promise
-////        }
-//        let urlString = "\(MovieSection.baseURL)/\(id)?api_key=\(K.tmdbApiKey)&language=en-US&append_to_response=credits,recommendations"
-//        if let url  = URL(string: urlString) {
-//            let session = URLSession(configuration: .default)
-//
-//            session.dataTask(with: url, completionHandler: { (data, response, error) in
-//                if error != nil, let e = error {
-//                    promise.reject(e)
-//                }
-//
-//                if let safeData = data {
-//                    if let payload = self.parseDetail(safeData) {
-//                        // Set to cache
-////                        try? self.detailStorage?.setObject(payload, forKey: cacheKey)
-//
-//                        // Fulfill Promise
-//                        promise.fulfill(payload)
-//                    } else {
-//                        promise.reject(MovieFetchError(description: "An Error has occured parsing fetched Movie Data"))
-//                    }
-//                } else {
-//                    promise.reject(MovieFetchError(description: "An Error has occured fetching Movie Data"))
-//                }
-//
-//            }).resume()
-//        } else {
-//            promise.reject(MovieFetchError(description: "An Invalid URL was provided"))
+        let promise = Promise<ShowDetail>.pending()
+
+        // Check if cached
+//        if let cachedDetail = try? detailStorage?.object(forKey: cacheKey) {
+//            // Fulfill Promise and return early
+//            promise.fulfill(cachedDetail)
+//            return promise
 //        }
-//
-//        return promise
-//    }
-//
-//    private func parseDetail(_ movieData: Data) -> MovieDetail? {
-//        let decoder = JSONDecoder()
-//
-//        // ".self" after the WeatherData refers to the Type of
-//        // the Decodable struct
-//        do {
-//            let decodedDetail = try decoder.decode(MovieDetail.self, from: movieData)
-//            return decodedDetail
-//        } catch {
-//            return nil
-//        }
-//    }
-//}
+        let urlString = "\(ShowSection.baseURL)/\(id)\(K.CommonQuery)&append_to_response=credits,recommendations"
+        if let url  = URL(string: urlString) {
+            let session = URLSession(configuration: .default)
+
+            session.dataTask(with: url, completionHandler: { (data, response, error) in
+                if error != nil, let e = error {
+                    promise.reject(e)
+                }
+
+                if let safeData = data {
+                    if let payload = self.parseDetail(safeData) {
+                        // Set to cache
+//                        try? self.detailStorage?.setObject(payload, forKey: cacheKey)
+
+                        // Fulfill Promise
+                        promise.fulfill(payload)
+                    } else {
+                        promise.reject(ShowFetchError(description: "An Error has occured parsing fetched Show Data"))
+                    }
+                } else {
+                    promise.reject(ShowFetchError(description: "An Error has occured fetching Show Data"))
+                }
+
+            }).resume()
+        } else {
+            promise.reject(ShowFetchError(description: "An Invalid URL was provided"))
+        }
+
+        return promise
+    }
+
+    private func parseDetail(_ showData: Data) -> ShowDetail? {
+        let decoder = JSONDecoder()
+
+        // ".self" after the WeatherData refers to the Type of
+        // the Decodable struct
+        do {
+            let decodedDetail = try decoder.decode(ShowDetail.self, from: showData)
+            return decodedDetail
+        } catch {
+            return nil
+        }
+    }
+}

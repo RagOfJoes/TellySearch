@@ -23,7 +23,7 @@ struct ShowSection: Codable {
     
     func fetchSection(with type: FetchTypes) -> Promise<[Show]> {
         let promise = Promise<[Show]>.pending()
-        if let url = URL(string: "\(ShowSection.baseURL)/\(type.rawValue)?api_key=\(K.tmdbApiKey)&region=US") {
+        if let url = URL(string: "\(ShowSection.baseURL)/\(type.rawValue)\(K.CommonQuery)&timezone=\(K.User.timezone)") {
             let session = URLSession(configuration: .default)
             
             session.dataTask(with: url, completionHandler: { (data, response, error) in
