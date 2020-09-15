@@ -66,8 +66,8 @@ extension MovieFeaturedCollectionView {
         let collectionViewConstraints: [NSLayoutConstraint] = [
             collectionViewLeading,
             collectionViewTrailing,
-            collectionView.heightAnchor.constraint(equalTo: heightAnchor),
-            collectionView.topAnchor.constraint(equalTo: topAnchor , constant: 10)
+            collectionView.topAnchor.constraint(equalTo: topAnchor),
+            collectionView.heightAnchor.constraint(equalTo: heightAnchor)
         ]
         NSLayoutConstraint.activate(collectionViewConstraints)
     }
@@ -107,10 +107,6 @@ extension MovieFeaturedCollectionView: UICollectionViewDataSource {
 }
 
 extension MovieFeaturedCollectionView: SkeletonCollectionViewDataSource {
-    func numSections(in collectionSkeletonView: UICollectionView) -> Int {
-        return 1
-    }
-    
     func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3
     }

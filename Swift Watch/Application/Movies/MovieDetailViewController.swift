@@ -16,6 +16,9 @@ class MovieDetailViewController: UIViewController {
     var containerView: UIView
     var scrollView: UIScrollView
     private lazy var backdropDetail = BackdropDetail()
+    
+    private let directedBy = CreatorsCollectionView()
+    
     private lazy var overviewStack: InfoStackView = {
         let overviewStack = InfoStackView(fontSize: (18, 14))
         return overviewStack
@@ -65,6 +68,7 @@ class MovieDetailViewController: UIViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(containerView)
         containerView.addSubview(backdropDetail)
+        containerView.addSubview(directedBy)
         containerView.addSubview(overviewStack)
         containerView.addSubview(stackView)
         
@@ -158,8 +162,15 @@ extension MovieDetailViewController {
         ]
         NSLayoutConstraint.activate(backdropDetailConstraints)
         
+        let directedByConstraints: [NSLayoutConstraint] = [
+            directedBy.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            directedBy.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            directedBy.topAnchor.constraint(equalTo: backdropDetail.bottomAnchor, constant: 20),
+        ]
+        NSLayoutConstraint.activate(directedByConstraints)
+        
         let overviewStackConstraints: [NSLayoutConstraint] = [
-            overviewStack.topAnchor.constraint(equalTo: backdropDetail.bottomAnchor, constant: 20),
+            overviewStack.topAnchor.constraint(equalTo: directedBy.bottomAnchor, constant: 20),
             overviewStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
             overviewStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20)
         ]
@@ -201,8 +212,13 @@ extension MovieDetailViewController {
             // Return Void Promise to allow Recommendations to setup UI
             return Promise { (fulfill, reject) -> Void in
                 self.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate) { colors in
-                    if let credits = detail.credits {
-                        self.setupCastCollectionView(with: credits, using: colors)
+                    self.setupCastCollectionView(with: detail.credits, using: colors)
+                    
+                    if let safeDirectors = detail.directors, safeDirectors.count > 0 {
+                        self.directedBy.configure(with: safeDirectors, colors: colors, and: "Directed By")
+                    } else {
+                        self.directedBy.removeFromSuperview()
+                        self.overviewStack.topAnchor.constraint(equalTo: self.backdropDetail.bottomAnchor, constant: 20).isActive = true
                     }
                     
                     if let recommendations = detail.recommendations?.results {
@@ -248,7 +264,7 @@ extension MovieDetailViewController {
                 return
             }
         }
-        castCollectionView.configure(with: credits, colors: colors)
+        castCollectionView.configure(with: credits, title: "Top Billed Cast", and: colors)
     }
     
     private func setupBackdropText(with detail: MovieDetail) -> (String?, String?) {
@@ -306,6 +322,7 @@ extension MovieDetailViewController: CastCollectionViewDelegate {
     func select(cast: Cast) {
         guard let safeColors = self.colors else { return }
         let creditModal = CreditDetailModal(with: cast, using: safeColors)
+        creditModal.delegate = self
         self.present(creditModal, animated: true)
     }
 }
@@ -315,5 +332,11 @@ extension MovieDetailViewController: MovieDetailRecommendationsDelegate {
     func select(movie: Movie) {
         let detailVC = MovieDetailViewController(with: movie)
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+}
+
+extension MovieDetailViewController: CreditDetailModalDelegate {
+    func shouldPush(VC: UIViewController) {
+        self.navigationController?.pushViewController(VC, animated: true)
     }
 }

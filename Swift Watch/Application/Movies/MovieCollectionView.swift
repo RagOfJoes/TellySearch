@@ -70,8 +70,8 @@ extension MovieCollectionView {
         let collectionViewConstraints: [NSLayoutConstraint] = [
             collectionViewLeading,
             collectionViewTrailing,
-            collectionView.heightAnchor.constraint(equalTo: heightAnchor),
-            collectionView.topAnchor.constraint(equalTo: topAnchor , constant: 10)
+            collectionView.topAnchor.constraint(equalTo: topAnchor),
+            collectionView.heightAnchor.constraint(equalTo: heightAnchor)
         ]
         NSLayoutConstraint.activate(collectionViewConstraints)
     }
@@ -100,10 +100,10 @@ extension MovieCollectionView: UICollectionViewDataSource {
         
         if let movie = movies?[indexPath.row] {
             if let poster = movie.posterPath {
-                cell.configure(name: movie.title, image: K.Poster.URL + poster)
+                cell.configure(primary: movie.title, image: K.Poster.URL + poster)
                 return cell
             } else {
-                cell.configure(name: movie.title)
+                cell.configure(primary: movie.title)
             }
         }
         
@@ -126,7 +126,6 @@ extension MovieCollectionView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let height = collectionView.frame.height
-        return CGSize(width: K.Poster.width, height: height)
+        return CGSize(width: K.Poster.width, height: collectionView.frame.height)
     }
 }

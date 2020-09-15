@@ -23,7 +23,6 @@ class MovieDetailRecommendations: UIView {
         let header = CastCollectionViewHeader()
         header.translatesAutoresizingMaskIntoConstraints = false
         header.isSkeletonable = true
-        header.skeletonCornerRadius = 5
         return header
     }()
     
@@ -69,7 +68,7 @@ class MovieDetailRecommendations: UIView {
 extension MovieDetailRecommendations {
     private func setupAnchors() {
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: K.Poster.height + 80),
+            heightAnchor.constraint(equalToConstant: K.Overview.regularHeight + 45),
             
             header.topAnchor.constraint(equalTo: topAnchor),
             header.heightAnchor.constraint(equalToConstant: 30),
@@ -91,8 +90,8 @@ extension MovieDetailRecommendations {
         let collectionViewConstraints: [NSLayoutConstraint] = [
             collectionViewLeading,
             collectionViewTrailing,
-            collectionView.heightAnchor.constraint(equalTo: heightAnchor, constant: -35),
-            collectionView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 5),
+            collectionView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 2),
+            collectionView.heightAnchor.constraint(equalToConstant: K.Overview.regularHeight)
         ]
         NSLayoutConstraint.activate(collectionViewConstraints)
     }
@@ -128,12 +127,11 @@ extension MovieDetailRecommendations: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OverviewCell.reuseIdentifier, for: indexPath) as! OverviewCell
         
-        cell.title.textColor = colors?.primary
         if let movie = movies?[indexPath.row] {
             if let safePoster = movie.posterPath {
-                cell.configure(name: movie.title, image: K.Poster.URL + safePoster)
+                cell.configure(primary: movie.title, image: K.Poster.URL + safePoster, colors: self.colors)
             } else {
-                cell.configure(name: movie.title)
+                cell.configure(primary: movie.title, colors: self.colors)
             }
         }
         

@@ -91,8 +91,7 @@ extension MoviesOverviewController: UITableViewDelegate {
 			let height: CGFloat = .getHeight(with: K.Overview.featuredCellWidth, using: K.Overview.featuredImageRatio)
 			return height + 45
 		default:
-			let height: CGFloat = K.Poster.height
-			return height + 45
+			return K.Overview.regularHeight
 		}
 	}
 }
