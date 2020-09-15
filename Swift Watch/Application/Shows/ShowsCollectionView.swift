@@ -69,8 +69,8 @@ extension ShowsCollectionView {
         let collectionViewConstraints: [NSLayoutConstraint] = [
             collectionViewLeading,
             collectionViewTrailing,
-            collectionView.heightAnchor.constraint(equalTo: heightAnchor),
-            collectionView.topAnchor.constraint(equalTo: topAnchor , constant: 10)
+            collectionView.topAnchor.constraint(equalTo: topAnchor),
+            collectionView.heightAnchor.constraint(equalTo: heightAnchor)
         ]
         NSLayoutConstraint.activate(collectionViewConstraints)
     }
@@ -99,10 +99,10 @@ extension ShowsCollectionView: UICollectionViewDataSource {
         
         if let show = shows?[indexPath.row] {
             if let poster = show.posterPath {
-                cell.configure(name: show.name, image: K.Poster.URL + poster)
+                cell.configure(primary: show.name, image: K.Poster.URL + poster)
                 return cell
             } else {
-                cell.configure(name: show.name)
+                cell.configure(primary: show.name)
             }
         }
         

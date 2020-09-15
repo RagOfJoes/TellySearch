@@ -90,8 +90,7 @@ extension ShowsViewController: UITableViewDelegate {
             let height: CGFloat = .getHeight(with: K.Overview.featuredCellWidth, using: K.Overview.featuredImageRatio)
             return height + 45
         default:
-            let height: CGFloat = K.Poster.height
-            return height + 45
+            return K.Overview.regularHeight
         }
     }
 }
@@ -135,13 +134,13 @@ extension ShowsViewController: UITableViewDataSource {
     }
 }
 
-// MARK: - MovieCollectionViewTableViewCellDelegate
-// Passes up the Index Path of the selected Movie
+// MARK: - ShowsCollectionViewDelegate
+// Passes up the Index Path of the selected Show
 extension ShowsViewController: ShowsCollectionViewDelegate {
     func select(show: IndexPath) {
-//        guard let safeMovie = shows[movie.section]?[movie.row] else { return }
-//        let detailVC = MovieDetailViewController(with: safeMovie)
-//        navigationController?.pushViewController(detailVC, animated: true)
+        guard let safeShow = shows[show.section]?[show.row] else { return }
+        let detailVC = ShowDetailViewController(with: safeShow)
+        navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 

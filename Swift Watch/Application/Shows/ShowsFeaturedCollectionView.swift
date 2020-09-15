@@ -65,8 +65,8 @@ extension ShowsFeaturedCollectionView {
         let collectionViewConstraints: [NSLayoutConstraint] = [
             collectionViewLeading,
             collectionViewTrailing,
-            collectionView.heightAnchor.constraint(equalTo: heightAnchor),
-            collectionView.topAnchor.constraint(equalTo: topAnchor , constant: 10)
+            collectionView.topAnchor.constraint(equalTo: topAnchor),
+            collectionView.heightAnchor.constraint(equalTo: heightAnchor)
         ]
         NSLayoutConstraint.activate(collectionViewConstraints)
     }
