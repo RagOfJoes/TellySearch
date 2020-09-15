@@ -269,7 +269,7 @@ extension BackdropDetail {
         NSLayoutConstraint.activate(backdropConstraints)
         
         let metsStackConstraints: [NSLayoutConstraint] = [
-            metaStack.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor, constant: -35),
+            metaStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -35),
             metaStack.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
             metaStack.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20)
         ]

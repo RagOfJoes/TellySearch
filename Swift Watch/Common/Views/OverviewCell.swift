@@ -11,18 +11,29 @@ import Kingfisher
 import SkeletonView
 
 protocol OverviewConfigureCell: SelfConfiguringCell {
-    func configure(name: String, image: String?)
+    func configure(primary: String, secondary: String?, image: String?, colors: UIImageColors?)
 }
 
 class OverviewCell: UICollectionViewCell {
-    lazy var title: UILabel = {
-        let title = UILabel()
-        title.numberOfLines = 2
-        title.textColor = UIColor(named: "primaryTextColor")
-        title.translatesAutoresizingMaskIntoConstraints = false
-        title.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .semibold))
-                
-        return title
+    lazy var primaryLabel: UILabel = {
+        let primaryLabel = UILabel()
+        primaryLabel.numberOfLines = 2
+        primaryLabel.setupFont(size: 14, weight: .bold)
+        primaryLabel.textColor = UIColor(named: "primaryTextColor")
+        primaryLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        primaryLabel.isSkeletonable = true
+        return primaryLabel
+    }()
+    
+    lazy var secondaryLabel: UILabel = {
+        let secondaryLabel = UILabel()
+        secondaryLabel.numberOfLines = 2
+        secondaryLabel.setupFont(size: 13, weight: .medium)
+        secondaryLabel.textColor = UIColor(named: "secondaryTextColor")
+        secondaryLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        return secondaryLabel
     }()
     
     lazy var imageView: UIImageView = {
@@ -34,33 +45,36 @@ class OverviewCell: UICollectionViewCell {
         
         imageView.isSkeletonable = true
         imageView.skeletonCornerRadius = 5
-        
         return imageView
-    }()
-    
-    lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [imageView, title])
-        stackView.axis = .vertical
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        return stackView
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         clipsToBounds = true
-        contentView.addSubview(stackView)
-        let stackViewConstraints: [NSLayoutConstraint] = [
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            stackView.heightAnchor.constraint(equalTo: contentView.heightAnchor),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imageView.heightAnchor.constraint(equalTo: stackView.heightAnchor, constant: -45),
-        ]
-        NSLayoutConstraint.activate(stackViewConstraints)
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        contentView.addSubview(imageView)
+        contentView.addSubview(primaryLabel)
+        contentView.addSubview(secondaryLabel)
+        
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: K.Poster.width),
+            imageView.heightAnchor.constraint(equalToConstant: K.Poster.height),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+
+            primaryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            primaryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            primaryLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 5),
+
+            secondaryLabel.topAnchor.constraint(equalTo: primaryLabel.bottomAnchor),
+            secondaryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            secondaryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+        ])
         
         isSkeletonable = true
-        skeletonCornerRadius = 10
+        skeletonCornerRadius = 5
     }
     
     override var isHighlighted: Bool {
@@ -76,10 +90,16 @@ class OverviewCell: UICollectionViewCell {
 extension OverviewCell: OverviewConfigureCell {
     static var reuseIdentifier = "OverviewCell"
     
-    func configure(name: String, image: String? = nil) {
-        hideSkeleton()
+    func configure(primary: String, secondary: String? = nil, image: String? = nil, colors: UIImageColors? = nil) {
+        self.hideSkeleton()
         DispatchQueue.main.async {
-            self.title.text = name
+            self.primaryLabel.text = primary
+            
+            if let safeSecondary = secondary {
+                self.secondaryLabel.text = safeSecondary
+            } else {
+                self.secondaryLabel.removeFromSuperview()
+            }
         }
         
         if let safePoster = image {
@@ -94,5 +114,13 @@ extension OverviewCell: OverviewConfigureCell {
         } else {
             imageView.image = UIImage(named: "placeholderPoster")
         }
+        
+        guard let safeColors = colors else { return }
+        setupColors(colors: safeColors)
+    }
+    
+    private func setupColors(colors: UIImageColors) {
+        primaryLabel.textColor = colors.primary
+        secondaryLabel.textColor = colors.secondary
     }
 }

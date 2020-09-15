@@ -21,6 +21,8 @@ class InfoStackView: UIStackView {
         let titleLabel = UILabel()
         titleLabel.numberOfLines = 1
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        titleLabel.isSkeletonable = true
         return titleLabel
     }()
     
@@ -39,8 +41,6 @@ class InfoStackView: UIStackView {
         titleStackView.translatesAutoresizingMaskIntoConstraints = false
         
         titleStackView.isSkeletonable = true
-        titleStackView.skeletonCornerRadius = 5
-        titleStackView.showAnimatedGradientSkeleton()
         return titleStackView
     }()
     
@@ -50,16 +50,15 @@ class InfoStackView: UIStackView {
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
         
         valueLabel.isSkeletonable = true
-        valueLabel.showAnimatedGradientSkeleton()
         return valueLabel
     }()
     
-    init(using colors: UIImageColors? = nil, hasReadMore: Bool = false, fontSize: (CGFloat, CGFloat) = (14, 14), fontWeight: (UIFont.Weight, UIFont.Weight) = (.bold, .medium)) {
+    init(using colors: UIImageColors? = nil, hasReadMore: Bool = false, fontSize: (CGFloat, CGFloat) = (18, 14), fontWeight: (UIFont.Weight, UIFont.Weight) = (.bold, .medium)) {
         super.init(frame: .zero)
         axis = .vertical
         translatesAutoresizingMaskIntoConstraints = false
-        
         setupFonts(fontSize: fontSize, weight: fontWeight)
+        
         setupReadMore(enabled: hasReadMore)
         
         addArrangedSubview(titleStackView)
@@ -132,11 +131,11 @@ extension InfoStackView {
     private func setupFonts(fontSize: (CGFloat, CGFloat), weight: (UIFont.Weight, UIFont.Weight)) {
         titleLabel.setupFont(size: fontSize.0, weight: weight.0)
         valueLabel.setupFont(size: fontSize.1, weight: weight.1)
-        readMore.titleLabel?.setupFont(size: fontSize.0, weight: weight.0)
+        readMore.titleLabel?.setupFont(size: fontSize.1, weight: weight.1)
         
         let placeholderText: String = "Lorem"
         NSLayoutConstraint.activate([
-            titleStackView.heightAnchor.constraint(greaterThanOrEqualToConstant: placeholderText.height(font: titleLabel.font)),
+            titleLabel.heightAnchor.constraint(equalToConstant: placeholderText.height(font: titleLabel.font) + 2),
             valueLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: placeholderText.height(font: valueLabel.font))
         ])
     }

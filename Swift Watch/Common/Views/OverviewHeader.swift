@@ -11,9 +11,9 @@ import UIKit
 class OverviewHeader: UIView {
     lazy var title: UILabel = {
         let title = UILabel()
+        title.setupFont(size: 22, weight: .bold)
         title.textColor = UIColor(named: "primaryTextColor")
         title.translatesAutoresizingMaskIntoConstraints = false
-        title.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 22, weight: .bold))
         
         return title
     }()
@@ -35,7 +35,7 @@ class OverviewHeader: UIView {
         
         NSLayoutConstraint.activate([
             heightAnchor.constraint(equalToConstant: 65),
-            title.bottomAnchor.constraint(equalTo: bottomAnchor),
+            title.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
             title.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
             title.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20)
         ])
