@@ -77,7 +77,7 @@ class CreditDetailNotableWorks: UIView {
 extension CreditDetailNotableWorks {
     private func setupAnchors() {
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: K.Poster.height + 75),
+            heightAnchor.constraint(equalToConstant: K.Overview.regularHeightWithSecondary + 30),
             
             header.topAnchor.constraint(equalTo: topAnchor),
             header.heightAnchor.constraint(equalToConstant: 25),
@@ -88,8 +88,8 @@ extension CreditDetailNotableWorks {
         let collectionViewConstraints: [NSLayoutConstraint] = [
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            collectionView.heightAnchor.constraint(equalTo: heightAnchor, constant: -30),
             collectionView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 5),
+            collectionView.heightAnchor.constraint(equalToConstant: K.Overview.regularHeightWithSecondary)
         ]
         NSLayoutConstraint.activate(collectionViewConstraints)
     }
@@ -122,7 +122,7 @@ extension CreditDetailNotableWorks: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OverviewCell.reuseIdentifier, for: indexPath) as! OverviewCell
-        cell.title.textColor = self.colors.primary
+        
         if let media = self.media?[indexPath.row] {
             if let mediaType = media.mediaType {
                 var textStr: String
@@ -133,9 +133,9 @@ extension CreditDetailNotableWorks: UICollectionViewDataSource {
                 }
 
                 if let safePoster = media.posterPath {
-                    cell.configure(name: textStr, image: K.Poster.URL + safePoster)
+                    cell.configure(primary: textStr, secondary: media.character ?? media.job!, image: K.Poster.URL + safePoster, colors: self.colors)
                 } else {
-                    cell.configure(name: textStr)
+                    cell.configure(primary: textStr, secondary: media.character ?? media.job!, colors: self.colors)
                 }
             }
         }

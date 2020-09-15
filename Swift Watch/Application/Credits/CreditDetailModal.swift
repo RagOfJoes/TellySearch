@@ -10,7 +10,13 @@ import UIKit
 import Promises
 import Kingfisher
 
+protocol CreditDetailModalDelegate: class {
+    func shouldPush(VC: UIViewController)
+}
+
 class CreditDetailModal: UIViewController {
+    weak var delegate: CreditDetailModalDelegate?
+    
     private let person: Cast
     private let colors: UIImageColors
     private var personDetail: PersonDetail?
@@ -26,22 +32,22 @@ class CreditDetailModal: UIViewController {
         let label = UILabel()
         label.text = self.person.name
         label.textColor = self.colors.primary
+        label.setupFont(size: 18, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 16, weight: .bold))
         return label
     }()
     
     private lazy var genderLabels: InfoStackView = {
-        return InfoStackView(using: self.colors)
+        return InfoStackView(using: self.colors, fontSize: (14, 14))
     }()
     private lazy var bornLabels: InfoStackView = {
-        return InfoStackView(using: self.colors)
+        return InfoStackView(using: self.colors, fontSize: (14, 14))
     }()
     private lazy var diedLabels: InfoStackView = {
-        return InfoStackView(using: self.colors)
+        return InfoStackView(using: self.colors, fontSize: (14, 14))
     }()
     private lazy var birthplaceStack: InfoStackView = {
-        return InfoStackView(using: self.colors)
+        return InfoStackView(using: self.colors, fontSize: (14, 14))
     }()
     
     private lazy var personalStackViews: UIStackView = {
@@ -59,10 +65,10 @@ class CreditDetailModal: UIViewController {
     }()
     
     private lazy var knownForStack: InfoStackView = {
-        return InfoStackView(using: self.colors)
+        return InfoStackView(using: self.colors, fontSize: (14, 14))
     }()
     private lazy var biographyStack: InfoStackView = {
-        let biographyStack = InfoStackView(using: self.colors, hasReadMore: true)
+        let biographyStack = InfoStackView(using: self.colors, hasReadMore: true, fontSize: (14, 14))
         biographyStack.delegate = self
         return biographyStack
     }()
@@ -76,6 +82,7 @@ class CreditDetailModal: UIViewController {
     
     lazy var notableWorks: CreditDetailNotableWorks = {
         let notableWorks = CreditDetailNotableWorks(colors: self.colors)
+        notableWorks.delegate = self
         return notableWorks
     }()
     
@@ -227,8 +234,6 @@ extension CreditDetailModal {
             DispatchQueue.main.async {
                 self?.updateContentSize()
             }
-        }.catch { (e) in
-            print(e)
         }
     }
 }
@@ -238,6 +243,26 @@ extension CreditDetailModal: InfoStackViewDelegate {
     func didReadMore() {
         DispatchQueue.main.async {
             self.updateContentSize()
+        }
+    }
+}
+
+extension CreditDetailModal: CreditDetailNotableWorksDelegate {
+    func select(media: Media) {
+        guard let type = media.mediaType else { return }
+        
+        if type == .tv {
+            let show = Show(id: media.id, name: media.name!, overview: media.overview, posterPath: media.posterPath, firstAirDate: media.firstAirDate!, backdropPath: media.backdropPath)
+            let detailVC = ShowDetailViewController(with: show)
+            self.dismiss(animated: true) {
+                self.delegate?.shouldPush(VC: detailVC)
+            }
+        } else {
+            let movie = Movie(id: media.id, title: media.title!, overview: media.overview, releaseDate: media.releaseDate ?? "", posterPath: media.posterPath, backdropPath: media.backdropPath)
+            let detailVC = MovieDetailViewController(with: movie)
+            self.dismiss(animated: true) {
+                self.delegate?.shouldPush(VC: detailVC)
+            }
         }
     }
 }
