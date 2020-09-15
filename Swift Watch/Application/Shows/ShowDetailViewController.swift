@@ -16,6 +16,8 @@ class ShowDetailViewController: UIViewController {
     var containerView: UIView
     var scrollView: UIScrollView
     private lazy var backdropDetail = BackdropDetail()
+    private let createdBy = CreatorsCollectionView()
+    
     private lazy var overviewStack: InfoStackView = {
         let overviewStack = InfoStackView(fontSize: (18, 14))
         return overviewStack
@@ -27,8 +29,8 @@ class ShowDetailViewController: UIViewController {
         return castCollectionView
     }()
     
-    private lazy var recommendationsView: MovieDetailRecommendations = {
-        let recommendationsView = MovieDetailRecommendations()
+    private lazy var recommendationsView: ShowDetailRecommendations = {
+        let recommendationsView = ShowDetailRecommendations()
         recommendationsView.delegate = self
         return recommendationsView
     }()
@@ -65,6 +67,7 @@ class ShowDetailViewController: UIViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(containerView)
         containerView.addSubview(backdropDetail)
+        containerView.addSubview(createdBy)
         containerView.addSubview(overviewStack)
         containerView.addSubview(stackView)
         
@@ -158,8 +161,15 @@ extension ShowDetailViewController {
         ]
         NSLayoutConstraint.activate(backdropDetailConstraints)
         
+        let createdByConstraints: [NSLayoutConstraint] = [
+            createdBy.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            createdBy.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            createdBy.topAnchor.constraint(equalTo: backdropDetail.bottomAnchor, constant: 20),
+        ]
+        NSLayoutConstraint.activate(createdByConstraints)
+        
         let overviewStackConstraints: [NSLayoutConstraint] = [
-            overviewStack.topAnchor.constraint(equalTo: backdropDetail.bottomAnchor, constant: 20),
+            overviewStack.topAnchor.constraint(equalTo: createdBy.bottomAnchor, constant: 20),
             overviewStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
             overviewStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20)
         ]
@@ -190,41 +200,48 @@ extension ShowDetailViewController {
     
     // MARK: - Detail UI
     private func setupDetailUI() {
-//        self.show.fetchDetail().then({ detail -> Promise<Void> in
-//            let (genres, runtime) = self.setupBackdropText(with: detail)
-//            
-//            let title = self.movie.title
-//            let releaseDate = self.movie.releaseDate
-//            let posterURL = self.movie.posterPath != nil ? K.Poster.URL + (self.movie.posterPath!) : nil
-//            let backdropURL = self.movie.backdropPath != nil ? K.Backdrop.URL + (self.movie.backdropPath!) : nil
-//            
-//            // Return Void Promise to allow Recommendations to setup UI
-//            return Promise { (fulfill, reject) -> Void in
-//                self.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate) { colors in
-//                    if let credits = detail.credits {
-//                        self.setupCastCollectionView(with: credits, using: colors)
-//                    }
-//                    
-//                    if let recommendations = detail.recommendations?.results {
-//                        self.setupRecommendationsView(with: recommendations, using: colors)
-//                    }
-//                    fulfill(Void())
-//                }
-//            }
-//        }).always {
-//            DispatchQueue.main.async {
-//                self.updateContentSize()
-//            }
-//        }
+        self.show.fetchDetail().then({ detail -> Promise<Void> in
+            let (genres, runtime) = self.setupBackdropText(with: detail)
+            
+            let title = self.show.name
+            let releaseDate = self.show.firstAirDate
+            let posterURL = self.show.posterPath != nil ? K.Poster.URL + (self.show.posterPath!) : nil
+            let backdropURL = self.show.backdropPath != nil ? K.Backdrop.URL + (self.show.backdropPath!) : nil
+            
+            // Return Void Promise to allow Recommendations to setup UI
+            return Promise { (fulfill, reject) -> Void in
+                self.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate) { colors in
+                    if let credits = detail.credits {
+                        self.setupCastCollectionView(with: credits, using: colors)
+                    }
+                    
+                    if let safeCreatedBy = detail.createdBy, safeCreatedBy.count > 0 {
+                        self.createdBy.configure(with: safeCreatedBy, colors: colors, and: "Created By")
+                    } else {
+                        self.createdBy.removeFromSuperview()
+                        self.overviewStack.topAnchor.constraint(equalTo: self.backdropDetail.bottomAnchor, constant: 20).isActive = true
+                    }
+                    
+                    if let recommendations = detail.recommendations?.results {
+                        self.setupRecommendationsView(with: recommendations, using: colors)
+                    }
+                    fulfill(Void())
+                }
+            }
+        }).always {
+            DispatchQueue.main.async {
+                self.updateContentSize()
+            }
+        }
     }
     
-    private func setupRecommendationsView(with movies: [Movie], using colors: UIImageColors) {
-        if movies.count <= 0 {
+    private func setupRecommendationsView(with shows: [Show], using colors: UIImageColors) {
+        if shows.count <= 0 {
             stackView.removeArrangedSubview(recommendationsView)
             recommendationsView.removeFromSuperview()
             return
         }
-        recommendationsView.configure(with: movies, colors: colors)
+        recommendationsView.configure(with: shows, colors: colors)
     }
     
     private func setupCastCollectionView(with credits: Credits, using colors: UIImageColors) {
@@ -248,10 +265,10 @@ extension ShowDetailViewController {
                 return
             }
         }
-        castCollectionView.configure(with: credits, colors: colors)
+        castCollectionView.configure(with: credits, title: "Series Cast", and: colors)
     }
     
-    private func setupBackdropText(with detail: MovieDetail) -> (String?, String?) {
+    private func setupBackdropText(with detail: ShowDetail) -> (String?, String?) {
         var genresStr: String?
         var runtimeStr: String?
         if let safeGenres = detail.genres {
@@ -262,7 +279,7 @@ extension ShowDetailViewController {
             genresStr = genresArr.joined(separator: ", ")
         }
         
-        if let safeRuntime = detail.runtime {
+        if let safeRuntime = detail.episodeRunTime[0] {
             if safeRuntime > 0 {
                 let (hours, minutes) = safeRuntime.minutesToHoursMinutes(minutes: safeRuntime)
                 
@@ -306,14 +323,21 @@ extension ShowDetailViewController: CastCollectionViewDelegate {
     func select(cast: Cast) {
         guard let safeColors = self.colors else { return }
         let creditModal = CreditDetailModal(with: cast, using: safeColors)
+        creditModal.delegate = self
         self.present(creditModal, animated: true)
     }
 }
 
 // MARK: - MovieDetailRecommendationsDelegate
-extension ShowDetailViewController: MovieDetailRecommendationsDelegate {
-    func select(movie: Movie) {
-        let detailVC = MovieDetailViewController(with: movie)
+extension ShowDetailViewController: ShowDetailRecommendationsDelegate {
+    func select(show: Show) {
+        let detailVC = ShowDetailViewController(with: show)
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+}
+
+extension ShowDetailViewController: CreditDetailModalDelegate {
+    func shouldPush(VC: UIViewController) {
+        self.navigationController?.pushViewController(VC, animated: true)
     }
 }
