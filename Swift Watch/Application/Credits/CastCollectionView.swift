@@ -23,7 +23,6 @@ class CastCollectionView: UIView {
         header.translatesAutoresizingMaskIntoConstraints = false
         
         header.isSkeletonable = true
-        header.skeletonCornerRadius = 5
         
         return header
     }()
@@ -32,7 +31,7 @@ class CastCollectionView: UIView {
         let collectionView = UICollectionView.createHorizontalCollectionView(minimumLineSpacing: 10)
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(CastCollectionViewCell.self, forCellWithReuseIdentifier: CastCollectionViewCell.reuseIdentifier)
+        collectionView.register(OverviewCell.self, forCellWithReuseIdentifier: OverviewCell.reuseIdentifier)
         return collectionView
     }()
     
@@ -51,11 +50,11 @@ class CastCollectionView: UIView {
         setupAnchors()
     }
     
-    func configure(with credits: Credits, colors: UIImageColors) {
+    func configure(with credits: Credits, title: String = "Cast", and colors: UIImageColors) {
         self.credits = credits
         self.colors = colors
         
-        header.configure(with: "Top Billed Cast")
+        header.configure(with: title)
         header.title.textColor = self.colors?.primary
         
         self.hideSkeleton()
@@ -70,7 +69,7 @@ class CastCollectionView: UIView {
 extension CastCollectionView {
     private func setupAnchors() {
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: K.Poster.height + 135),
+            heightAnchor.constraint(equalToConstant: K.Overview.regularHeightWithSecondary + 32),
             
             header.topAnchor.constraint(equalTo: topAnchor),
             header.heightAnchor.constraint(equalToConstant: 30),
@@ -92,8 +91,8 @@ extension CastCollectionView {
         let collectionViewConstraints: [NSLayoutConstraint] = [
             collectionViewLeading,
             collectionViewTrailing,
-            collectionView.heightAnchor.constraint(equalTo: heightAnchor, constant: -35),
-            collectionView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 5),
+            collectionView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 2),
+            collectionView.heightAnchor.constraint(equalToConstant: K.Overview.regularHeightWithSecondary)
         ]
         NSLayoutConstraint.activate(collectionViewConstraints)
     }
@@ -129,10 +128,14 @@ extension CastCollectionView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCollectionViewCell.reuseIdentifier, for: indexPath) as! CastCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OverviewCell.reuseIdentifier, for: indexPath) as! OverviewCell
         
-        if let cast = credits?.cast?[indexPath.row], let safeColors = colors{
-            cell.configure(with: cast, colors: safeColors)
+        if let cast = credits?.cast?[indexPath.row], let safeColors = colors {
+            guard let profile = cast.profilePath else {
+                cell.configure(primary: cast.name, secondary: cast.character)
+                return cell
+            }
+            cell.configure(primary: cast.name, secondary: cast.character, image: K.Credits.profileURL + profile, colors: safeColors)
         }
         
         return cell
@@ -143,7 +146,7 @@ extension CastCollectionView: UICollectionViewDataSource {
 // MARK: - SkeletonCollectionViewDataSource
 extension CastCollectionView: SkeletonCollectionViewDataSource {
     func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
-        return CastCollectionViewCell.reuseIdentifier
+        return OverviewCell.reuseIdentifier
     }
     
     func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
