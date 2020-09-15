@@ -30,7 +30,6 @@ extension UICollectionView {
         collectionView.isSkeletonable = true
         collectionView.skeletonCornerRadius = 5
         
-        
         return collectionView
     }
 }
