@@ -18,6 +18,7 @@ struct ShowDetail: Codable {
     let rateAvg: Double
     let genres: [Genre]?
     let tagline: String?
+    let seasons: [Season]
     let credits: Credits?
     let episodeRunTime: [Int?]
     let createdByIds: [CrewIds]
@@ -43,6 +44,7 @@ struct ShowDetail: Codable {
     
     enum CodingKeys: String, CodingKey {
         case genres
+        case seasons
         case tagline
         case runtime
         case credits
