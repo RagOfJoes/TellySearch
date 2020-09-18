@@ -23,6 +23,12 @@ class ShowDetailViewController: UIViewController {
         return overviewStack
     }()
     
+    private lazy var seasonsView: ShowDetailSeasons = {
+        let seasonsView = ShowDetailSeasons()
+        
+        return seasonsView
+    }()
+    
     private lazy var castCollectionView: CastCollectionView = {
         let castCollectionView = CastCollectionView()
         castCollectionView.delegate = self
@@ -36,10 +42,11 @@ class ShowDetailViewController: UIViewController {
     }()
     
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [castCollectionView, recommendationsView])
+        let stackView = UIStackView(arrangedSubviews: [seasonsView, castCollectionView, recommendationsView])
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
+        stackView.setCustomSpacing(20, after: seasonsView)
         stackView.setCustomSpacing(20, after: castCollectionView)
         stackView.setCustomSpacing(20, after: recommendationsView)
         
@@ -211,6 +218,8 @@ extension ShowDetailViewController {
             // Return Void Promise to allow Recommendations to setup UI
             return Promise { (fulfill, reject) -> Void in
                 self.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate) { colors in
+                    self.setupSeasonsView(with: detail.seasons, using: colors)
+                    
                     if let credits = detail.credits {
                         self.setupCastCollectionView(with: credits, using: colors)
                     }
@@ -232,16 +241,9 @@ extension ShowDetailViewController {
             DispatchQueue.main.async {
                 self.updateContentSize()
             }
+        }.catch { e in
+            print(e)
         }
-    }
-    
-    private func setupRecommendationsView(with shows: [Show], using colors: UIImageColors) {
-        if shows.count <= 0 {
-            stackView.removeArrangedSubview(recommendationsView)
-            recommendationsView.removeFromSuperview()
-            return
-        }
-        recommendationsView.configure(with: shows, colors: colors)
     }
     
     private func setupCastCollectionView(with credits: Credits, using colors: UIImageColors) {
@@ -266,6 +268,24 @@ extension ShowDetailViewController {
             }
         }
         castCollectionView.configure(with: credits, title: "Series Cast", and: colors)
+    }
+    
+    private func setupSeasonsView(with seasons: [Season], using colors: UIImageColors) {
+        if seasons.count <= 0 {
+            stackView.removeArrangedSubview(seasonsView)
+            seasonsView.removeFromSuperview()
+            return
+        }
+        seasonsView.configure(with: seasons.reversed(), colors: colors)
+    }
+    
+    private func setupRecommendationsView(with shows: [Show], using colors: UIImageColors) {
+        if shows.count <= 0 {
+            stackView.removeArrangedSubview(recommendationsView)
+            recommendationsView.removeFromSuperview()
+            return
+        }
+        recommendationsView.configure(with: shows, colors: colors)
     }
     
     private func setupBackdropText(with detail: ShowDetail) -> (String?, String?) {

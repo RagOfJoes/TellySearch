@@ -17,6 +17,8 @@
 		D60921B524CB5066001339EE /* UIButton+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60921B424CB5066001339EE /* UIButton+Additions.swift */; };
 		D60921B724CB514A001339EE /* FloatingTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60921B624CB514A001339EE /* FloatingTabBarView.swift */; };
 		D611F76324CA753700B3FE6A /* UIView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D611F76224CA753700B3FE6A /* UIView+Additions.swift */; };
+		D619A784251496E6002639B2 /* Season.swift in Sources */ = {isa = PBXBuildFile; fileRef = D619A783251496E6002639B2 /* Season.swift */; };
+		D619A78625149E2F002639B2 /* ShowDetailSeasons.swift in Sources */ = {isa = PBXBuildFile; fileRef = D619A78525149E2F002639B2 /* ShowDetailSeasons.swift */; };
 		D636CC5524CFB6C000361614 /* MovieDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D636CC5424CFB6C000361614 /* MovieDetail.swift */; };
 		D64241A524F6C1E700D1372D /* PosterImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64241A424F6C1E700D1372D /* PosterImageView.swift */; };
 		D6464FC624CA306E00C4497E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6464FC524CA306E00C4497E /* AppDelegate.swift */; };
@@ -111,6 +113,8 @@
 		D60921B424CB5066001339EE /* UIButton+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Additions.swift"; sourceTree = "<group>"; };
 		D60921B624CB514A001339EE /* FloatingTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingTabBarView.swift; sourceTree = "<group>"; };
 		D611F76224CA753700B3FE6A /* UIView+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Additions.swift"; sourceTree = "<group>"; };
+		D619A783251496E6002639B2 /* Season.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Season.swift; sourceTree = "<group>"; };
+		D619A78525149E2F002639B2 /* ShowDetailSeasons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowDetailSeasons.swift; sourceTree = "<group>"; };
 		D636CC5424CFB6C000361614 /* MovieDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetail.swift; sourceTree = "<group>"; };
 		D64241A424F6C1E700D1372D /* PosterImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterImageView.swift; sourceTree = "<group>"; };
 		D6464FC224CA306E00C4497E /* Swift Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swift Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -377,6 +381,7 @@
 				D6D63BB8250589EA002C60FA /* ShowsCollectionView.swift */,
 				D6D63BBA25058B26002C60FA /* ShowsFeaturedCollectionView.swift */,
 				D6D63BC225058E20002C60FA /* ShowDetailViewController.swift */,
+				D619A78525149E2F002639B2 /* ShowDetailSeasons.swift */,
 				D6F1053F250EEC1C0080D1F6 /* ShowDetailRecommendations.swift */,
 			);
 			path = Shows;
@@ -426,6 +431,7 @@
 			isa = PBXGroup;
 			children = (
 				D6D63BBC25058D63002C60FA /* Show.swift */,
+				D619A783251496E6002639B2 /* Season.swift */,
 				D6D63BC425058EF8002C60FA /* ShowDetail.swift */,
 				D6D63BBE25058D8C002C60FA /* ShowSection.swift */,
 				D6D63BC025058DAB002C60FA /* ShowSectionCell.swift */,
@@ -723,6 +729,7 @@
 				D6D63BC125058DAB002C60FA /* ShowSectionCell.swift in Sources */,
 				D6D63BC325058E20002C60FA /* ShowDetailViewController.swift in Sources */,
 				D6464FC624CA306E00C4497E /* AppDelegate.swift in Sources */,
+				D619A784251496E6002639B2 /* Season.swift in Sources */,
 				D611F76324CA753700B3FE6A /* UIView+Additions.swift in Sources */,
 				D6F545CF24FD5C0F00700677 /* CreditDetailNotableWorks.swift in Sources */,
 				D6040F3624DDFB920020815B /* CastCollectionView.swift in Sources */,
@@ -747,6 +754,7 @@
 				D6E3686624CA737A00863736 /* UIImage+Additions.swift in Sources */,
 				D650B97E24CB858100DD1E61 /* Movie.swift in Sources */,
 				D6A0549024E33BE0009C87B2 /* OverviewHeader.swift in Sources */,
+				D619A78625149E2F002639B2 /* ShowDetailSeasons.swift in Sources */,
 				D6C39B0624EBC7CC0033C11B /* MovieSectionCell.swift in Sources */,
 				D650B97C24CB855300DD1E61 /* Genre.swift in Sources */,
 				D64EB41624E36EA800B608CF /* MovieDetailRecommendations.swift in Sources */,
