@@ -1,12 +1,12 @@
 PODS:
   - Cache (5.3.0)
-  - Kingfisher (5.14.1):
-    - Kingfisher/Core (= 5.14.1)
-  - Kingfisher/Core (5.14.1)
-  - PromisesObjC (1.2.9)
-  - PromisesSwift (1.2.9):
-    - PromisesObjC (= 1.2.9)
-  - SkeletonView (1.8.7)
+  - Kingfisher (5.15.1):
+    - Kingfisher/Core (= 5.15.1)
+  - Kingfisher/Core (5.15.1)
+  - PromisesObjC (1.2.10)
+  - PromisesSwift (1.2.10):
+    - PromisesObjC (= 1.2.10)
+  - SkeletonView (1.9)
 
 DEPENDENCIES:
   - Cache
@@ -24,10 +24,10 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Cache: 48762993ec44e1d93483c4d4a13edd18452326f4
-  Kingfisher: 8050bc6f7f68cbf3908bd04df7ccbac188f6d6d6
-  PromisesObjC: b48e0338dbbac2207e611750777895f7a5811b75
-  PromisesSwift: 991ad88e9851c45410d6697d1fe5df88fd3deb08
-  SkeletonView: ba5370f41280b2f0a76918bb143c1294232bb4f4
+  Kingfisher: 3260a05e78a17fdbeb2f14dd8e66ffc768491231
+  PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
+  PromisesSwift: ce4c7602f91a6bfc8732039f1bc1a3fcded1a302
+  SkeletonView: f72ac4df69730e48324efae062ba580c2fce974d
 
 PODFILE CHECKSUM: 21d364377d62916777ef5111c2b3238c09939bfc
 
