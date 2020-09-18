@@ -9,6 +9,7 @@
 import UIKit
 
 struct K {
+    static let ScrollOffsetHeight: CGFloat = 45
     static let CommonQuery: String = "?api_key=\(K.TmdbApiKey)&region=\(K.User.country)&language=\(K.User.language)"
     static let TmdbApiKey: String = {
         if let path = Bundle.main.path(forResource: "Keys", ofType: "plist") {

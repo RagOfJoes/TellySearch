@@ -170,7 +170,7 @@ extension CreditDetailModal {
     }
     
     private func updateContentSize() {
-        let offsetHeight:CGFloat = 45
+        let offsetHeight:CGFloat = K.ScrollOffsetHeight
         let view = self.view.frame
         
         if !notableWorks.isDescendant(of: self.view) {

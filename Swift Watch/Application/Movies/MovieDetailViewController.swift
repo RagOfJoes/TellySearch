@@ -305,7 +305,7 @@ extension MovieDetailViewController {
     
     // MARK: - Update ScrollVIewContentSize
     private func updateContentSize() {
-        let offsetHeight:CGFloat = 90
+        let offsetHeight:CGFloat = K.ScrollOffsetHeight
         let screen = UIScreen.main.bounds
         
         let stackViewY = stackView.frame.maxY + offsetHeight
