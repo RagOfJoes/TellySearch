@@ -27,7 +27,7 @@ class MovieFeaturedCollectionView: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         backgroundColor = .clear
-        addSubview(collectionView)
+        contentView.addSubview(collectionView)
         collectionView.prepareSkeleton { (done) in
             self.collectionView.showAnimatedGradientSkeleton()
         }
