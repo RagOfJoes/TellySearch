@@ -17,7 +17,7 @@ extension UIImageView {
         if completionHandler != nil {
             self.kf.setImage(with: url, placeholder: placeholder, options: options, completionHandler: completionHandler)
         } else {
-            self.kf.setImage(with: url, placeholder: placeholder, options: options) { result in
+            self.kf.setImage(with: url, placeholder: placeholder, options: options, completionHandler:  { result in
                 switch result {
                 case .success:
                     return
@@ -25,7 +25,7 @@ extension UIImageView {
                     self.image = placeholder
                     return
                 }
-            }
+            })
         }
     }
 }
