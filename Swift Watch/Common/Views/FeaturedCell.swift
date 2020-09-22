@@ -1,5 +1,5 @@
 //
-//  OverviewFeaturedCell.swift
+//  FeaturedCell.swift
 //  Swift Watch
 //
 //  Created by Victor Ragojos on 8/18/20.
@@ -10,12 +10,25 @@ import UIKit
 import Kingfisher
 import SkeletonView
 
-protocol OverviewFeaturedConfigureCell: SelfConfiguringCell {
+protocol ConfigurableFeaturedCell: ReusableCell {
     func configure(name: String, image: String?)
 }
 
-class OverviewFeaturedCell: UICollectionViewCell {
-    lazy var title: UILabel = {
+class FeaturedCell: UICollectionViewCell {
+    private lazy var imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 5
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        imageView.isSkeletonable = true
+        imageView.skeletonCornerRadius = 5
+        
+        return imageView
+    }()
+    
+    private lazy var title: UILabel = {
         let title = UILabel()
         title.numberOfLines = 2
         title.textColor = UIColor(named: "primaryTextColor")
@@ -25,26 +38,25 @@ class OverviewFeaturedCell: UICollectionViewCell {
         return title
     }()
     
-    lazy var imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 5
-        imageView.contentMode = .scaleAspectFill
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        return imageView
-    }()
-    
     override init(frame: CGRect) {
-        super.init(frame: frame)
+        super.init(frame: .zero)
+        clipsToBounds = true
+        translatesAutoresizingMaskIntoConstraints = false
         
         contentView.addSubview(title)
         contentView.addSubview(imageView)
+        
+        let placeholder = "Lorem"
+        let primaryFont = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .bold))
+        let primaryHeight = placeholder.height(font: primaryFont) * 2
+        
+        let imageHeight: CGFloat = K.Overview.featuredCellHeight - (primaryHeight + 5)
+        
         let stackViewConstraints: [NSLayoutConstraint] = [
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: imageHeight),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -45),
             
             title.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
             title.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
@@ -53,8 +65,6 @@ class OverviewFeaturedCell: UICollectionViewCell {
         NSLayoutConstraint.activate(stackViewConstraints)
         
         isSkeletonable = true
-        skeletonCornerRadius = 5
-        showAnimatedGradientSkeleton()
     }
     
     override var isHighlighted: Bool {
@@ -67,9 +77,7 @@ class OverviewFeaturedCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
-extension OverviewFeaturedCell: OverviewFeaturedConfigureCell {
-    static var reuseIdentifier = "OverviewFeaturedCell"
-    
+extension FeaturedCell: ConfigurableFeaturedCell {    
     func configure(name: String, image: String? = nil) {
         DispatchQueue.main.async {
             self.hideSkeleton()

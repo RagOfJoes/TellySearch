@@ -1,5 +1,5 @@
 //
-//  MovieCell.swift
+//  RegularCell.swift
 //  Swift Watch
 //
 //  Created by Victor Ragojos on 7/24/20.
@@ -10,23 +10,22 @@ import UIKit
 import Kingfisher
 import SkeletonView
 
-protocol OverviewConfigureCell: SelfConfiguringCell {
+protocol ConfigurableRegularCell: ReusableCell {
     func configure(primary: String, secondary: String?, image: String?, colors: UIImageColors?)
 }
 
-class OverviewCell: UICollectionViewCell {
-    lazy var primaryLabel: UILabel = {
+class RegularCell: UICollectionViewCell {
+    private lazy var primaryLabel: UILabel = {
         let primaryLabel = UILabel()
         primaryLabel.numberOfLines = 2
         primaryLabel.setupFont(size: 14, weight: .bold)
         primaryLabel.textColor = UIColor(named: "primaryTextColor")
         primaryLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        primaryLabel.isSkeletonable = true
         return primaryLabel
     }()
     
-    lazy var secondaryLabel: UILabel = {
+    private lazy var secondaryLabel: UILabel = {
         let secondaryLabel = UILabel()
         secondaryLabel.numberOfLines = 2
         secondaryLabel.setupFont(size: 13, weight: .medium)
@@ -36,11 +35,11 @@ class OverviewCell: UICollectionViewCell {
         return secondaryLabel
     }()
     
-    lazy var imageView: UIImageView = {
+    private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 5
         imageView.contentMode = .scaleAspectFill
-        imageView.roundCorners(.allCorners, radius: 5)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         imageView.isSkeletonable = true
@@ -49,7 +48,7 @@ class OverviewCell: UICollectionViewCell {
     }()
     
     override init(frame: CGRect) {
-        super.init(frame: frame)
+        super.init(frame: .zero)
         clipsToBounds = true
         translatesAutoresizingMaskIntoConstraints = false
         
@@ -59,7 +58,6 @@ class OverviewCell: UICollectionViewCell {
         
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            imageView.widthAnchor.constraint(equalToConstant: K.Poster.width),
             imageView.heightAnchor.constraint(equalToConstant: K.Poster.height),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
@@ -74,7 +72,6 @@ class OverviewCell: UICollectionViewCell {
         ])
         
         isSkeletonable = true
-        skeletonCornerRadius = 5
     }
     
     override var isHighlighted: Bool {
@@ -87,11 +84,9 @@ class OverviewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
-extension OverviewCell: OverviewConfigureCell {
-    static var reuseIdentifier = "OverviewCell"
-    
+extension RegularCell: ConfigurableRegularCell {    
     func configure(primary: String, secondary: String? = nil, image: String? = nil, colors: UIImageColors? = nil) {
-        self.hideSkeleton()
+        hideSkeleton()
         DispatchQueue.main.async {
             self.primaryLabel.text = primary
             
