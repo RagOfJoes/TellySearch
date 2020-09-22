@@ -24,19 +24,19 @@ class ShowDetailViewController: UIViewController {
     }()
     
     private lazy var seasonsView: ShowDetailSeasons = {
-        let seasonsView = ShowDetailSeasons()
+        let seasonsView = ShowDetailSeasons(.Regular)
         
         return seasonsView
     }()
     
     private lazy var castCollectionView: CastCollectionView = {
-        let castCollectionView = CastCollectionView()
+        let castCollectionView = CastCollectionView(.RegularHasSecondary)
         castCollectionView.delegate = self
         return castCollectionView
     }()
     
     private lazy var recommendationsView: ShowDetailRecommendations = {
-        let recommendationsView = ShowDetailRecommendations()
+        let recommendationsView = ShowDetailRecommendations(.Regular)
         recommendationsView.delegate = self
         return recommendationsView
     }()
@@ -84,7 +84,6 @@ class ShowDetailViewController: UIViewController {
     
     // MARK: - viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
-        AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
         super.viewWillAppear(animated)
         setupNav(by: true)
         view.layoutIfNeeded()
@@ -111,7 +110,6 @@ class ShowDetailViewController: UIViewController {
         
         if(isMovingFromParent) {
             setupNav(by: false)
-            AppUtility.lockOrientation(.all)
         }
     }
     
@@ -267,7 +265,7 @@ extension ShowDetailViewController {
                 return
             }
         }
-        castCollectionView.configure(with: credits, title: "Series Cast", and: colors)
+        castCollectionView.configure(with: credits, title: "Series Cast", colors: colors)
     }
     
     private func setupSeasonsView(with seasons: [Season], using colors: UIImageColors) {
@@ -299,7 +297,7 @@ extension ShowDetailViewController {
             genresStr = genresArr.joined(separator: ", ")
         }
         
-        if let safeRuntime = detail.episodeRunTime[0] {
+        if detail.episodeRunTime.count > 0, let safeRuntime = detail.episodeRunTime[0] {
             if safeRuntime > 0 {
                 let (hours, minutes) = safeRuntime.minutesToHoursMinutes(minutes: safeRuntime)
                 

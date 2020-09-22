@@ -27,15 +27,10 @@ class ShowsViewController: UIViewController {
         tableView.allowsSelection = false
         tableView.backgroundColor = .clear
         tableView.delaysContentTouches = false
-        for (index, section) in sections.enumerated() {
-            if section.type == .featured {
-                let identifier = "ShowsFeaturedCollectionView+\(index)"
-                tableView.register(ShowsFeaturedCollectionView.self, forCellReuseIdentifier: identifier)
-            } else {
-                let identifier = "ShowsCollectionView+\(index)"
-                tableView.register(ShowsCollectionView.self, forCellReuseIdentifier: identifier)
-            }
-        }
+        tableView.showsVerticalScrollIndicator = false
+        
+        tableView.register(ShowsCollectionView.self, forCellReuseIdentifier: ShowsCollectionView.reuseIdentifier)
+        tableView.register(ShowsFeaturedCollectionView.self, forCellReuseIdentifier: ShowsFeaturedCollectionView.reuseIdentifier)
         
         return tableView
     }()
@@ -57,19 +52,22 @@ class ShowsViewController: UIViewController {
             sections[3].section.fetchSection(with: .topRated)
         ]
         
-        all(promises)
-            .then { [weak self] (results) in
-                // Loop through all the results
-                // and append to shows array
-                for data in results {
-                    self?.shows.append(data)
-                }
-                
-                // Reload TableView's Data
-                // in the Main Thread
-                DispatchQueue.main.async {
-                    self?.tableView.reloadData()
-                }
+        all(promises.map { section in
+            return section.then({ (data) -> Promise<[Show]> in
+                return ShowSection.decodeShowSection(data: data)
+            })
+        }).then { [weak self] (results) in
+            // Loop through all the results
+            // and append to shows array
+            for data in results {
+                self?.shows.append(data)
+            }
+            
+            // Reload TableView's Data
+            // in the Main Thread
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
         }
     }
 }
@@ -87,8 +85,7 @@ extension ShowsViewController: UITableViewDelegate {
         let cellType = sections[indexPath.section].type
         switch cellType {
         case .featured:
-            let height: CGFloat = .getHeight(with: K.Overview.featuredCellWidth, using: K.Overview.featuredImageRatio)
-            return height + 45
+            return K.Overview.featuredCellHeight
         default:
             return K.Overview.regularHeight
         }
@@ -109,8 +106,7 @@ extension ShowsViewController: UITableViewDataSource {
         let cellType = sections[indexPath.section].type
         
         if cellType == .featured {
-            let identifier = "ShowsFeaturedCollectionView+\(indexPath.section)"
-            let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ShowsFeaturedCollectionView
+            let cell = tableView.dequeueReusableCell(withIdentifier: ShowsFeaturedCollectionView.reuseIdentifier, for: indexPath) as! ShowsFeaturedCollectionView
             
             if shows.count > indexPath.section, let data = shows[indexPath.section] {
                 cell.delegate = self
@@ -120,8 +116,7 @@ extension ShowsViewController: UITableViewDataSource {
             }
             return cell
         } else {
-            let identifier = "ShowsCollectionView+\(indexPath.section)"
-            let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! ShowsCollectionView
+            let cell = tableView.dequeueReusableCell(withIdentifier: ShowsCollectionView.reuseIdentifier, for: indexPath) as! ShowsCollectionView
             
             if shows.count > indexPath.section, let data = shows[indexPath.section] {
                 cell.delegate = self

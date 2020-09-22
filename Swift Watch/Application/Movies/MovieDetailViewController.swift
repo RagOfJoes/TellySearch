@@ -25,13 +25,13 @@ class MovieDetailViewController: UIViewController {
     }()
     
     private lazy var castCollectionView: CastCollectionView = {
-        let castCollectionView = CastCollectionView()
+        let castCollectionView = CastCollectionView(.RegularHasSecondary)
         castCollectionView.delegate = self
         return castCollectionView
     }()
     
     private lazy var recommendationsView: MovieDetailRecommendations = {
-        let recommendationsView = MovieDetailRecommendations()
+        let recommendationsView = MovieDetailRecommendations(.Regular)
         recommendationsView.delegate = self
         return recommendationsView
     }()
@@ -61,8 +61,14 @@ class MovieDetailViewController: UIViewController {
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        let backBarButton = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
-        navigationItem.backBarButtonItem = backBarButton
+        
+        if #available(iOS 13, *) {
+            let backBarButton = UIBarButtonItem(image: .remove, style: .plain, target: nil, action: nil)
+            navigationItem.backBarButtonItem = backBarButton
+        } else {
+            let backBarButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+            navigationItem.backBarButtonItem = backBarButton
+        }
         
         view.backgroundColor = UIColor(named: "backgroundColor")
         view.addSubview(scrollView)
@@ -78,7 +84,6 @@ class MovieDetailViewController: UIViewController {
     
     // MARK: - viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
-        AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
         super.viewWillAppear(animated)
         setupNav(by: true)
         view.layoutIfNeeded()
@@ -105,7 +110,6 @@ class MovieDetailViewController: UIViewController {
         
         if(isMovingFromParent) {
             setupNav(by: false)
-            AppUtility.lockOrientation(.all)
         }
     }
     
@@ -264,7 +268,7 @@ extension MovieDetailViewController {
                 return
             }
         }
-        castCollectionView.configure(with: credits, title: "Top Billed Cast", and: colors)
+        castCollectionView.configure(with: credits, title: "Top Billed Cast", colors: colors)
     }
     
     private func setupBackdropText(with detail: MovieDetail) -> (String?, String?) {
@@ -305,7 +309,7 @@ extension MovieDetailViewController {
     
     // MARK: - Update ScrollVIewContentSize
     private func updateContentSize() {
-        let offsetHeight:CGFloat = K.ScrollOffsetHeight
+        let offsetHeight: CGFloat = K.ScrollOffsetHeight
         let screen = UIScreen.main.bounds
         
         let stackViewY = stackView.frame.maxY + offsetHeight
@@ -323,7 +327,8 @@ extension MovieDetailViewController: CastCollectionViewDelegate {
         guard let safeColors = self.colors else { return }
         let creditModal = CreditDetailModal(with: cast, using: safeColors)
         creditModal.delegate = self
-        self.present(creditModal, animated: true)
+        let navController = UINavigationController(rootViewController: creditModal)
+        self.present(navController, animated: true)
     }
 }
 

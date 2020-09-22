@@ -14,8 +14,8 @@ class CreatorsCollectionView: UIView {
     private var colors: UIImageColors?
     private var heightConstraint: NSLayoutConstraint!
     
-    private lazy var header: CastCollectionViewHeader = {
-        let header = CastCollectionViewHeader()
+    private lazy var header: GenericCollectionViewHeader = {
+        let header = GenericCollectionViewHeader()
         header.translatesAutoresizingMaskIntoConstraints = false
         
         header.isSkeletonable = true
@@ -72,8 +72,7 @@ class CreatorsCollectionView: UIView {
         self.crews = crews
         self.colors = colors
         
-        header.configure(with: title)
-        header.title.textColor = colors.primary
+        self.header.configure(title, color: colors.primary)
         
         if crews.count > 2 {
             let numOfRows: CGFloat = (CGFloat(crews.count) / 2).rounded(.toNearestOrEven)
@@ -123,7 +122,7 @@ extension CreatorsCollectionView {
 // MARK: - UICollectionViewDelegate
 extension CreatorsCollectionView: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let crew = self.crews?[indexPath.row] {
+        if (self.crews?[indexPath.row]) != nil {
             //            self.delegate?.select(cast: cast)
         }
     }
@@ -149,7 +148,7 @@ extension CreatorsCollectionView: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreatorsCollectionViewCell.reuseIdentifier, for: indexPath) as! CreatorsCollectionViewCell
         
         if let crew = self.crews?[indexPath.row], let safeColors = colors {
-            cell.configure(primary: crew.name, secondary: crew.job ?? "-", color: safeColors.secondary)
+            cell.configure(primary: crew.name, secondary: crew.job , color: safeColors.secondary)
         }
         
         return cell

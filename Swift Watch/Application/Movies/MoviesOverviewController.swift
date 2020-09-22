@@ -17,10 +17,10 @@ class MoviesOverviewController: UIViewController  {
 		MovieSectionCell(section: MovieSection(title: "Popular"), type: .featured),
 		MovieSectionCell(section: MovieSection(title: "In Theatres"), type: .regular),
 		MovieSectionCell(section: MovieSection(title: "Top Rated"), type: .regular),
-		MovieSectionCell(section: MovieSection(title: "Upcoming"), type: .regular)
+		MovieSectionCell(section: MovieSection(title: "Upcoming"), type: .regular),
 	]
 	
-	lazy var tableView: UITableView = {
+	private lazy var tableView: UITableView = {
 		let tableView = UITableView(frame: .zero, style: .grouped)
 		tableView.delegate = self
 		tableView.dataSource = self
@@ -28,15 +28,9 @@ class MoviesOverviewController: UIViewController  {
 		tableView.allowsSelection = false
 		tableView.backgroundColor = .clear
 		tableView.delaysContentTouches = false
-		for (index, section) in sections.enumerated() {
-			if section.type == .featured {
-				let identifier = "MovieFeaturedCollectionView+\(index)"
-				tableView.register(MovieFeaturedCollectionView.self, forCellReuseIdentifier: identifier)
-			} else {
-				let identifier = "MovieCollectionView+\(index)"
-				tableView.register(MovieCollectionView.self, forCellReuseIdentifier: identifier)				
-			}
-		}
+		tableView.showsVerticalScrollIndicator = false
+		tableView.register(MovieCollectionView.self, forCellReuseIdentifier: MovieCollectionView.reuseIdentifier)
+		tableView.register(MovieFeaturedCollectionView.self, forCellReuseIdentifier: MovieFeaturedCollectionView.reuseIdentifier)
 		
 		return tableView
 	}()
@@ -58,19 +52,23 @@ class MoviesOverviewController: UIViewController  {
 			sections[3].section.fetchSection(with: .upcoming)
 		]
 		
-		all(promises)
-			.then { [weak self] (results) in
-				// Loop through all the results
-				// and append to movies array
-				for data in results {
-					self?.movies.append(data)
-				}
-				
-				// Reload TableView's Data
-				// in the Main Thread
-				DispatchQueue.main.async {
-					self?.tableView.reloadData()
-				}
+		all(promises.map { section in
+			return section.then({ (data) -> Promise<[Movie]> in
+				return MovieSection.decodeMovieSection(data: data)
+			})
+		})
+		.then { [weak self] (results) in
+			// Loop through all the results
+			// and append to movies array
+			for result in results {
+				self?.movies.append(result)
+			}
+			
+			// Reload TableView's Data
+			// in the Main Thread
+			DispatchQueue.main.async {
+				self?.tableView.reloadData()
+			}
 		}
 	}
 }
@@ -88,8 +86,7 @@ extension MoviesOverviewController: UITableViewDelegate {
 		let cellType = sections[indexPath.section].type
 		switch cellType {
 		case .featured:
-			let height: CGFloat = .getHeight(with: K.Overview.featuredCellWidth, using: K.Overview.featuredImageRatio)
-			return height + 45
+			return K.Overview.featuredCellHeight
 		default:
 			return K.Overview.regularHeight
 		}
@@ -98,20 +95,21 @@ extension MoviesOverviewController: UITableViewDelegate {
 
 // MARK: - UITableViewDataSource
 extension MoviesOverviewController: UITableViewDataSource {
-	func numberOfSections(in tableView: UITableView) -> Int {
-		return sections.count
-	}
-	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return 1
+	}
+	
+	func numberOfSections(in tableView: UITableView) -> Int {
+		return sections.count
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cellType = sections[indexPath.section].type
 		
 		if cellType == .featured {
-			let identifier = "MovieFeaturedCollectionView+\(indexPath.section)"
-			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! MovieFeaturedCollectionView
+			guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieFeaturedCollectionView.reuseIdentifier, for: indexPath) as? MovieFeaturedCollectionView else {
+				return UITableViewCell()
+			}
 			
 			if movies.count > indexPath.section, let data = movies[indexPath.section] {
 				cell.delegate = self
@@ -121,8 +119,9 @@ extension MoviesOverviewController: UITableViewDataSource {
 			}
 			return cell
 		} else {
-			let identifier = "MovieCollectionView+\(indexPath.section)"
-			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! MovieCollectionView
+			guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieCollectionView.reuseIdentifier, for: indexPath) as? MovieCollectionView else {
+				return UITableViewCell()
+			}
 			
 			if movies.count > indexPath.section, let data = movies[indexPath.section] {
 				cell.delegate = self

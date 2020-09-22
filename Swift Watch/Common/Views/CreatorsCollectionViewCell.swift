@@ -9,7 +9,7 @@
 import UIKit
 import SkeletonView
 
-protocol ConfigureCreatorsCollectionViewCell: SelfConfiguringCell {
+protocol ConfigureCreatorsCollectionViewCell: ReusableCell {
     func configure(primary: String, secondary: String, color: UIColor)
 }
 
