@@ -1,15 +1,15 @@
 //
-//  CastCollectionViewHeader.swift
+//  GenericCollectionViewHeader.swift
 //  Swift Watch
 //
-//  Created by Victor Ragojos on 8/10/20.
+//  Created by Victor Ragojos on 9/21/20.
 //  Copyright © 2020 Victor Ragojos. All rights reserved.
 //
 
 import UIKit
 
-class CastCollectionViewHeader: UIView {
-    lazy var title: UILabel = {
+class GenericCollectionViewHeader: UIView {
+    private lazy var title: UILabel = {
         let title = UILabel()
         title.textColor = UIColor(named: "primaryTextColor")
         title.translatesAutoresizingMaskIntoConstraints = false
@@ -24,12 +24,17 @@ class CastCollectionViewHeader: UIView {
         setupUI()
     }
     
-    func configure(with text: String) {
+    func configure(_ text: String, color: UIColor? = nil) {
         title.text = text
+        
+        if color != nil {
+            title.textColor = color            
+        }
     }
     
     private func setupUI() {
         backgroundColor = .clear
+        translatesAutoresizingMaskIntoConstraints = false
         
         addSubview(title)
         
