@@ -10,14 +10,20 @@ import UIKit
 import Promises
 
 class MovieDetailViewController: UIViewController {
+    // MARK: - Internal Properties
     let movie: Movie
     var colors: UIImageColors?
-    // MARK: - View Declarations
+    
     var containerView: UIView
     var scrollView: UIScrollView
     private lazy var backdropDetail = BackdropDetail()
     
-    private let directedBy = CreatorsCollectionView()
+    private lazy var directedBy: CreatorsCollectionView = {
+        let directedBy = CreatorsCollectionView()
+        directedBy.delegate = self
+        
+        return directedBy
+    }()
     
     private lazy var overviewStack: InfoStackView = {
         let overviewStack = InfoStackView(fontSize: (18, 14))
@@ -47,7 +53,7 @@ class MovieDetailViewController: UIViewController {
         return stackView
     }()
     
-    // MARK: - Init
+    // MARK: - LifeCycle
     init(with movie: Movie) {
         self.movie = movie
         
@@ -58,17 +64,11 @@ class MovieDetailViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if #available(iOS 13, *) {
-            let backBarButton = UIBarButtonItem(image: .remove, style: .plain, target: nil, action: nil)
-            navigationItem.backBarButtonItem = backBarButton
-        } else {
-            let backBarButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-            navigationItem.backBarButtonItem = backBarButton
-        }
+        let backBarButton = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
+        navigationItem.backBarButtonItem = backBarButton
         
         view.backgroundColor = UIColor(named: "backgroundColor")
         view.addSubview(scrollView)
@@ -82,7 +82,6 @@ class MovieDetailViewController: UIViewController {
         setupDetailUI()
     }
     
-    // MARK: - viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupNav(by: true)
@@ -104,7 +103,6 @@ class MovieDetailViewController: UIViewController {
         }
     }
     
-    // MARK: - viewWillDisappear
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -118,9 +116,13 @@ class MovieDetailViewController: UIViewController {
     }
 }
 
-// MARK: - UI Setup
+// MARK: - View Setup
 extension MovieDetailViewController {
-    // MARK: - Nav
+    private func setupUIColors(with colors: UIImageColors) {
+        view.backgroundColor = colors.background
+        navigationController?.navigationBar.tintColor = colors.primary
+    }
+    
     func setupNav(by disappearing: Bool) {
         if disappearing {
             self.navigationController?.navigationBar.shadowImage = UIImage()
@@ -141,7 +143,6 @@ extension MovieDetailViewController {
         }
     }
     
-    // MARK: - Anchors
     private func setupAnchors() {
         let scrollViewConstraints: [NSLayoutConstraint] = [
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -197,15 +198,25 @@ extension MovieDetailViewController {
         NSLayoutConstraint.activate(stackViewConstraints)
     }
     
-    // MARK: - Colors UI
-    private func setupUIColors(with colors: UIImageColors) {
-        view.backgroundColor = colors.background
-        navigationController?.navigationBar.tintColor = colors.primary
+    private func updateContentSize() {
+        let offsetHeight: CGFloat = K.ScrollOffsetHeight
+        let screen = UIScreen.main.bounds
+        
+        let stackViewY = stackView.frame.maxY + offsetHeight
+        if stackViewY > screen.height {
+            scrollView.contentSize = CGSize(width: screen.width, height: stackViewY)
+        } else {
+            scrollView.contentSize = CGSize(width: screen.width, height: screen.height)
+        }
     }
-    
-    // MARK: - Detail UI
+}
+
+// MARK: - SubViews Setup
+extension MovieDetailViewController {
     private func setupDetailUI() {
-        self.movie.fetchDetail().then({ detail -> Promise<Void> in
+        self.movie.fetchDetail().then({ data -> Promise<MovieDetail> in
+            return MovieDetail.decodeMovieData(data: data)
+        }).then ({ detail -> Promise<Void> in
             let (genres, runtime) = self.setupBackdropText(with: detail)
             
             let title = self.movie.title
@@ -214,7 +225,7 @@ extension MovieDetailViewController {
             let backdropURL = self.movie.backdropPath != nil ? K.Backdrop.URL + (self.movie.backdropPath!) : nil
             
             // Return Void Promise to allow Recommendations to setup UI
-            return Promise { (fulfill, reject) -> Void in
+            return Promise<Void>(on: .promises) { (fulfill, reject) in
                 self.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate) { colors in
                     self.setupCastCollectionView(with: detail.credits, using: colors)
                     
@@ -228,12 +239,13 @@ extension MovieDetailViewController {
                     if let recommendations = detail.recommendations?.results {
                         self.setupRecommendationsView(with: recommendations, using: colors)
                     }
+                    
                     fulfill(Void())
                 }
             }
-        }).always {
+        }).then {
             DispatchQueue.main.async {
-                self.updateContentSize()                
+                self.updateContentSize()
             }
         }
     }
@@ -306,18 +318,16 @@ extension MovieDetailViewController {
         
         return (genresStr, runtimeStr)
     }
-    
-    // MARK: - Update ScrollVIewContentSize
-    private func updateContentSize() {
-        let offsetHeight: CGFloat = K.ScrollOffsetHeight
-        let screen = UIScreen.main.bounds
-        
-        let stackViewY = stackView.frame.maxY + offsetHeight
-        if stackViewY > screen.height {
-            scrollView.contentSize = CGSize(width: screen.width, height: stackViewY)
-        } else {
-            scrollView.contentSize = CGSize(width: screen.width, height: screen.height)
-        }
+}
+
+// MARK: - CreatorsCollectionViewDelegate
+extension MovieDetailViewController: CreatorsCollectionVIewDelegate {
+    func select(crew: Crew) {
+        guard let safeColors = self.colors else { return }
+        let creditModal = CreditDetailModal(with: crew, using: safeColors)
+        creditModal.delegate = self
+        let navController = UINavigationController(rootViewController: creditModal)
+        self.present(navController, animated: true)
     }
 }
 
@@ -340,6 +350,7 @@ extension MovieDetailViewController: MovieDetailRecommendationsDelegate {
     }
 }
 
+// MARK: - CreditDetailModalDelegate
 extension MovieDetailViewController: CreditDetailModalDelegate {
     func shouldPush(VC: UIViewController) {
         self.navigationController?.pushViewController(VC, animated: true)

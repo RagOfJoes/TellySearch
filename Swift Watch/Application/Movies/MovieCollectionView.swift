@@ -44,7 +44,6 @@ extension MovieCollectionView {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let correctIndexPath = IndexPath(row: indexPath.row, section: section ?? indexPath.section)
         self.delegate?.select(movie: correctIndexPath)
-        return
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

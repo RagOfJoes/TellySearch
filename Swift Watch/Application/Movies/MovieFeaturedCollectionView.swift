@@ -9,7 +9,6 @@
 import UIKit
 import SkeletonView
 
-// MARK: - MovieFeaturedCollectionView
 class MovieFeaturedCollectionView: CVTCell {
     var section: Int?
     var movies: [Movie]? = nil
