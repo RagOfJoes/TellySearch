@@ -32,20 +32,12 @@ struct K {
     }
     
     struct Poster {
-        static let URL = "https://image.tmdb.org/t/p/w300"
-        static let ratio: CGFloat = (27/40)
-        static var minWidth: CGFloat {
-            get {
-                let screen = UIScreen.main.bounds
-                if screen.width > 500 {
-                    return screen.width / 6.25
-                } else {
-                    return screen.width / 3
-                }
-            }
-        }
+        static let URL = "https://image.tmdb.org/t/p/w200"
         static var width: CGFloat {
             get {
+                let screen = UIScreen.main.bounds
+                let minWidth = screen.width > 500 ? screen.width / 6.25 : screen.width / 3
+                
                 let numberOfCells: CGFloat = UIScreen.main.bounds.width / minWidth
                 let width: CGFloat = floor((numberOfCells / floor(numberOfCells)) * minWidth)
                 
@@ -54,6 +46,7 @@ struct K {
         }
         static var height: CGFloat {
             get {
+                let ratio: CGFloat = (27 / 40)
                 return .getHeight(with: width, using: ratio)
             }
         }
@@ -70,8 +63,8 @@ struct K {
                 let placeholder = "Lorem"
                 let primaryFont = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .bold))
                 
-                let primaryHeight = placeholder.height(font: primaryFont) * 2
-                
+                let primaryHeight = placeholder.height(withConstrainedWidth: K.Poster.width, font: primaryFont) * 2
+
                 return primaryHeight + K.Poster.height + 5
             }
         }
@@ -81,30 +74,34 @@ struct K {
                 let primaryFont = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .bold))
                 let secondaryFont = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 13, weight: .medium))
                 
-                let primaryHeight = placeholder.height(font: primaryFont) * 2
-                let secondaryHeight = placeholder.height(font: secondaryFont)
+                let primaryHeight = placeholder.height(withConstrainedWidth: K.Poster.width, font: primaryFont) * 2
+                let secondaryHeight = placeholder.height(font: secondaryFont) * 2
                 
                 return primaryHeight + secondaryHeight + K.Poster.height + 5
             }
         }
         
-        static let featuredImageRatio: CGFloat = (16/9)
-        static var featuredMinWidth: CGFloat {
-            get {
-                let screen = UIScreen.main.bounds
-                if screen.width > 500 {
-                    return screen.width / 2
-                } else {
-                    return screen.width
-                }
-            }
-        }
         static var featuredCellWidth: CGFloat {
             get {
-                let numberOfCells: CGFloat = UIScreen.main.bounds.width / featuredMinWidth
-                let width: CGFloat = floor((numberOfCells / floor(numberOfCells)) * featuredMinWidth)
+                let screen = UIScreen.main.bounds
+                let minWidth = screen.width > 500 ? screen.width / 2 : screen.width / 1.25
+                let numberOfCells: CGFloat = screen.width / minWidth
+                let width: CGFloat = (numberOfCells / numberOfCells) * minWidth
                 
+                // Account for the CollectionView insets
                 return width - 40
+            }
+        }
+        static var featuredCellHeight: CGFloat {
+            get {
+                let placeholder = "Lorem"
+                let primaryFont = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .bold))
+                let primaryHeight = placeholder.height(font: primaryFont) * 2
+                
+                let ratio: CGFloat = (16 / 9)
+                let height: CGFloat = .getHeight(with: featuredCellWidth, using: ratio)
+                
+                return height + primaryHeight + 5
             }
         }
     }

@@ -6,6 +6,7 @@
 //  Copyright © 2020 Victor Ragojos. All rights reserved.
 //
 
+import Promises
 import Foundation
 
 struct MovieDetail: Codable {
@@ -33,5 +34,21 @@ struct MovieDetail: Codable {
         case credits
         case recommendations
         case rateAvg = "vote_average"
+    }
+}
+
+extension MovieDetail {
+    static func decodeMovieData(data: Data) -> Promise<MovieDetail> {
+        return Promise<MovieDetail>(on: .promises, { (fullfill, reject) in
+            do {
+                let decoder = JSONDecoder()
+                let decodedMovieDetail = try decoder.decode(MovieDetail.self, from: data)
+                
+                fullfill(decodedMovieDetail)
+                return
+            } catch {
+                reject(MovieFetchError(description: "An Error has occured decoding Movie Detail Data"))
+            }
+        })
     }
 }

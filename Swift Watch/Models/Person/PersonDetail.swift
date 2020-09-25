@@ -6,6 +6,7 @@
 //  Copyright © 2020 Victor Ragojos. All rights reserved.
 //
 
+import Promises
 import Foundation
 
 struct CombinedCredis: Codable {
@@ -13,7 +14,7 @@ struct CombinedCredis: Codable {
     let crew: [Media]
 }
 
-struct PersonDetail: Codable {
+struct PersonDetail: Codable {    
     let id: Int
     let gender: Int
     let knownFor: String
@@ -94,6 +95,7 @@ struct PersonDetail: Codable {
         for index in 0..<range {
             arr.append(sortByVoteCount[index])
         }
+        
         return arr
     }
     
@@ -108,5 +110,21 @@ struct PersonDetail: Codable {
         case birthPlace = "place_of_birth"
         case knownFor = "known_for_department"
         case combinedCredits = "combined_credits"
+    }
+}
+
+extension PersonDetail {
+    static func decodePersonDetail(data: Data) -> Promise<PersonDetail> {
+        return Promise<PersonDetail>(on: .promises, { (fullfill, reject) in
+            do {
+                let decoder = JSONDecoder()
+                let decodedPersonDetail = try decoder.decode(PersonDetail.self, from: data)
+                
+                fullfill(decodedPersonDetail)
+                return
+            } catch {
+                reject(CreditFetchError(description: "An Error has occured decoding Person Detail Data"))
+            }
+        })
     }
 }

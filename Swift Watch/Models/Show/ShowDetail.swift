@@ -6,6 +6,7 @@
 //  Copyright © 2020 Victor Ragojos. All rights reserved.
 //
 
+import Promises
 import Foundation
 
 struct CrewIds: Codable {
@@ -52,5 +53,21 @@ struct ShowDetail: Codable {
         case rateAvg = "vote_average"
         case createdByIds = "created_by"
         case episodeRunTime = "episode_run_time"
+    }
+}
+
+extension ShowDetail {
+    static func decodeShowData(data: Data) -> Promise<ShowDetail> {
+        return Promise<ShowDetail>(on: .promises, { (fullfill, reject) in
+            do {
+                let decoder = JSONDecoder()
+                let decodedShowDeatail = try decoder.decode(ShowDetail.self, from: data)
+                
+                fullfill(decodedShowDeatail)
+                return
+            } catch {
+                reject(ShowFetchError(description: "An Error has occured decoding Show Detail Data"))
+            }
+        })
     }
 }

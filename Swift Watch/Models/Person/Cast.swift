@@ -11,22 +11,12 @@ import Promises
 import Foundation
 
 struct Cast: Codable {    
+    private let detailStorage = C.Person
+    
     let id: Int
     let name: String
     let character: String
     let profilePath: String?
-    
-    private let castDetailStorage = try? Storage(
-        diskConfig: DiskConfig(name: "CastDetail"),
-        memoryConfig: MemoryConfig(
-            // Expire objects in 6 hours
-            expiry: .date(Date().addingTimeInterval(60 * 60 * 6)),
-            /// The maximum number of objects in memory the cache should hold
-            countLimit: 50,
-            /// The maximum total cost that the cache can hold before it starts evicting objects
-            totalCostLimit: 0
-        ), transformer: TransformerFactory.forCodable(ofType: Media.self)
-    )
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -38,57 +28,36 @@ struct Cast: Codable {
 
 // MARK: - Cast Movie Detail Handler
 extension Cast {
-    func fetchDetails() -> Promise<PersonDetail> {
-        let cacheKey = "cast:\(self.id):detail"
-        let promise = Promise<PersonDetail>.pending()
-        
-        // Check if cached
-        // if let cachedDetail = try? castDetailStorage?.object(forKey: cacheKey) {
-            // Fulfill Promise and return early
-            // promise.fulfill(cachedDetail)
-            // return promise
-        // }
-        let urlString = "\(K.Credits.baseURL)/\(id)\(K.CommonQuery)&append_to_response=combined_credits"
-        if let url  = URL(string: urlString) {
-            let session = URLSession(configuration: .default)
+    func fetchDetail() -> Promise<Data> {
+        let cacheKey = "person:\(self.id):detail"
+        return Promise<Data>(on: .global(qos: .userInitiated), { (fullfill, reject) in
+            // Check if cached then fulfill and return early
+            if let cached = try? detailStorage?.object(forKey: cacheKey) {
+                fullfill(cached)
+                return
+            }
             
-            session.dataTask(with: url, completionHandler: { (data, response, error) in
-                if error != nil, let e = error {
-                    promise.reject(e)
-                }
+            let urlString = "\(K.Credits.baseURL)/\(id)\(K.CommonQuery)&append_to_response=combined_credits"
+            if let url = URL(string: urlString) {
+                let session = URLSession(configuration: .default)
                 
-                if let safeData = data {
-                    if let payload = self.parseDetail(safeData) {
-                        // Set to cache
-                        // try? self.castDetailStorage?.setObject(payload, forKey: cacheKey)
-                        
-                        // Fulfill Promise
-                        promise.fulfill(payload)
-                    } else {
-                        promise.reject(MovieFetchError(description: "An Error has occured parsing fetched Cast Detail"))
+                session.dataTask(with: url, completionHandler: { (data, response, error) in
+                    if let e = error {
+                        reject(e)
+                        return
                     }
-                } else {
-                    promise.reject(MovieFetchError(description: "An Error has occured fetching Cast Detail"))
-                }
-                
-            }).resume()
-        } else {
-            promise.reject(MovieFetchError(description: "An Invalid URL was provided"))
-        }
-        
-        return promise
-    }
-    
-    private func parseDetail(_ data: Data) -> PersonDetail? {
-        let decoder = JSONDecoder()
-        
-        // ".self" after the WeatherData refers to the Type of
-        // the Decodable struct
-        do {
-            let decodedDetail = try decoder.decode(PersonDetail.self, from: data)
-            return decodedDetail
-        } catch {
-            return nil
-        }
+                    
+                    guard let safeData = data else {
+                        reject(CreditFetchError(description: "An Error has occured fetching Cast Detail Data"))
+                        return
+                    }
+                    
+                    try? detailStorage?.setObject(safeData, forKey: cacheKey)
+                    fullfill(safeData)
+                }).resume()
+            } else {
+                reject(CreditFetchError(description: "An Invalid URL was provided"))
+            }
+        })
     }
 }
