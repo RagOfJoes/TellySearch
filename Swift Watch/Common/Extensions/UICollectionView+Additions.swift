@@ -26,6 +26,7 @@ extension UICollectionView {
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.contentInsetAdjustmentBehavior = .never
         
         collectionView.isSkeletonable = true
         collectionView.skeletonCornerRadius = 5
