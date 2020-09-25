@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Kingfisher
 
 extension UIImage {
     static func from(color: UIColor) -> UIImage {
