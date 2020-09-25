@@ -84,15 +84,16 @@ extension GenericCollectionView {
         switch self.type {
         case .Featured:
             heightConstraint = featuredHeightConstraint
-            collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: featuredHeightConstraint.constant)
+            collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: K.Overview.featuredCellHeight)
             break
         case .RegularHasSecondary:
             heightConstraint = regularHeightSecondaryConstraint
-            collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: regularHeightSecondaryConstraint.constant)
+            collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: K.Overview.regularHeightWithSecondary)
             break
         default:
             heightConstraint = regularHeightConstraint
-            collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: regularHeightConstraint.constant)
+            collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: K.Overview.regularHeight)
+            break
         }
         
         NSLayoutConstraint.activate([
@@ -132,7 +133,6 @@ extension GenericCollectionView: UICollectionViewDelegateFlowLayout {
         if type == .Featured {
             width = K.Overview.featuredCellWidth
         }
-        
         return CGSize(width: width, height: collectionView.frame.height)
     }
 }

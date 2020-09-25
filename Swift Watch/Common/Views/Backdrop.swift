@@ -229,7 +229,7 @@ extension BackdropDetail {
         var releaseMonth: String?
         var releaseDay: Int?
         var releaseYear: Int?
-        if let dateString = _releaseDate {
+        if let dateString = _releaseDate, dateString.count > 0 {
             let date = Date(dateString, with: "YYYY-MM-dd")
             
             let monthFormatter = DateFormatter()
@@ -239,6 +239,8 @@ extension BackdropDetail {
             let calendar = Calendar.current.dateComponents([.day, .year], from: date)
             releaseDay = calendar.day
             releaseYear = calendar.year
+        } else {
+            releaseDate.text = "-"
         }
         
         if releaseMonth != nil && releaseYear != nil && releaseDay != nil {

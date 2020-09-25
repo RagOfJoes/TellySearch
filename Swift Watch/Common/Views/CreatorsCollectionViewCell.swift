@@ -18,7 +18,6 @@ class CreatorsCollectionViewCell: UICollectionViewCell {
         let primaryLabel = UILabel()
         primaryLabel.numberOfLines = 1
         primaryLabel.setupFont(size: 14, weight: .bold)
-        primaryLabel.translatesAutoresizingMaskIntoConstraints = false
         
         primaryLabel.isSkeletonable = true
         return primaryLabel
@@ -28,7 +27,6 @@ class CreatorsCollectionViewCell: UICollectionViewCell {
         let secondaryLabel = UILabel()
         secondaryLabel.numberOfLines = 1
         secondaryLabel.setupFont(size: 13, weight: .medium)
-        secondaryLabel.translatesAutoresizingMaskIntoConstraints = false
         
         secondaryLabel.isSkeletonable = true
         return secondaryLabel

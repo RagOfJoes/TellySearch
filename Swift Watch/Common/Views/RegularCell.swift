@@ -97,9 +97,9 @@ extension RegularCell: ConfigurableRegularCell {
             }
         }
         
+        let placeholder = UIImage(named: "placeholderPoster")
         if let safePoster = image {
             let url = URL(string: safePoster)
-            let placeholder = UIImage(named: "placeholderPoster")
             let options: KingfisherOptionsInfo = [
                 .scaleFactor(UIScreen.main.scale),
                 .transition(.fade(1)),
@@ -107,7 +107,7 @@ extension RegularCell: ConfigurableRegularCell {
             ]
             self.imageView.kfSetImage(with: url, using: placeholder, options: options)
         } else {
-            imageView.image = UIImage(named: "placeholderPoster")
+            imageView.image = placeholder
         }
         
         guard let safeColors = colors else { return }

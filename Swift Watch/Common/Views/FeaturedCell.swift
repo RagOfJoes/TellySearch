@@ -84,9 +84,9 @@ extension FeaturedCell: ConfigurableFeaturedCell {
             self.title.text = name
         }
         
+        let placeholder = UIImage(named: "placeholderBackdrop")
         if let safeImage = image {
             let url = URL(string: safeImage)
-            let placeholder = UIImage(named: "placeholderBackdrop")
             let roundCorner = RoundCornerImageProcessor(cornerRadius: imageView.layer.cornerRadius)
             let options: KingfisherOptionsInfo = [
                 .processor(roundCorner),
@@ -96,7 +96,7 @@ extension FeaturedCell: ConfigurableFeaturedCell {
             ]
             self.imageView.kfSetImage(with: url, using: placeholder, options: options)
         } else {
-            imageView.image = UIImage(named: "placeholderBackdrop")
+            imageView.image = placeholder
         }
     }
 }

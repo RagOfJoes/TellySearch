@@ -21,8 +21,8 @@ class InfoStackView: UIStackView {
         let titleLabel = UILabel()
         titleLabel.numberOfLines = 1
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
         
-        titleLabel.isSkeletonable = true
         return titleLabel
     }()
     
@@ -37,10 +37,10 @@ class InfoStackView: UIStackView {
     private lazy var titleStackView: UIStackView = {
         let titleStackView = UIStackView(arrangedSubviews: [titleLabel, readMore])
         titleStackView.axis = .horizontal
+        titleStackView.alignment = .bottom
         titleStackView.distribution = .fill
         titleStackView.translatesAutoresizingMaskIntoConstraints = false
         
-        titleStackView.isSkeletonable = true
         return titleStackView
     }()
     
@@ -49,7 +49,6 @@ class InfoStackView: UIStackView {
         valueLabel.numberOfLines = 0
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        valueLabel.isSkeletonable = true
         return valueLabel
     }()
     
@@ -108,14 +107,15 @@ extension InfoStackView {
         
         DispatchQueue.main.async { [weak self] in
             guard let safeReadMore = self?.readMore else { return }
+            
             if safeReadMore.isSelected {
                 self?.valueLabel.numberOfLines = 3
             } else {
                 self?.valueLabel.numberOfLines = 0
             }
             safeReadMore.isSelected = !safeReadMore.isSelected
-            self?.delegate?.didReadMore()
         }
+        self.delegate?.didReadMore()
     }
 }
 

@@ -9,10 +9,16 @@
 import UIKit
 import SkeletonView
 
+protocol CreatorsCollectionVIewDelegate: class {
+    func select(crew: Crew)
+}
+
 class CreatorsCollectionView: UIView {
+    // MARK: - Internal Properties
     private var crews: [Crew]?
     private var colors: UIImageColors?
     private var heightConstraint: NSLayoutConstraint!
+    weak var delegate: CreatorsCollectionVIewDelegate?
     
     private lazy var header: GenericCollectionViewHeader = {
         let header = GenericCollectionViewHeader()
@@ -44,7 +50,7 @@ class CreatorsCollectionView: UIView {
         return collectionView
     }()
     
-    let heightConstant: CGFloat = {
+    private let heightConstant: CGFloat = {
         let placeholderText = "Lorem"
         let primaryFont = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .bold))
         let secondaryFont = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 13, weight: .medium))
@@ -76,7 +82,12 @@ class CreatorsCollectionView: UIView {
         
         if crews.count > 2 {
             let numOfRows: CGFloat = (CGFloat(crews.count) / 2).rounded(.toNearestOrEven)
-            self.heightConstraint.constant = self.heightConstant * numOfRows + 45
+            
+            if numOfRows > 4 {
+                self.heightConstraint.constant = self.heightConstant * 4
+            } else {
+                self.heightConstraint.constant = self.heightConstant * numOfRows
+            }
         }
         
         self.hideSkeleton()
@@ -122,9 +133,8 @@ extension CreatorsCollectionView {
 // MARK: - UICollectionViewDelegate
 extension CreatorsCollectionView: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if (self.crews?[indexPath.row]) != nil {
-            //            self.delegate?.select(cast: cast)
-        }
+        guard let crew = self.crews?[indexPath.row] else { return }
+        self.delegate?.select(crew: crew)
     }
     
     func collectionView(_ collectionView: UICollectionView,
