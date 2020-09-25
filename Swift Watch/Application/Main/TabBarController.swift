@@ -47,7 +47,7 @@ class TabBarController: UITabBarController {
     
     // MARK: - Setup Tab Items
     private func setupTabItems() {
-        let moviesVC = createNavViewController(viewController: MoviesOverviewController(), title: "Movies")
+        let moviesVC = createNavViewController(viewController: MoviesViewController(), title: "Movies")
         
         let showsVC = createNavViewController(viewController: ShowsViewController(), title: "Shows")
         
@@ -60,6 +60,7 @@ class TabBarController: UITabBarController {
         let navController = UINavigationController(rootViewController: viewController)
         navController.navigationBar.prefersLargeTitles = true
         navController.navigationBar.tintColor = .systemOrange
+        navController.navigationBar.shadowImage = UIImage()
         navController.navigationBar.layer.borderColor = UIColor.clear.cgColor
         navController.navigationBar.barTintColor = UIColor(named: "backgroundColor")?.withAlphaComponent(0.2)
         

@@ -12,7 +12,6 @@ import SkeletonView
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window : UIWindow?
-    var orientationLock = UIInterfaceOrientationMask.all
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         guard #available(iOS 13, *) else {
@@ -24,10 +23,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return true
         }
         return true
-    }
-    
-    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-        return self.orientationLock
     }
     
     // MARK: - UISceneSession Lifecycle
