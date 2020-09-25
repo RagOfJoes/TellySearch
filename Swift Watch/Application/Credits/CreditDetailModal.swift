@@ -10,30 +10,50 @@ import UIKit
 import Promises
 import Kingfisher
 
+enum CreditDetailType {
+    case Cast
+    case Crew
+}
+
 protocol CreditDetailModalDelegate: class {
     func shouldPush(VC: UIViewController)
 }
 
 class CreditDetailModal: UIViewController {
-    weak var delegate: CreditDetailModalDelegate?
+    // MARK: - Internal Properties
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
     
-    private let person: Cast
+    private let cast: Cast?
+    private let crew: Crew?
+    private let type: CreditDetailType
+    
     private let colors: UIImageColors
     private var personDetail: PersonDetail?
+    weak var delegate: CreditDetailModalDelegate?
     
     private var scrollView: UIScrollView
     private var containerView: UIView
     private lazy var poster: PosterImageView = {
-        let poster = PosterImageView(with: self.person.profilePath)
-        return poster
+        if self.type == .Cast {
+            return PosterImageView(with: self.cast?.profilePath)
+        } else {
+            return PosterImageView(with: self.crew?.profilePath)
+        }
     }()
     
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.text = self.person.name
         label.textColor = self.colors.primary
         label.setupFont(size: 18, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
+        
+        if self.type == .Cast {
+            label.text = self.cast?.name
+        } else {
+            label.text = self.crew?.name
+        }
         return label
     }()
     
@@ -73,21 +93,37 @@ class CreditDetailModal: UIViewController {
         return biographyStack
     }()
     
-    lazy var bodyStackView: UIStackView = {
+    private lazy var bodyStackView: UIStackView = {
         let bodyStackView = UIStackView(arrangedSubviews: [knownForStack, biographyStack])
         bodyStackView.axis = .vertical
         bodyStackView.translatesAutoresizingMaskIntoConstraints = false
         return bodyStackView
     }()
     
-    lazy var notableWorks: CreditDetailNotableWorks = {
-        let notableWorks = CreditDetailNotableWorks(colors: self.colors)
+    private lazy var notableWorks: CreditDetailNotableWorks = {
+        let notableWorks = CreditDetailNotableWorks(.RegularHasSecondary, colors: self.colors)
         notableWorks.delegate = self
         return notableWorks
     }()
     
-    init(with person: Cast, using colors: UIImageColors) {
-        self.person = person
+    // MARK: - Life Cycle
+    init(with cast: Cast, using colors: UIImageColors) {
+        self.crew = nil
+        self.cast = cast
+        self.type = .Cast
+        self.colors = colors
+        
+        let (sV, cV) = UIView.createScrollView()
+        self.scrollView = sV
+        self.containerView = cV
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(with crew: Crew, using colors: UIImageColors) {
+        self.cast = nil
+        self.crew = crew
+        self.type = .Crew
         self.colors = colors
         
         let (sV, cV) = UIView.createScrollView()
@@ -98,7 +134,9 @@ class CreditDetailModal: UIViewController {
     }
     
     override func viewDidLoad() {
-        super.viewDidLoad()        
+        super.viewDidLoad()
+        
+        setupNav()
         view.backgroundColor = self.colors.background
         
         view.addSubview(scrollView)
@@ -111,12 +149,26 @@ class CreditDetailModal: UIViewController {
         fetchDetails()
     }
     
+    @objc func onBackButton() {
+        self.dismiss(animated: true)
+    }
+    
+    private func setupNav() {
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        
+        self.navigationController?.navigationBar.tintColor = colors.primary
+        let backBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(onBackButton))
+        navigationItem.rightBarButtonItem = backBarButton
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-// MARK: - View Functions
+// MARK: - View Setup
 extension CreditDetailModal {
     private func setupAnchors() {
         let scrollViewConstraints: [NSLayoutConstraint] = [
@@ -127,11 +179,18 @@ extension CreditDetailModal {
         ]
         NSLayoutConstraint.activate(scrollViewConstraints)
         
+        var containerViewTopConstant: CGFloat
+        
+        if let navBar = self.navigationController?.navigationBar {
+            containerViewTopConstant = navBar.frame.height
+        } else {
+            containerViewTopConstant = 0
+        }
         let containerViewConstraints: [NSLayoutConstraint] = [
-            containerView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            containerView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: containerViewTopConstant),
         ]
         NSLayoutConstraint.activate(containerViewConstraints)
         
@@ -170,29 +229,29 @@ extension CreditDetailModal {
     }
     
     private func updateContentSize() {
-        let offsetHeight:CGFloat = K.ScrollOffsetHeight
-        let view = self.view.frame
+        let viewFrame = self.view.frame
+        let offsetHeight:CGFloat = K.ScrollOffsetHeight * 2
         
-        if !notableWorks.isDescendant(of: self.view) {
-            let stackViewY = bodyStackView.frame.maxY
-            
-            if stackViewY > view.height {
-                scrollView.contentSize = CGSize(width: view.width, height: stackViewY)
+        if notableWorks.isDescendant(of: self.view) {
+            let notableWorksY = notableWorks.frame.maxY + offsetHeight
+            if notableWorksY > viewFrame.height {
+                scrollView.contentSize = CGSize(width: viewFrame.width, height: notableWorksY)
             } else {
-                scrollView.contentSize = CGSize(width: view.width, height: view.height)
+                scrollView.contentSize = CGSize(width: viewFrame.width, height: viewFrame.height)
             }
-        }
-        
-        let notableWorksY = notableWorks.frame.maxY + offsetHeight
-        if notableWorksY > view.height {
-            scrollView.contentSize = CGSize(width: view.width, height: notableWorksY)
         } else {
-            scrollView.contentSize = CGSize(width: view.width, height: view.height)
+            let stackViewY = bodyStackView.frame.maxY + offsetHeight
+            
+            if stackViewY > viewFrame.height {
+                scrollView.contentSize = CGSize(width: viewFrame.width, height: stackViewY)
+            } else {
+                scrollView.contentSize = CGSize(width: viewFrame.width, height: viewFrame.height)
+            }
         }
     }
 }
 
-// MARK: - Helper Functions
+// MARK: - SubViews Setup
 extension CreditDetailModal {
     private func setupPersonalLabels(title: String, value: String?, parentView: UIStackView?, view: InfoStackView?, previousView: UIView?) {
         guard let safeParent = parentView else { return }
@@ -210,9 +269,33 @@ extension CreditDetailModal {
         guard let safePreviousView = previousView else { return }
         safeParent.setCustomSpacing(20, after: safePreviousView)
     }
-    
+}
+
+// MARK: - Data Fetchers
+extension CreditDetailModal {
     private func fetchDetails() {
-        self.person.fetchDetails().then({ [weak self] data -> Promise<Void> in
+        var personDetailData: Promise<PersonDetail>
+        if self.cast != nil && self.type == .Cast {
+            personDetailData = self.cast!.fetchDetail().then({ data -> Promise<PersonDetail> in
+                return PersonDetail.decodePersonDetail(data: data)
+            })
+        } else if self.crew != nil && self.type == .Crew {
+            personDetailData = self.crew!.fetchDetail().then({ data -> Promise<PersonDetail> in
+                return PersonDetail.decodePersonDetail(data: data)
+            })
+        } else {
+            self.setupPersonalLabels(title: "Gender", value: "-", parentView: self.personalStackViews, view: self.genderLabels, previousView: self.nameLabel)
+            self.setupPersonalLabels(title: "Born", value: "-", parentView: self.personalStackViews, view: self.bornLabels, previousView: self.genderLabels)
+            self.setupPersonalLabels(title: "Died", value: "-", parentView: self.personalStackViews, view: self.diedLabels, previousView: self.bornLabels)
+            self.setupPersonalLabels(title: "Place Of Birth", value: "-", parentView: self.personalStackViews, view: self.birthplaceStack, previousView: (self.diedLabels.isDescendant(of: self.personalStackViews)) ? self.diedLabels : self.bornLabels)
+            self.setupPersonalLabels(title: "Known For", value: "-", parentView: self.bodyStackView, view: self.knownForStack, previousView: self.birthplaceStack)
+            self.setupPersonalLabels(title: "About", value: "-", parentView: self.bodyStackView, view: self.biographyStack, previousView: self.knownForStack)
+            
+            self.notableWorks.removeFromSuperview()
+            return
+        }
+        
+        personDetailData.then { [weak self] (data) in
             self?.personDetail = data
             
             self?.setupPersonalLabels(title: "Gender", value: data.genderStr, parentView: self?.personalStackViews, view: self?.genderLabels, previousView: self?.nameLabel)
@@ -222,15 +305,14 @@ extension CreditDetailModal {
             self?.setupPersonalLabels(title: "Known For", value: data.knownFor, parentView: self?.bodyStackView, view: self?.knownForStack, previousView: self?.birthplaceStack)
             self?.setupPersonalLabels(title: "About", value: data.biography.count <= 0 ? "-" : data.biography, parentView: self?.bodyStackView, view: self?.biographyStack, previousView: self?.knownForStack)
             
-            if let notableWorks = data.notableWorks {
-                self?.notableWorks.configure(with: notableWorks)
+            if let notableWorks = data.notableWorks, notableWorks.count > 0 {
+                DispatchQueue.main.async {
+                    self?.notableWorks.configure(with: notableWorks)
+                }
             } else {
                 self?.notableWorks.removeFromSuperview()
             }
-            return Promise { (fulfill, reject) -> Void in
-                fulfill(Void())
-            }
-        }).always { [weak self] in
+        }.always { [weak self] in
             DispatchQueue.main.async {
                 self?.updateContentSize()
             }
@@ -242,11 +324,13 @@ extension CreditDetailModal {
 extension CreditDetailModal: InfoStackViewDelegate {
     func didReadMore() {
         DispatchQueue.main.async {
+            self.scrollView.layoutIfNeeded()
             self.updateContentSize()
         }
     }
 }
 
+// MARK: - CreditDetailNotableWorksDelegate
 extension CreditDetailModal: CreditDetailNotableWorksDelegate {
     func select(media: Media) {
         guard let type = media.mediaType else { return }
@@ -254,15 +338,15 @@ extension CreditDetailModal: CreditDetailNotableWorksDelegate {
         if type == .tv {
             let show = Show(id: media.id, name: media.name!, overview: media.overview, posterPath: media.posterPath, firstAirDate: media.firstAirDate!, backdropPath: media.backdropPath)
             let detailVC = ShowDetailViewController(with: show)
-            self.dismiss(animated: true) {
+            self.navigationController?.dismiss(animated: true, completion: {
                 self.delegate?.shouldPush(VC: detailVC)
-            }
+            })
         } else {
             let movie = Movie(id: media.id, title: media.title!, overview: media.overview, releaseDate: media.releaseDate ?? "", posterPath: media.posterPath, backdropPath: media.backdropPath)
             let detailVC = MovieDetailViewController(with: movie)
-            self.dismiss(animated: true) {
+            self.navigationController?.dismiss(animated: true, completion: {
                 self.delegate?.shouldPush(VC: detailVC)
-            }
+            })
         }
     }
 }
