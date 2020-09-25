@@ -35,7 +35,7 @@ class ShowDetailRecommendations: GenericCollectionView {
     }
 }
 
-// MARK: - CollectionView Setup
+// MARK: - UICollectionViewDelegate
 extension ShowDetailRecommendations {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let safeShow = shows?[indexPath.item] {

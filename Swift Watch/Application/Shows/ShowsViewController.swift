@@ -19,7 +19,7 @@ class ShowsViewController: UIViewController {
         ShowSectionCell(section: ShowSection(title: "Top Rated"), type: .regular),
     ]
     
-    lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.delegate = self
         tableView.dataSource = self
@@ -52,15 +52,15 @@ class ShowsViewController: UIViewController {
             sections[3].section.fetchSection(with: .topRated)
         ]
         
-        all(promises.map { section in
-            return section.then({ (data) -> Promise<[Show]> in
+        all(promises.map {
+            return $0.then({ (data) -> Promise<[Show]> in
                 return ShowSection.decodeShowSection(data: data)
             })
         }).then { [weak self] (results) in
             // Loop through all the results
             // and append to shows array
-            for data in results {
-                self?.shows.append(data)
+            for result in results {
+                self?.shows.append(result)
             }
             
             // Reload TableView's Data
@@ -106,7 +106,7 @@ extension ShowsViewController: UITableViewDataSource {
         let cellType = sections[indexPath.section].type
         
         if cellType == .featured {
-            let cell = tableView.dequeueReusableCell(withIdentifier: ShowsFeaturedCollectionView.reuseIdentifier, for: indexPath) as! ShowsFeaturedCollectionView
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ShowsFeaturedCollectionView.reuseIdentifier, for: indexPath) as? ShowsFeaturedCollectionView else { return UITableViewCell() }
             
             if shows.count > indexPath.section, let data = shows[indexPath.section] {
                 cell.delegate = self
@@ -116,7 +116,7 @@ extension ShowsViewController: UITableViewDataSource {
             }
             return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: ShowsCollectionView.reuseIdentifier, for: indexPath) as! ShowsCollectionView
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ShowsCollectionView.reuseIdentifier, for: indexPath) as? ShowsCollectionView else { return UITableViewCell() }
             
             if shows.count > indexPath.section, let data = shows[indexPath.section] {
                 cell.delegate = self

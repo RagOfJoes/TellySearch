@@ -31,7 +31,7 @@ class ShowDetailSeasons: GenericCollectionView {
     }
 }
 
-// MARK: - CollectionView Setup
+// MARK: - UICollectionViewDelegate
 extension ShowDetailSeasons {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         //        if let safeShow = seasons?[indexPath.item] {

@@ -23,10 +23,6 @@ class ShowsCollectionView: CVTCell {
         self.configure(.Regular)
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-    }
-    
     func configure(shows: [Show], section: Int) {
         self.shows = shows
         self.section = section

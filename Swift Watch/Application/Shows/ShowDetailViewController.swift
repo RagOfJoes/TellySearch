@@ -10,13 +10,20 @@ import UIKit
 import Promises
 
 class ShowDetailViewController: UIViewController {
+    // MARK: - Internal Properties
     let show: Show
     var colors: UIImageColors?
-    // MARK: - View Declarations
+    
     var containerView: UIView
     var scrollView: UIScrollView
+    
     private lazy var backdropDetail = BackdropDetail()
-    private let createdBy = CreatorsCollectionView()
+    private lazy var createdBy: CreatorsCollectionView = {
+        let createdBy = CreatorsCollectionView()
+        createdBy.delegate = self
+        
+        return createdBy
+    }()
     
     private lazy var overviewStack: InfoStackView = {
         let overviewStack = InfoStackView(fontSize: (18, 14))
@@ -53,7 +60,7 @@ class ShowDetailViewController: UIViewController {
         return stackView
     }()
     
-    // MARK: - Init
+    // MARK: - Lifecycle
     init(with show: Show) {
         self.show = show
         
@@ -64,7 +71,6 @@ class ShowDetailViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         let backBarButton = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
@@ -82,7 +88,6 @@ class ShowDetailViewController: UIViewController {
         setupDetailUI()
     }
     
-    // MARK: - viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupNav(by: true)
@@ -104,7 +109,6 @@ class ShowDetailViewController: UIViewController {
         }
     }
     
-    // MARK: - viewWillDisappear
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -118,9 +122,13 @@ class ShowDetailViewController: UIViewController {
     }
 }
 
-// MARK: - UI Setup
+// MARK: - View Setup
 extension ShowDetailViewController {
-    // MARK: - Nav
+    private func setupUIColors(with colors: UIImageColors) {
+        view.backgroundColor = colors.background
+        navigationController?.navigationBar.tintColor = colors.primary
+    }
+    
     func setupNav(by disappearing: Bool) {
         if disappearing {
             self.navigationController?.navigationBar.shadowImage = UIImage()
@@ -141,7 +149,6 @@ extension ShowDetailViewController {
         }
     }
     
-    // MARK: - Anchors
     private func setupAnchors() {
         let scrollViewConstraints: [NSLayoutConstraint] = [
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -197,15 +204,25 @@ extension ShowDetailViewController {
         NSLayoutConstraint.activate(stackViewConstraints)
     }
     
-    // MARK: - Colors UI
-    private func setupUIColors(with colors: UIImageColors) {
-        view.backgroundColor = colors.background
-        navigationController?.navigationBar.tintColor = colors.primary
+    private func updateContentSize() {
+        let offsetHeight:CGFloat = K.ScrollOffsetHeight
+        let screen = UIScreen.main.bounds
+        
+        let stackViewY = stackView.frame.maxY + offsetHeight
+        if stackViewY > screen.height {
+            scrollView.contentSize = CGSize(width: screen.width, height: stackViewY)
+        } else {
+            scrollView.contentSize = CGSize(width: screen.width, height: screen.height)
+        }
     }
-    
-    // MARK: - Detail UI
+}
+
+// MARK: - SubViews Setup
+extension ShowDetailViewController {
     private func setupDetailUI() {
-        self.show.fetchDetail().then({ detail -> Promise<Void> in
+        self.show.fetchDetail().then({ data -> Promise<ShowDetail> in
+            return ShowDetail.decodeShowData(data: data)
+        }).then({ detail -> Promise<Void> in
             let (genres, runtime) = self.setupBackdropText(with: detail)
             
             let title = self.show.name
@@ -214,7 +231,7 @@ extension ShowDetailViewController {
             let backdropURL = self.show.backdropPath != nil ? K.Backdrop.URL + (self.show.backdropPath!) : nil
             
             // Return Void Promise to allow Recommendations to setup UI
-            return Promise { (fulfill, reject) -> Void in
+            return Promise<Void>(on: .promises) { (fulfill, reject) in
                 self.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate) { colors in
                     self.setupSeasonsView(with: detail.seasons, using: colors)
                     
@@ -232,15 +249,14 @@ extension ShowDetailViewController {
                     if let recommendations = detail.recommendations?.results {
                         self.setupRecommendationsView(with: recommendations, using: colors)
                     }
+                    
                     fulfill(Void())
                 }
             }
-        }).always {
+        }).then {
             DispatchQueue.main.async {
                 self.updateContentSize()
             }
-        }.catch { e in
-            print(e)
         }
     }
     
@@ -321,18 +337,16 @@ extension ShowDetailViewController {
         
         return (genresStr, runtimeStr)
     }
-    
-    // MARK: - Update ScrollVIewContentSize
-    private func updateContentSize() {
-        let offsetHeight:CGFloat = K.ScrollOffsetHeight
-        let screen = UIScreen.main.bounds
-        
-        let stackViewY = stackView.frame.maxY + offsetHeight
-        if stackViewY > screen.height {
-            scrollView.contentSize = CGSize(width: screen.width, height: stackViewY)
-        } else {
-            scrollView.contentSize = CGSize(width: screen.width, height: screen.height)
-        }
+}
+
+// MARK: - CreatorsCollectionViewDelegate
+extension ShowDetailViewController: CreatorsCollectionVIewDelegate {
+    func select(crew: Crew) {
+        guard let safeColors = self.colors else { return }
+        let creditModal = CreditDetailModal(with: crew, using: safeColors)
+        creditModal.delegate = self
+        let navController = UINavigationController(rootViewController: creditModal)
+        self.present(navController, animated: true)
     }
 }
 
@@ -342,7 +356,8 @@ extension ShowDetailViewController: CastCollectionViewDelegate {
         guard let safeColors = self.colors else { return }
         let creditModal = CreditDetailModal(with: cast, using: safeColors)
         creditModal.delegate = self
-        self.present(creditModal, animated: true)
+        let navController = UINavigationController(rootViewController: creditModal)
+        self.present(navController, animated: true)
     }
 }
 
