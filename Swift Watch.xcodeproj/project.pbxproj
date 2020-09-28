@@ -252,6 +252,8 @@
 				D64EB41724E4E9AD00B608CF /* CreditDetailModal.swift */,
 				D6F545CE24FD5C0F00700677 /* CreditDetailNotableWorks.swift */,
 				D6BA6084250224C100998093 /* CreditsTableViewController.swift */,
+				D6EED055250CA7060029CC87 /* CreatorsCollectionView.swift */,
+				D6EED057250CA88E0029CC87 /* CreatorsCollectionViewCell.swift */,
 			);
 			path = Credits;
 			sourceTree = "<group>";
@@ -409,8 +411,6 @@
 				D6EF10332518ABB400F035A7 /* CVTCell.swift */,
 				D6F214372519509D00241F56 /* GenericCollectionViewHeader.swift */,
 				D6EF10282518589400F035A7 /* GenericCollectionView.swift */,
-				D6EED055250CA7060029CC87 /* CreatorsCollectionView.swift */,
-				D6EED057250CA88E0029CC87 /* CreatorsCollectionViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
