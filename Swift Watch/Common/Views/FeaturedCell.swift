@@ -79,17 +79,15 @@ class FeaturedCell: UICollectionViewCell {
 }
 extension FeaturedCell: ConfigurableFeaturedCell {    
     func configure(name: String, image: String? = nil) {
+        hideSkeleton()
         DispatchQueue.main.async {
-            self.hideSkeleton()
             self.title.text = name
         }
         
         let placeholder = UIImage(named: "placeholderBackdrop")
         if let safeImage = image {
             let url = URL(string: safeImage)
-            let roundCorner = RoundCornerImageProcessor(cornerRadius: imageView.layer.cornerRadius)
             let options: KingfisherOptionsInfo = [
-                .processor(roundCorner),
                 .scaleFactor(UIScreen.main.scale),
                 .transition(.fade(1)),
                 .cacheOriginalImage,

@@ -149,6 +149,13 @@ class CreditDetailModal: UIViewController {
         fetchDetails()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: - View Setup
+extension CreditDetailModal {
     @objc func onBackButton() {
         self.dismiss(animated: true)
     }
@@ -163,13 +170,6 @@ class CreditDetailModal: UIViewController {
         navigationItem.rightBarButtonItem = backBarButton
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-// MARK: - View Setup
-extension CreditDetailModal {
     private func setupAnchors() {
         let scrollViewConstraints: [NSLayoutConstraint] = [
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
