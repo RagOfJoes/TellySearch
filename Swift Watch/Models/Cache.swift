@@ -26,6 +26,15 @@ struct C {
         ), transformer: TransformerFactory.forCodable(ofType: Data.self)
     )
     
+    static let Season = try? Storage(
+        diskConfig: DiskConfig(name: "SeasonDetail"),
+        memoryConfig: MemoryConfig(
+            expiry: C.Expiration,
+            countLimit: C.CountLimit,
+            totalCostLimit: C.TotalCostLimit
+        ), transformer: TransformerFactory.forCodable(ofType: Data.self)
+    )
+    
     static let Movie = try? Storage(
         diskConfig: DiskConfig(name: "MovieDetail"),
         memoryConfig: MemoryConfig(
