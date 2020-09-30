@@ -9,11 +9,15 @@
 import UIKit
 import SkeletonView
 
+protocol ShowDetailSeasonsDelegate: class {
+    func select(season: Season)
+}
+
 class ShowDetailSeasons: GenericCollectionView {
     var seasons: [Season]?
     var colors: UIImageColors?
     
-    weak var delegate: ShowDetailRecommendationsDelegate?
+    weak var delegate: ShowDetailSeasonsDelegate?
     
     override init(_ type: GenericCollectionViewType) {
         super.init(type)
@@ -34,9 +38,9 @@ class ShowDetailSeasons: GenericCollectionView {
 // MARK: - UICollectionViewDelegate
 extension ShowDetailSeasons {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        //        if let safeShow = seasons?[indexPath.item] {
-        //            self.delegate?.select(show: safeShow)
-        //        }
+        if let safeSeason = seasons?[indexPath.item] {
+            self.delegate?.select(season: safeSeason)
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

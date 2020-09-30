@@ -32,7 +32,7 @@ class ShowDetailViewController: UIViewController {
     
     private lazy var seasonsView: ShowDetailSeasons = {
         let seasonsView = ShowDetailSeasons(.Regular)
-        
+        seasonsView.delegate = self
         return seasonsView
     }()
     
@@ -361,7 +361,17 @@ extension ShowDetailViewController: CastCollectionViewDelegate {
     }
 }
 
-// MARK: - MovieDetailRecommendationsDelegate
+// MARK: - ShowDetailSeasonsDelegate
+extension ShowDetailViewController: ShowDetailSeasonsDelegate {
+    func select(season: Season) {
+        guard let safeColors = self.colors else { return }
+        let seasonModal = SeasonsView(tvId: self.show.id, season: season, colors: safeColors)
+        let navController = UINavigationController(rootViewController: seasonModal)
+        self.present(navController, animated: true)
+    }
+}
+
+// MARK: - ShowDetailRecommendationsDelegate
 extension ShowDetailViewController: ShowDetailRecommendationsDelegate {
     func select(show: Show) {
         let detailVC = ShowDetailViewController(with: show)
@@ -369,6 +379,7 @@ extension ShowDetailViewController: ShowDetailRecommendationsDelegate {
     }
 }
 
+// MARK: - CreditDetailModalDelegate
 extension ShowDetailViewController: CreditDetailModalDelegate {
     func shouldPush(VC: UIViewController) {
         self.navigationController?.pushViewController(VC, animated: true)
