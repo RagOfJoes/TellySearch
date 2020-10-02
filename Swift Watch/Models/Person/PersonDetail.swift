@@ -29,33 +29,19 @@ struct PersonDetail: Codable {
     let combinedCredits: CombinedCredis
     
     var born: String? {
-        guard let safeBirthday = self.birthday else { return nil }
-        let date = Date(safeBirthday, with: "YYYY-MM-dd")
-        let monthFormatter = DateFormatter()
-        monthFormatter.dateFormat = "LLL"
-        let releaseMonth = monthFormatter.string(from: date)
-        
-        let calendar = Calendar.current.dateComponents([.day, .year], from: date)
-        let releaseDay = "\(calendar.day!)"
-        let releaseYear = "\(calendar.year!)"
-        
-        return "\(releaseMonth) \(releaseDay), \(releaseYear)"
+        guard let safeBirthday = birthday else { return nil }
+        return safeBirthday.formatDate(format: "YYYY-MM-dd") { (month, day, year) -> String in
+            return "\(month) \(day), \(year)"
+        }
     }
     var died: String? {
-        guard let safeDeathday = self.deathday else { return nil }
-        let date = Date(safeDeathday, with: "YYYY-MM-dd")
-        let monthFormatter = DateFormatter()
-        monthFormatter.dateFormat = "LLL"
-        let releaseMonth = monthFormatter.string(from: date)
-        
-        let calendar = Calendar.current.dateComponents([.day, .year], from: date)
-        let releaseDay = "\(calendar.day!)"
-        let releaseYear = "\(calendar.year!)"
-        
-        return "\(releaseMonth) \(releaseDay), \(releaseYear)"
+        guard let safeDeathday = deathday else { return nil }
+        return safeDeathday.formatDate(format: "YYYY-MM-dd") { (month, day, year) -> String in
+            return "\(month) \(day), \(year)"
+        }
     }
     var genderStr: String {
-        switch self.gender {
+        switch gender {
         case 1:
             return "Female"
         case 2:
