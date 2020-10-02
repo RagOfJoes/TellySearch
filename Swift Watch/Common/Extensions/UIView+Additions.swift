@@ -47,13 +47,7 @@ extension UIView {
         }
     }
     
-    func shrink(down: Bool) {
-        UIView.animate(withDuration: 0.1) {
-            self.transform = down ? CGAffineTransform(scaleX: 0.96, y: 0.96) : .identity
-        }
-    }
-    
-    func shrink(down: Bool, scale: CGFloat) {
+    func shrink(down: Bool, scale: CGFloat = 0.96) {
         UIView.animate(withDuration: 0.1) {
             self.transform = down ? CGAffineTransform(scaleX: scale, y: scale) : .identity
         }
