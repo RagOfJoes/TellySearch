@@ -58,7 +58,6 @@
 		D6A4DF402523E7D9008495AD /* SeasonDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4DF3F2523E7D9008495AD /* SeasonDetail.swift */; };
 		D6A4DF452523E80F008495AD /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4DF442523E80F008495AD /* Episode.swift */; };
 		D6A4DF4D2523F1EF008495AD /* SeasonsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4DF4C2523F1EF008495AD /* SeasonsViewCell.swift */; };
-		D6A4DF5225242BD8008495AD /* UIColor+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4DF5125242BD8008495AD /* UIColor+Additions.swift */; };
 		D6A4DF622526409C008495AD /* SeasonsOverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4DF612526409C008495AD /* SeasonsOverviewCell.swift */; };
 		D6BA607D2502243500998093 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA607C2502243500998093 /* Constants.swift */; };
 		D6BA6085250224C100998093 /* CreditsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA6084250224C100998093 /* CreditsTableViewController.swift */; };
@@ -169,7 +168,6 @@
 		D6A4DF3F2523E7D9008495AD /* SeasonDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonDetail.swift; sourceTree = "<group>"; };
 		D6A4DF442523E80F008495AD /* Episode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
 		D6A4DF4C2523F1EF008495AD /* SeasonsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsViewCell.swift; sourceTree = "<group>"; };
-		D6A4DF5125242BD8008495AD /* UIColor+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Additions.swift"; sourceTree = "<group>"; };
 		D6A4DF612526409C008495AD /* SeasonsOverviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsOverviewCell.swift; sourceTree = "<group>"; };
 		D6BA607C2502243500998093 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		D6BA6084250224C100998093 /* CreditsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditsTableViewController.swift; sourceTree = "<group>"; };
@@ -468,7 +466,6 @@
 			isa = PBXGroup;
 			children = (
 				D611F76224CA753700B3FE6A /* UIView+Additions.swift */,
-				D6A4DF5125242BD8008495AD /* UIColor+Additions.swift */,
 				D654B9C224FB82EB005620FD /* UILabel+Additions.swift */,
 				D6E3686524CA737A00863736 /* UIImage+Additions.swift */,
 				D60921B424CB5066001339EE /* UIButton+Additions.swift */,
@@ -734,7 +731,6 @@
 				D6EED056250CA7060029CC87 /* CreatorsCollectionView.swift in Sources */,
 				D648C05124F8CB1E00733F8B /* InfoStackView.swift in Sources */,
 				D6D63BBD25058D63002C60FA /* Show.swift in Sources */,
-				D6A4DF5225242BD8008495AD /* UIColor+Additions.swift in Sources */,
 				D6C39B1424F4B5400033C11B /* Media.swift in Sources */,
 				D6689DC924DB52580061C45C /* UIImageColors.swift in Sources */,
 				D6D63BBB25058B26002C60FA /* ShowsFeaturedCollectionView.swift in Sources */,
