@@ -11,6 +11,10 @@ import Promises
 
 class MovieDetailViewController: UIViewController {
     // MARK: - Internal Properties
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
     let movie: Movie
     var colors: UIImageColors?
     
@@ -26,7 +30,7 @@ class MovieDetailViewController: UIViewController {
     }()
     
     private lazy var overviewStack: InfoStackView = {
-        let overviewStack = InfoStackView(fontSize: (18, 14))
+        let overviewStack = InfoStackView()
         return overviewStack
     }()
     

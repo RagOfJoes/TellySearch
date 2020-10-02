@@ -11,6 +11,10 @@ import Promises
 
 class ShowDetailViewController: UIViewController {
     // MARK: - Internal Properties
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
     let show: Show
     var colors: UIImageColors?
     
@@ -366,6 +370,7 @@ extension ShowDetailViewController: ShowDetailSeasonsDelegate {
     func select(season: Season) {
         guard let safeColors = colors else { return }
         let seasonModal = SeasonsView(tvId: show.id, season: season, colors: safeColors)
+        seasonModal.creditModalDelegate = self
         let navController = UINavigationController(rootViewController: seasonModal)
         present(navController, animated: true)
     }
