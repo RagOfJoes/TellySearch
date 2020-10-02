@@ -25,8 +25,8 @@ class CastCollectionView: GenericCollectionView {
     func configure(with credits: Credits, title: String, colors: UIImageColors) {
         self.colors = colors
         self.credits = credits
-        self.setupHeader(title: title, color: self.colors?.primary)
-        self.hideSkeleton()
+        setupHeader(title: title, color: colors.primary)
+        hideSkeleton()
     }
     
     required init?(coder: NSCoder) {
@@ -38,7 +38,7 @@ class CastCollectionView: GenericCollectionView {
 extension CastCollectionView {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let cast = credits?.cast?[indexPath.row] {
-            self.delegate?.select(cast: cast)
+            delegate?.select(cast: cast)
         }
     }
     

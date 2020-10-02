@@ -25,9 +25,9 @@ class PosterImageView: UIImageView {
         ]
         NSLayoutConstraint.activate(constraints)
 
-        guard let safeString = string else { self.image = PosterImageView.placeholder; return }
-        guard let url = URL(string: K.Credits.profileURL + safeString) else { self.image = PosterImageView.placeholder; return }
-        self.kfSetImage(with: url, using: PosterImageView.placeholder)
+        guard let safeString = string else { image = PosterImageView.placeholder; return }
+        guard let url = URL(string: K.Credits.profileURL + safeString) else { image = PosterImageView.placeholder; return }
+        kfSetImage(with: url, using: PosterImageView.placeholder)
     }
     
     required init?(coder: NSCoder) {

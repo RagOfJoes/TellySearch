@@ -63,7 +63,7 @@ class CreatorsCollectionView: UIView {
         clipsToBounds = true
         backgroundColor = .clear
         translatesAutoresizingMaskIntoConstraints = false
-        self.heightConstraint = heightAnchor.constraint(equalToConstant: self.heightConstant + 40)
+        heightConstraint = heightAnchor.constraint(equalToConstant: heightConstant + 40)
         
         addSubview(header)
         addSubview(collectionView)
@@ -78,19 +78,19 @@ class CreatorsCollectionView: UIView {
         self.crews = crews
         self.colors = colors
         
-        self.header.configure(title, color: colors.primary)
+        header.configure(title, color: colors.primary)
         
         if crews.count > 2 {
             let numOfRows: CGFloat = (CGFloat(crews.count) / 2).rounded(.toNearestOrEven)
             
             if numOfRows > 4 {
-                self.heightConstraint.constant = self.heightConstant * 4
+                heightConstraint.constant = heightConstant * 4
             } else {
-                self.heightConstraint.constant = self.heightConstant * numOfRows
+                heightConstraint.constant = heightConstant * numOfRows
             }
         }
         
-        self.hideSkeleton()
+        hideSkeleton()
     }
     
     required init?(coder: NSCoder) {
@@ -133,21 +133,21 @@ extension CreatorsCollectionView {
 // MARK: - UICollectionViewDelegate
 extension CreatorsCollectionView: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let crew = self.crews?[indexPath.row] else { return }
-        self.delegate?.select(crew: crew)
+        guard let crew = crews?[indexPath.row] else { return }
+        delegate?.select(crew: crew)
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width / 2 - 40, height: self.heightConstant)
+        return CGSize(width: collectionView.frame.width / 2 - 40, height: heightConstant)
     }
 }
 
 // MARK: - UICollectionViewDataSource
 extension CreatorsCollectionView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let crewsLen = self.crews?.count {
+        if let crewsLen = crews?.count {
             return crewsLen > 4 ? 4 : crewsLen
         }
         
@@ -157,7 +157,7 @@ extension CreatorsCollectionView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreatorsCollectionViewCell.reuseIdentifier, for: indexPath) as! CreatorsCollectionViewCell
         
-        if let crew = self.crews?[indexPath.row], let safeColors = colors {
+        if let crew = crews?[indexPath.row], let safeColors = colors {
             cell.configure(primary: crew.name, secondary: crew.job , color: safeColors.secondary)
         }
         

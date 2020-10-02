@@ -19,7 +19,7 @@ struct MovieDetail: Codable {
     
     var directors: [Crew]? {
         get {
-            let directors = self.credits.crew?.filter({ (crew) -> Bool in
+            let directors = credits.crew?.filter({ (crew) -> Bool in
                 return crew.job == "Director"
             })
             

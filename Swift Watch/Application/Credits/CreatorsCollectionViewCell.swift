@@ -77,7 +77,7 @@ extension CreatorsCollectionViewCell: ConfigureCreatorsCollectionViewCell {
     static var reuseIdentifier = "CreatorCollectionViewCell"
     
     func configure(primary: String, secondary: String, color: UIColor) {
-        self.hideSkeleton()
+        hideSkeleton()
         
         let underlineAttributes: [NSAttributedString.Key: Any] = [
             .underlineStyle: NSUnderlineStyle.single.rawValue,

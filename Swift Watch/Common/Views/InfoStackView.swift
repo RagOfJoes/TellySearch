@@ -16,7 +16,7 @@ protocol InfoStackViewDelegate: class {
 class InfoStackView: UIStackView {
     weak var delegate: InfoStackViewDelegate?
     
-    var hasReadMore: Bool = false
+    private var hasReadMore: Bool = false
     private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.numberOfLines = 1
@@ -72,7 +72,7 @@ class InfoStackView: UIStackView {
     }
     
     func setup(title: String, value: String, colors: UIImageColors? = nil) {
-        self.hideSkeleton()
+        hideSkeleton()
         let valueText = value.trimmingCharacters(in: .whitespacesAndNewlines)
         
         DispatchQueue.main.async { [weak self] in
@@ -101,7 +101,7 @@ class InfoStackView: UIStackView {
 // MARK: - Action Handlers
 extension InfoStackView {
     @objc func readMoreAction(_ sender: UIButton) {
-        if !self.hasReadMore {
+        if !hasReadMore {
             return
         }
         
@@ -115,7 +115,7 @@ extension InfoStackView {
             }
             safeReadMore.isSelected = !safeReadMore.isSelected
         }
-        self.delegate?.didReadMore()
+        delegate?.didReadMore()
     }
 }
 
@@ -146,7 +146,7 @@ extension InfoStackView {
             readMore.addTarget(self, action: #selector(readMoreAction), for: .touchUpInside)
             readMore.isUserInteractionEnabled = true
             
-            self.hasReadMore = true
+            hasReadMore = true
         } else {
             titleStackView.removeArrangedSubview(readMore)
             readMore.removeFromSuperview()

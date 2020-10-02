@@ -21,7 +21,7 @@ class MovieCollectionView: CVTCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.configure(.Regular)
+        configure(.Regular)
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -31,7 +31,7 @@ class MovieCollectionView: CVTCell {
     func configure(movies: [Movie], section: Int) {
         self.movies = movies
         self.section = section
-        self.hideSkeleton()
+        hideSkeleton()
     }
     
     required init?(coder: NSCoder) {
@@ -43,7 +43,7 @@ class MovieCollectionView: CVTCell {
 extension MovieCollectionView {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let correctIndexPath = IndexPath(row: indexPath.row, section: section ?? indexPath.section)
-        self.delegate?.select(movie: correctIndexPath)
+        delegate?.select(movie: correctIndexPath)
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

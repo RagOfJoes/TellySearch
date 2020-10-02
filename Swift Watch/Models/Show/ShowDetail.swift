@@ -28,7 +28,7 @@ struct ShowDetail: Codable {
     var createdBy: [Crew]? {
         get {
             var arr: [Crew] = []
-            guard let safeCredits = self.credits else { return nil }
+            guard let safeCredits = credits else { return nil }
             guard let safeCrew = safeCredits.crew else { return nil }
             
             for id in createdByIds {

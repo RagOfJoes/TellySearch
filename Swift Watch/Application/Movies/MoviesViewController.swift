@@ -39,7 +39,7 @@ class MoviesViewController: UIViewController  {
         super.viewDidLoad()
         
         let backBarButton = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
-        self.navigationItem.backBarButtonItem = backBarButton
+        navigationItem.backBarButtonItem = backBarButton
         view.backgroundColor = UIColor(named: "backgroundColor")
         
         view.addSubview(tableView)
@@ -146,7 +146,7 @@ extension MoviesViewController: MovieCollectionViewTableViewCellDelegate {
 // MARK: - TabBarAnimation
 extension MoviesViewController {
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        guard let tbc = self.tabBarController as? TabBarController else { return }
+        guard let tbc = tabBarController as? TabBarController else { return }
         if scrollView.panGestureRecognizer.translation(in: scrollView).y < 0 {
             tbc.hideTabBar(hide: true)
         } else {

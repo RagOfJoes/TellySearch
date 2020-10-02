@@ -45,7 +45,7 @@ struct Show: Codable {
 // MARK: - Show Detail Handler
 extension Show {
     func fetchDetail() -> Promise<Data> {
-        let cacheKey = "show:\(self.id):detail"
+        let cacheKey = "show:\(id):detail"
         
         return Promise<Data>(on: .global(qos: .userInitiated), { (fullfill, reject) in
             // Check if cached then fulfill and return early

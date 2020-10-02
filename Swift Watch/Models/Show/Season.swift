@@ -13,6 +13,7 @@ struct Season: Codable {
     let id: Int
     let name: String
     let airDate: String?
+    let overview: String?
     let episodeCount: Int
     let seasonNumber: Int
     let posterPath: String?
@@ -21,6 +22,7 @@ struct Season: Codable {
     enum CodingKeys: String, CodingKey {
         case id
         case name
+        case overview
         case airDate = "air_date"
         case posterPath = "poster_path"
         case episodeCount = "episode_count"
@@ -30,7 +32,7 @@ struct Season: Codable {
 
 extension Season {
     func fetchDetail(tvId: Int) -> Promise<Data> {
-        let cacheKey = "season:\(self.id):detail"
+        let cacheKey = "season:\(id):detail"
         
         return Promise<Data>(on: .global(qos: .userInitiated), { (fullfill, reject) in
             // Check if cached then fulfill and return early

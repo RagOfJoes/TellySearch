@@ -219,8 +219,8 @@ extension BackdropDetail {
     }
     
     private func setupText(title _title: String?, genres _genres: String?, runtime _runtime: String?, releaseDate _releaseDate: String?) {
-        self.title.text = _title
-        self.genres.text = _genres
+        title.text = _title
+        genres.text = _genres
         
         if let safeRuntime = _runtime {
             runtime.text = safeRuntime

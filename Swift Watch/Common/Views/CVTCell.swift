@@ -41,12 +41,12 @@ class CVTCell: UITableViewCell {
         clipsToBounds = true
         backgroundColor = .clear
         
-        contentView.addSubview(self.collectionView)
+        contentView.addSubview(collectionView)
         
         setupAnchors()
         isSkeletonable = true
         
-        self.collectionView.prepareSkeleton { [weak self] (done) in
+        collectionView.prepareSkeleton { [weak self] (done) in
             self?.showAnimatedGradientSkeleton()
         }
     }
@@ -75,7 +75,7 @@ extension CVTCell {
             collectionViewTrailing = collectionView.trailingAnchor.constraint(equalTo: trailingAnchor)
         }
         
-        if self.type == .Featured {
+        if type == .Featured {
             collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: K.Overview.featuredCellHeight)
         } else {
             collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: K.Overview.regularHeight)
@@ -105,7 +105,7 @@ extension CVTCell: SkeletonCollectionViewDataSource {
     }
     
     func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
-        if self.type == .Featured {
+        if type == .Featured {
             return FeaturedCell.reuseIdentifier
         } else {
             return RegularCell.reuseIdentifier

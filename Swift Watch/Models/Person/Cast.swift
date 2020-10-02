@@ -29,7 +29,7 @@ struct Cast: Codable {
 // MARK: - Cast Movie Detail Handler
 extension Cast {
     func fetchDetail() -> Promise<Data> {
-        let cacheKey = "person:\(self.id):detail"
+        let cacheKey = "person:\(id):detail"
         return Promise<Data>(on: .global(qos: .userInitiated), { (fullfill, reject) in
             // Check if cached then fulfill and return early
             if let cached = try? detailStorage?.object(forKey: cacheKey) {

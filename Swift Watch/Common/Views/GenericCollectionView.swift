@@ -34,7 +34,7 @@ class GenericCollectionView: UIView {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         // Only Register the Cell's that are required
-        if self.type == .Featured {
+        if type == .Featured {
             collectionView.register(FeaturedCell.self, forCellWithReuseIdentifier: FeaturedCell.reuseIdentifier)
         } else {
             collectionView.register(RegularCell.self, forCellWithReuseIdentifier: RegularCell.reuseIdentifier)            
@@ -51,19 +51,19 @@ class GenericCollectionView: UIView {
         backgroundColor = .clear
         translatesAutoresizingMaskIntoConstraints = false
         
-        addSubview(self.header)
-        addSubview(self.collectionView)
+        addSubview(header)
+        addSubview(collectionView)
         
         setupAnchors()
         isSkeletonable = true
         
-        self.collectionView.prepareSkeleton { [weak self] (done) in
+        collectionView.prepareSkeleton { [weak self] (done) in
             self?.showAnimatedGradientSkeleton()
         }
     }
     
     public func setupHeader(title: String, color: UIColor? = UIColor(named: "primaryTextColor")) {
-        self.header.configure(title, color: color)
+        header.configure(title, color: color)
     }
     
     required init?(coder: NSCoder) {
@@ -81,7 +81,7 @@ extension GenericCollectionView {
         let regularHeightSecondaryConstraint = heightAnchor.constraint(equalToConstant: K.Overview.regularHeightWithSecondary + 35)
         let featuredHeightConstraint = heightAnchor.constraint(equalToConstant: K.Overview.featuredCellHeight - 100)
         
-        switch self.type {
+        switch type {
         case .Featured:
             heightConstraint = featuredHeightConstraint
             collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: K.Overview.featuredCellHeight)
@@ -152,7 +152,7 @@ extension GenericCollectionView: SkeletonCollectionViewDataSource {
     }
     
     func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
-        if self.type == .Featured {
+        if type == .Featured {
             return FeaturedCell.reuseIdentifier
         } else {
             return RegularCell.reuseIdentifier

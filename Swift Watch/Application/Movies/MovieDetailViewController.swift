@@ -58,8 +58,8 @@ class MovieDetailViewController: UIViewController {
         self.movie = movie
         
         let (sV, cV) = UIView.createScrollView()
-        self.scrollView = sV
-        self.containerView = cV
+        scrollView = sV
+        containerView = cV
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -94,7 +94,7 @@ class MovieDetailViewController: UIViewController {
         // When User leaves View
         // retain colors and ensure that we're
         // resetting Nav color to appropriate Color
-        if let safeColors = self.colors {
+        if let safeColors = colors {
             DispatchQueue.main.async { [weak self] in
                 UIView.animate(withDuration: 0.25) { [weak self] in
                     self?.navigationController?.navigationBar.tintColor = safeColors.primary
@@ -125,20 +125,20 @@ extension MovieDetailViewController {
     
     func setupNav(by disappearing: Bool) {
         if disappearing {
-            self.navigationController?.navigationBar.shadowImage = UIImage()
-            self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+            navigationController?.navigationBar.shadowImage = UIImage()
+            navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
             
-            guard let tbc = self.tabBarController as? TabBarController else { return }
+            guard let tbc = tabBarController as? TabBarController else { return }
             tbc.hideTabBar(hide: true)
         } else {
-            self.navigationController?.navigationBar.shadowImage = nil
-            self.navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
+            navigationController?.navigationBar.shadowImage = nil
+            navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
             
             UIView.animate(withDuration: 0.25) {
                 self.navigationController?.navigationBar.prefersLargeTitles = true
             }
             
-            guard let tbc = self.tabBarController as? TabBarController else { return }
+            guard let tbc = tabBarController as? TabBarController else { return }
             tbc.hideTabBar(hide: false)
         }
     }
@@ -214,7 +214,7 @@ extension MovieDetailViewController {
 // MARK: - SubViews Setup
 extension MovieDetailViewController {
     private func setupDetailUI() {
-        self.movie.fetchDetail().then({ data -> Promise<MovieDetail> in
+        movie.fetchDetail().then({ data -> Promise<MovieDetail> in
             return MovieDetail.decodeMovieData(data: data)
         }).then ({ detail -> Promise<Void> in
             let (genres, runtime) = self.setupBackdropText(with: detail)
@@ -323,22 +323,22 @@ extension MovieDetailViewController {
 // MARK: - CreatorsCollectionViewDelegate
 extension MovieDetailViewController: CreatorsCollectionVIewDelegate {
     func select(crew: Crew) {
-        guard let safeColors = self.colors else { return }
+        guard let safeColors = colors else { return }
         let creditModal = CreditDetailModal(with: crew, using: safeColors)
         creditModal.delegate = self
         let navController = UINavigationController(rootViewController: creditModal)
-        self.present(navController, animated: true)
+        present(navController, animated: true)
     }
 }
 
 // MARK: - CastCollectionViewDelegate
 extension MovieDetailViewController: CastCollectionViewDelegate {
     func select(cast: Cast) {
-        guard let safeColors = self.colors else { return }
+        guard let safeColors = colors else { return }
         let creditModal = CreditDetailModal(with: cast, using: safeColors)
         creditModal.delegate = self
         let navController = UINavigationController(rootViewController: creditModal)
-        self.present(navController, animated: true)
+        present(navController, animated: true)
     }
 }
 
@@ -353,6 +353,6 @@ extension MovieDetailViewController: MovieDetailRecommendationsDelegate {
 // MARK: - CreditDetailModalDelegate
 extension MovieDetailViewController: CreditDetailModalDelegate {
     func shouldPush(VC: UIViewController) {
-        self.navigationController?.pushViewController(VC, animated: true)
+        navigationController?.pushViewController(VC, animated: true)
     }
 }

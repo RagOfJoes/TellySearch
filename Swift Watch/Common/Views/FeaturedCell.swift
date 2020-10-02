@@ -92,7 +92,7 @@ extension FeaturedCell: ConfigurableFeaturedCell {
                 .transition(.fade(1)),
                 .cacheOriginalImage,
             ]
-            self.imageView.kfSetImage(with: url, using: placeholder, options: options)
+            imageView.kfSetImage(with: url, using: placeholder, options: options)
         } else {
             imageView.image = placeholder
         }

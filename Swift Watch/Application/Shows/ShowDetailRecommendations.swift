@@ -26,8 +26,8 @@ class ShowDetailRecommendations: GenericCollectionView {
     func configure(with shows: [Show], colors: UIImageColors) {
         self.shows = shows
         self.colors = colors
-        self.setupHeader(title: "Recommendations", color: self.colors?.primary)
-        self.hideSkeleton()
+        setupHeader(title: "Recommendations", color: self.colors?.primary)
+        hideSkeleton()
     }
     
     required init?(coder: NSCoder) {
@@ -39,7 +39,7 @@ class ShowDetailRecommendations: GenericCollectionView {
 extension ShowDetailRecommendations {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let safeShow = shows?[indexPath.item] {
-            self.delegate?.select(show: safeShow)
+            delegate?.select(show: safeShow)
         }
     }
     
@@ -58,9 +58,9 @@ extension ShowDetailRecommendations {
         
         if let show = shows?[indexPath.row] {
             if let safePoster = show.posterPath {
-                cell.configure(primary: show.name, image: K.Poster.URL + safePoster, colors: self.colors)
+                cell.configure(primary: show.name, image: K.Poster.URL + safePoster, colors: colors)
             } else {
-                cell.configure(primary: show.name, colors: self.colors)
+                cell.configure(primary: show.name, colors: colors)
             }
         }
         

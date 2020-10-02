@@ -45,7 +45,7 @@ struct Movie: Codable {
 // MARK: - Movie Detail Handler
 extension Movie {
     func fetchDetail() -> Promise<Data> {
-        let cacheKey = "movie:\(self.id):detail"
+        let cacheKey = "movie:\(id):detail"
         
         return Promise<Data>(on: .global(qos: .userInitiated), { (fullfill, reject) in
             // Check if cached then fulfill and return early

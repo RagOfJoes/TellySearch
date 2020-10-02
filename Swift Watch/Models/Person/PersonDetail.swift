@@ -65,23 +65,23 @@ struct PersonDetail: Codable {
         }
     }
     var numberOfWorks: Int {
-        return self.combinedCredits.cast.count + self.combinedCredits.crew.count
+        return combinedCredits.cast.count + combinedCredits.crew.count
     }
     var notableWorks:  [Media]?  {
-        if self.numberOfWorks < 4 {
+        if numberOfWorks < 4 {
             return nil
         }
         
         var range: Int
         var arr: [Media] = []
         var sortByVoteCount: [Media]
-        if self.knownFor == "Acting" {            
-            let uniqueArray = self.combinedCredits.cast.unique(on: \Media.id)
+        if knownFor == "Acting" {
+            let uniqueArray = combinedCredits.cast.unique(on: \Media.id)
             sortByVoteCount = uniqueArray.sorted {
                 return $0.voteCount > $1.voteCount
             }
         } else {
-            let uniqueArray = self.combinedCredits.crew.unique(on: \Media.id)
+            let uniqueArray = combinedCredits.crew.unique(on: \Media.id)
             let knownForArray = uniqueArray.filter {
                 return $0.department == self.knownFor
             }

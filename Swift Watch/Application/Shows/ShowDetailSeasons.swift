@@ -26,8 +26,8 @@ class ShowDetailSeasons: GenericCollectionView {
     func configure(with seasons: [Season], colors: UIImageColors) {
         self.colors = colors
         self.seasons = seasons
-        self.setupHeader(title: "Seasons", color: self.colors?.primary)
-        self.hideSkeleton()
+        setupHeader(title: "Seasons", color: self.colors?.primary)
+        hideSkeleton()
     }
     
     required init?(coder: NSCoder) {
@@ -39,7 +39,7 @@ class ShowDetailSeasons: GenericCollectionView {
 extension ShowDetailSeasons {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let safeSeason = seasons?[indexPath.item] {
-            self.delegate?.select(season: safeSeason)
+            delegate?.select(season: safeSeason)
         }
     }
     
@@ -59,9 +59,9 @@ extension ShowDetailSeasons {
         if let season = seasons?[indexPath.row] {
             let episodeCountStr = "\(season.episodeCount) episodes"
             if let safePoster = season.posterPath {
-                cell.configure(primary: season.name, secondary: episodeCountStr, image: K.Poster.URL + safePoster, colors: self.colors)
+                cell.configure(primary: season.name, secondary: episodeCountStr, image: K.Poster.URL + safePoster, colors: colors)
             } else {
-                cell.configure(primary: season.name, secondary: episodeCountStr, colors: self.colors)
+                cell.configure(primary: season.name, secondary: episodeCountStr, colors: colors)
             }
         }
         

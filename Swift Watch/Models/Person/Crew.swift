@@ -29,7 +29,7 @@ struct Crew: Codable {
 
 extension Crew {
     func fetchDetail() -> Promise<Data> {
-        let cacheKey = "person:\(self.id):detail"
+        let cacheKey = "person:\(id):detail"
 
         return Promise<Data>(on: .global(qos: .userInitiated), { (fullfill, reject) in
             // Check if cached then fulfill and return early

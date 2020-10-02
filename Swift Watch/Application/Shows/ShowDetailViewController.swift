@@ -65,8 +65,8 @@ class ShowDetailViewController: UIViewController {
         self.show = show
         
         let (sV, cV) = UIView.createScrollView()
-        self.scrollView = sV
-        self.containerView = cV
+        scrollView = sV
+        containerView = cV
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -100,7 +100,7 @@ class ShowDetailViewController: UIViewController {
         // When User leaves View
         // retain colors and ensure that we're
         // resetting Nav color to appropriate Color
-        if let safeColors = self.colors {
+        if let safeColors = colors {
             DispatchQueue.main.async { [weak self] in
                 UIView.animate(withDuration: 0.25) { [weak self] in
                     self?.navigationController?.navigationBar.tintColor = safeColors.primary
@@ -131,20 +131,20 @@ extension ShowDetailViewController {
     
     func setupNav(by disappearing: Bool) {
         if disappearing {
-            self.navigationController?.navigationBar.shadowImage = UIImage()
-            self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+            navigationController?.navigationBar.shadowImage = UIImage()
+            navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
             
-            guard let tbc = self.tabBarController as? TabBarController else { return }
+            guard let tbc = tabBarController as? TabBarController else { return }
             tbc.hideTabBar(hide: true)
         } else {
-            self.navigationController?.navigationBar.shadowImage = nil
-            self.navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
+            navigationController?.navigationBar.shadowImage = nil
+            navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
             
             UIView.animate(withDuration: 0.25) {
                 self.navigationController?.navigationBar.prefersLargeTitles = true
             }
             
-            guard let tbc = self.tabBarController as? TabBarController else { return }
+            guard let tbc = tabBarController as? TabBarController else { return }
             tbc.hideTabBar(hide: false)
         }
     }
@@ -220,7 +220,7 @@ extension ShowDetailViewController {
 // MARK: - SubViews Setup
 extension ShowDetailViewController {
     private func setupDetailUI() {
-        self.show.fetchDetail().then({ data -> Promise<ShowDetail> in
+        show.fetchDetail().then({ data -> Promise<ShowDetail> in
             return ShowDetail.decodeShowData(data: data)
         }).then({ detail -> Promise<Void> in
             let (genres, runtime) = self.setupBackdropText(with: detail)
@@ -342,32 +342,32 @@ extension ShowDetailViewController {
 // MARK: - CreatorsCollectionViewDelegate
 extension ShowDetailViewController: CreatorsCollectionVIewDelegate {
     func select(crew: Crew) {
-        guard let safeColors = self.colors else { return }
+        guard let safeColors = colors else { return }
         let creditModal = CreditDetailModal(with: crew, using: safeColors)
         creditModal.delegate = self
         let navController = UINavigationController(rootViewController: creditModal)
-        self.present(navController, animated: true)
+        present(navController, animated: true)
     }
 }
 
 // MARK: - CastCollectionViewDelegate
 extension ShowDetailViewController: CastCollectionViewDelegate {
     func select(cast: Cast) {
-        guard let safeColors = self.colors else { return }
+        guard let safeColors = colors else { return }
         let creditModal = CreditDetailModal(with: cast, using: safeColors)
         creditModal.delegate = self
         let navController = UINavigationController(rootViewController: creditModal)
-        self.present(navController, animated: true)
+        present(navController, animated: true)
     }
 }
 
 // MARK: - ShowDetailSeasonsDelegate
 extension ShowDetailViewController: ShowDetailSeasonsDelegate {
     func select(season: Season) {
-        guard let safeColors = self.colors else { return }
-        let seasonModal = SeasonsView(tvId: self.show.id, season: season, colors: safeColors)
+        guard let safeColors = colors else { return }
+        let seasonModal = SeasonsView(tvId: show.id, season: season, colors: safeColors)
         let navController = UINavigationController(rootViewController: seasonModal)
-        self.present(navController, animated: true)
+        present(navController, animated: true)
     }
 }
 
@@ -382,6 +382,6 @@ extension ShowDetailViewController: ShowDetailRecommendationsDelegate {
 // MARK: - CreditDetailModalDelegate
 extension ShowDetailViewController: CreditDetailModalDelegate {
     func shouldPush(VC: UIViewController) {
-        self.navigationController?.pushViewController(VC, animated: true)
+        navigationController?.pushViewController(VC, animated: true)
     }
 }

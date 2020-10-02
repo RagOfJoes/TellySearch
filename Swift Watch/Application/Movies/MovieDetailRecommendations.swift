@@ -26,8 +26,8 @@ class MovieDetailRecommendations: GenericCollectionView {
         self.movies = movies
         self.colors = colors
         
-        self.setupHeader(title: "Recommendations", color: self.colors?.primary)
-        self.hideSkeleton()
+        setupHeader(title: "Recommendations", color: self.colors?.primary)
+        hideSkeleton()
     }
     
     required init?(coder: NSCoder) {
@@ -39,7 +39,7 @@ class MovieDetailRecommendations: GenericCollectionView {
 extension MovieDetailRecommendations {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let safeMovie = movies?[indexPath.item] {
-            self.delegate?.select(movie: safeMovie)
+            delegate?.select(movie: safeMovie)
         }
     }
     
@@ -58,9 +58,9 @@ extension MovieDetailRecommendations {
         
         if let movie = movies?[indexPath.row] {
             if let safePoster = movie.posterPath {
-                cell.configure(primary: movie.title, image: K.Poster.URL + safePoster, colors: self.colors)
+                cell.configure(primary: movie.title, image: K.Poster.URL + safePoster, colors: colors)
             } else {
-                cell.configure(primary: movie.title, colors: self.colors)
+                cell.configure(primary: movie.title, colors: colors)
             }
         }
         

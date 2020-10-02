@@ -20,13 +20,13 @@ class ShowsCollectionView: CVTCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.configure(.Regular)
+        configure(.Regular)
     }
     
     func configure(shows: [Show], section: Int) {
         self.shows = shows
         self.section = section
-        self.hideSkeleton()
+        hideSkeleton()
     }
     
     required init?(coder: NSCoder) {
@@ -38,7 +38,7 @@ class ShowsCollectionView: CVTCell {
 extension ShowsCollectionView {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let correctIndexPath = IndexPath(row: indexPath.row, section: section ?? indexPath.section)
-        self.delegate?.select(show: correctIndexPath)
+        delegate?.select(show: correctIndexPath)
         return
     }
     

@@ -25,9 +25,9 @@ class CreditDetailNotableWorks: GenericCollectionView {
     
     func configure(with media: [Media]) {
         self.media = media
-        self.setupHeader(title: "Notable Works", color: self.colors.primary)
+        setupHeader(title: "Notable Works", color: colors.primary)
         
-        self.hideSkeleton()
+        hideSkeleton()
     }
     
     required init?(coder: NSCoder) {
@@ -39,7 +39,7 @@ class CreditDetailNotableWorks: GenericCollectionView {
 extension CreditDetailNotableWorks {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let safeMedia = media?[indexPath.item] {
-            self.delegate?.select(media: safeMedia)
+            delegate?.select(media: safeMedia)
         }
     }
     
@@ -56,13 +56,13 @@ extension CreditDetailNotableWorks {
             return UICollectionViewCell()
         }
         
-        if let media = self.media?[indexPath.row] {
+        if let media = media?[indexPath.row] {
             let primary = media.name ?? media.title ?? "-"
             let secondary = media.character ?? media.job ?? "-"
             if let safePoster = media.posterPath {
-                cell.configure(primary: primary, secondary: secondary, image: K.Poster.URL + safePoster, colors: self.colors)
+                cell.configure(primary: primary, secondary: secondary, image: K.Poster.URL + safePoster, colors: colors)
             } else {
-                cell.configure(primary: primary, secondary: secondary, colors: self.colors)
+                cell.configure(primary: primary, secondary: secondary, colors: colors)
             }
         }
         

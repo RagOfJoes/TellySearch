@@ -29,7 +29,7 @@ class FloatingTabBarView: UIView {
             if #available(iOS 13, *) {
                 _bgColor = .systemBackground
             } else {
-                if #available(iOS 12, *), self.traitCollection.userInterfaceStyle == .dark {
+                if #available(iOS 12, *), traitCollection.userInterfaceStyle == .dark {
                     _bgColor = .black
                 } else {
                     _bgColor = .white
@@ -72,7 +72,7 @@ class FloatingTabBarView: UIView {
         stackView.fillSuperview(padding: .init(top: 0, left: 16, bottom: 0, right: 16))
         
         if shouldBlur {
-            backgroundColor = self.backgroundColor?.withAlphaComponent(0.2)
+            backgroundColor = backgroundColor?.withAlphaComponent(0.2)
             
             var blurEffect: UIBlurEffect!
             
@@ -83,7 +83,7 @@ class FloatingTabBarView: UIView {
             }
             
             let blurView = UIVisualEffectView(effect: blurEffect)
-            blurView.frame = self.bounds
+            blurView.frame = bounds
             blurView.roundCorners(.allCorners, radius: 20)
             blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             
