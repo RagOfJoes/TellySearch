@@ -16,19 +16,24 @@ class SeasonsView: UIViewController {
     let colors: UIImageColors
     var detail: SeasonDetail? = nil
     
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.separatorStyle = .none
-        tableView.allowsSelection = true
-        tableView.backgroundColor = .clear
-        tableView.delaysContentTouches = false
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(SeasonsViewCell.self, forCellReuseIdentifier: SeasonsViewCell.reuseIdentifier)
+    private lazy var collectionView: UICollectionView = {
+        let layout = CollectionViewLayout()
+        layout.minimumLineSpacing = 35
+        layout.scrollDirection = .vertical
         
-        tableView.isSkeletonable = true
-        return tableView
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        collectionView.bounces = true
+        collectionView.backgroundColor = .clear
+        collectionView.delaysContentTouches = false
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.register(SeasonsViewCell.self, forCellWithReuseIdentifier: SeasonsViewCell.reuseIdentifier)
+        collectionView.register(SeasonsOverviewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SeasonsOverviewCell.reuseIdentifier)
+        
+        collectionView.isSkeletonable = true
+        return collectionView
     }()
     
     // MARK: - Life Cycle
@@ -41,21 +46,24 @@ class SeasonsView: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupNav()
-        view.backgroundColor = self.colors.background
-        view.addSubview(tableView)
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.heightAnchor.constraint(equalTo: view.heightAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
+        view.isSkeletonable = true
+        view.backgroundColor = colors.background
+        
+        view.addSubview(collectionView)
+        
+        collectionView.prepareSkeleton { done in
+            self.view.showAnimatedGradientSkeleton()
+        }
+        
+        setupAnchors()
+        
         fetchDetails()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        tableView.showAnimatedGradientSkeleton()
     }
     
     required init?(coder: NSCoder) {
@@ -66,99 +74,132 @@ class SeasonsView: UIViewController {
 // MARK: - View Setup
 extension SeasonsView {
     @objc func onBackButton() {
-        self.dismiss(animated: true)
+        dismiss(animated: true)
     }
     
-    private func setupNav() {
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.prefersLargeTitles = false
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage.from(color: self.colors.background), for: .default)
+    private func setupNav() {        
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.setBackgroundImage(UIImage.from(color: colors.background), for: .default)
         
-        self.navigationController?.navigationBar.tintColor = colors.primary
+        navigationController?.navigationBar.tintColor = colors.primary
         let backBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(onBackButton))
-        self.navigationItem.title = season.name
-        self.navigationItem.rightBarButtonItem = backBarButton
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: colors.primary!]
+        navigationItem.title = season.name
+        navigationItem.rightBarButtonItem = backBarButton
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: colors.primary!]
     }
+    
+    private func setupAnchors() {
+        let collectionViewConstraints: [NSLayoutConstraint] = [
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.heightAnchor.constraint(equalTo: view.heightAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ]
+        NSLayoutConstraint.activate(collectionViewConstraints)
+    }
+}
+
+// MARK: - Subviews Setup
+extension SeasonsView {
 }
 
 // MARK: - Data Fetches
 extension SeasonsView {
     private func fetchDetails() {
-        self.season.fetchDetail(tvId: self.tvId).then { (data) in
+        season.fetchDetail(tvId: tvId).then { (data) in
             return SeasonDetail.decodeSeasonData(data: data)
         }.then { [weak self] (detail) in
             self?.detail = detail
             
             DispatchQueue.main.async {
-                self?.tableView.hideSkeleton()
+                self?.view.hideSkeleton()
             }
         }
     }
 }
 
-// MARK: - UITableViewDelegate
-extension SeasonsView: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return SeasonsViewCell.height
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        cell.contentView.layer.masksToBounds = true
+// MARK: - UICollectionViewDelegate
+extension SeasonsView: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SeasonsOverviewCell.reuseIdentifier, for: indexPath) as? SeasonsOverviewCell else {
+            return UICollectionReusableView()
+        }
+        
+        var value = "-"
+        
+        if let overview = season.overview {
+            if overview.count > 0 {
+                value = overview
+            }
+        }
+        headerView.configure(airDate: season.airDate, overview: value, colors: colors)
+        return headerView
     }
 }
 
-// MARK: - UITableViewDataSource
-extension SeasonsView: SkeletonTableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+// MARK: - UICollectionViewDelegateFlowLayout
+extension SeasonsView: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: SeasonsViewCell.height)
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        if let episodes = self.detail?.episodes {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        let width: CGFloat = collectionView.frame.width - 40
+        
+        var overviewLabel: String = "-"
+        let marginBottom: CGFloat = 35
+        let lineSpacing: CGFloat = 15
+        
+        let titleFont = UIFont.systemFont(ofSize: 18, weight: .bold)
+        let valueFont = UIFont.systemFont(ofSize: 14, weight: .medium)
+        
+        let titleHeight = "".height(withConstrainedWidth: width, font: titleFont) * 2
+        
+        if let overview = season.overview {
+            if overview.count > 0 {
+                overviewLabel = overview
+            }
+        }
+        let airDateHeight = "".height(withConstrainedWidth: width, font: valueFont)
+        let overviewHeight = overviewLabel.height(withConstrainedWidth: width, font: valueFont) + 2
+        
+        let height = marginBottom + lineSpacing + titleHeight + airDateHeight + overviewHeight
+        return CGSize(width: collectionView.frame.width, height: height)
+    }
+}
+
+// MARK: - SkeletonCollectionViewDataSource
+extension SeasonsView: SkeletonCollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if let episodes = detail?.episodes {
             return episodes.count
         }
         
         return 0
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 0
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SeasonsViewCell.reuseIdentifier, for: indexPath) as? SeasonsViewCell else {
+            return UICollectionViewCell()
         }
         
-        return 35
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return UIView()
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SeasonsViewCell.reuseIdentifier) as? SeasonsViewCell else {
-            return UITableViewCell()
-        }
-        
-        if let episodes = self.detail?.episodes {
-            let episode = episodes[indexPath.section]
-            let name = "\(indexPath.section + 1). \(episode.name)"
+        if let episodes = detail?.episodes {
+            let episode = episodes[indexPath.item]
+            let name = "\(indexPath.item + 1). \(episode.name)"
             let url = episode.backdrop != nil ? K.Backdrop.URL + episode.backdrop! : nil
             
-            cell.configure(url: url, name: name, colors: self.colors)
+            cell.configure(url: url, name: name, airDate: episode.airDate, colors: colors)
         }
         
         return cell
     }
     
-    func numSections(in collectionSkeletonView: UITableView) -> Int {
-        return 3
+    func collectionSkeletonView(_ skeletonView: UICollectionView, supplementaryViewIdentifierOfKind: String, at indexPath: IndexPath) -> ReusableCellIdentifier? {
+        SeasonsOverviewCell.reuseIdentifier
     }
     
-    func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
+    func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
         return SeasonsViewCell.reuseIdentifier
     }
 }
