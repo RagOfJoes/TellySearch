@@ -135,11 +135,12 @@ class BackdropDetail: UIView {
             setupGenresView()
         }
         
+        let placeholder = UIImage(named: "placeholderPoster")
         // Set Poster
-        setImage(urlString: posterURL, imageView: poster, placeholder: UIImage(named: "placeholderPoster"))
+        UIImageView.setImage(urlString: posterURL, imageView: poster, placeholder: placeholder)
         
         // Sets Backdrop
-        setImageWithPromise(urlString: backdropURL, imageView: backdrop, placeholder: UIImage(named: "placeholderBackdrop")).then { (colors) in
+        UIImageView.setImageWithPromise(urlString: backdropURL, imageView: backdrop, placeholder: placeholder).then { (colors) in
             DispatchQueue.main.async {
                 self.setupText(title: title, genres: genres, runtime: runtime, releaseDate: releaseDate)
                 self.setupColor(colors: colors)
@@ -160,64 +161,6 @@ class BackdropDetail: UIView {
 
 // MARK: - Setup Functions
 extension BackdropDetail {
-    private func setImage(urlString: String?, imageView: UIImageView, placeholder: UIImage?) {
-        guard let safeUrlString = urlString else { return }
-        
-        let url = URL(string: safeUrlString)
-        let downsample = DownsamplingImageProcessor(size: imageView.bounds.size)
-        let options: KingfisherOptionsInfo = [
-            .processor(downsample),
-            .scaleFactor(UIScreen.main.scale),
-            .transition(.fade(1)),
-            .cacheOriginalImage,
-        ]
-        imageView.kfSetImage(with: url, using: placeholder, options: options)
-    }
-    
-    private func setImageWithPromise(urlString: String?, imageView: UIImageView, placeholder: UIImage?) -> Promise<UIImageColors> {
-        let promise = Promise<UIImageColors>.pending()
-        
-        guard let safeUrlString = urlString else {
-            imageView.image = placeholder
-            
-            if let safeBackdrop = self.backdrop.image {
-                safeBackdrop.getColors() { colors in
-                    guard let safeColors = colors else { return }
-                    promise.fulfill(safeColors)
-                }
-            }
-            
-            return promise
-        }
-        
-        let url = URL(string: safeUrlString)
-        let downsample = DownsamplingImageProcessor(size: imageView.bounds.size)
-        let options: KingfisherOptionsInfo = [
-            .processor(downsample),
-            .scaleFactor(UIScreen.main.scale),
-            .transition(.fade(1)),
-            .cacheOriginalImage,
-        ]
-        imageView.kfSetImage(with: url, using: placeholder, options: options) { result in
-            switch result {
-            case .success:
-                if let safeImage = imageView.image {
-                    safeImage.getColors() { colors in
-                        guard let safeColors = colors else { return }
-                        promise.fulfill(safeColors)
-                    }
-                }
-                break
-            case .failure(let e):
-                promise.reject(e)
-                break
-            }
-            
-        }
-        
-        return promise
-    }
-    
     private func setupText(title _title: String?, genres _genres: String?, runtime _runtime: String?, releaseDate _releaseDate: String?) {
         title.text = _title
         genres.text = _genres
@@ -226,25 +169,14 @@ extension BackdropDetail {
             runtime.text = safeRuntime
         }
         
-        var releaseMonth: String?
-        var releaseDay: Int?
-        var releaseYear: Int?
-        if let dateString = _releaseDate, dateString.count > 0 {
-            let date = Date(dateString, with: "YYYY-MM-dd")
+        if _releaseDate != nil {
+            let dateString = _releaseDate?.formatDate(format: "YYYY-MM-dd", formatter: { (month, day, year) -> String in
+                return "\(month) \(day), \(year)"
+            })
             
-            let monthFormatter = DateFormatter()
-            monthFormatter.dateFormat = "LLL"
-            releaseMonth = monthFormatter.string(from: date)
-            
-            let calendar = Calendar.current.dateComponents([.day, .year], from: date)
-            releaseDay = calendar.day
-            releaseYear = calendar.year
+            releaseDate.text = dateString ?? "-"
         } else {
             releaseDate.text = "-"
-        }
-        
-        if releaseMonth != nil && releaseYear != nil && releaseDay != nil {
-            releaseDate.text = "\(releaseMonth!) \(releaseDay!), \(releaseYear!)"
         }
     }
     
