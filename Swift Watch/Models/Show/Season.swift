@@ -41,7 +41,7 @@ extension Season {
                 return
             }
             
-            let urlString = "\(ShowSection.baseURL)/\(tvId)/season/\(seasonNumber)\(K.CommonQuery)"
+            let urlString = "\(ShowSection.baseURL)/\(tvId)/season/\(seasonNumber)\(K.CommonQuery)&append_to_response=credits"
             if let url = URL(string: urlString) {
                 let session = URLSession(configuration: .default)
                 

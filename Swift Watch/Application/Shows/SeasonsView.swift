@@ -16,6 +16,8 @@ class SeasonsView: UIViewController {
     let colors: UIImageColors
     var detail: SeasonDetail? = nil
     
+    weak var creditModalDelegate: CreditDetailModalDelegate?
+    
     private lazy var collectionView: UICollectionView = {
         let layout = CollectionViewLayout()
         layout.minimumLineSpacing = 35
@@ -30,7 +32,7 @@ class SeasonsView: UIViewController {
         collectionView.delaysContentTouches = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(SeasonsViewCell.self, forCellWithReuseIdentifier: SeasonsViewCell.reuseIdentifier)
-        collectionView.register(SeasonsOverviewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SeasonsOverviewCell.reuseIdentifier)
+        collectionView.register(SeasonsViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SeasonsViewHeader.reuseIdentifier)
         
         collectionView.isSkeletonable = true
         return collectionView
@@ -53,17 +55,10 @@ class SeasonsView: UIViewController {
         
         view.addSubview(collectionView)
         
-        collectionView.prepareSkeleton { done in
-            self.view.showAnimatedGradientSkeleton()
-        }
-        
         setupAnchors()
+        view.showAnimatedGradientSkeleton()
         
         fetchDetails()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
     }
     
     required init?(coder: NSCoder) {
@@ -122,18 +117,35 @@ extension SeasonsView {
 // MARK: - UICollectionViewDelegate
 extension SeasonsView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SeasonsOverviewCell.reuseIdentifier, for: indexPath) as? SeasonsOverviewCell else {
+        guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SeasonsViewHeader.reuseIdentifier, for: indexPath) as? SeasonsViewHeader else {
             return UICollectionReusableView()
         }
         
-        var value = "-"
+        var overview = "-"
+        var airDate = season.airDate?.formatDate(format: "YYYY-MM-dd", formatter: { (month, day, year) -> String in
+            return "\(month) \(day), \(year)"
+        }) ?? "-"
         
-        if let overview = season.overview {
-            if overview.count > 0 {
-                value = overview
+        if let safeOverview = season.overview {
+            if safeOverview.count > 0 {
+                overview = safeOverview
             }
         }
-        headerView.configure(airDate: season.airDate, overview: value, colors: colors)
+        
+        if let episodes = detail?.episodes, episodes.count > 1 {
+            if let startDate = episodes[0].airDate, let endDate = episodes[episodes.count - 1].airDate {
+                let formatStartDate = startDate.formatDate(format: "YYYY-MM-dd", formatter: { (month, day, year) -> String in
+                    return "\(month) \(day), \(year)"
+                }) ?? "-"
+                let formatEndDate = endDate.formatDate(format: "YYYY-MM-dd", formatter: { (month, day, year) -> String in
+                    return "\(month) \(day), \(year)"
+                }) ?? "-"
+                
+                airDate = "\(formatStartDate) - \(formatEndDate)"
+            }
+        }
+        headerView.setCastViewDelegate(self)
+        headerView.configure(airDate: airDate, overview: overview, episodes: detail?.episodes?.count, credits: detail?.credits, colors: colors)
         return headerView
     }
 }
@@ -148,13 +160,13 @@ extension SeasonsView: UICollectionViewDelegateFlowLayout {
         let width: CGFloat = collectionView.frame.width - 40
         
         var overviewLabel: String = "-"
-        let marginBottom: CGFloat = 35
-        let lineSpacing: CGFloat = 15
+        let lineSpacing: CGFloat = 15 * 2
+        let marginBottom: CGFloat = 35 * 2
         
         let titleFont = UIFont.systemFont(ofSize: 18, weight: .bold)
         let valueFont = UIFont.systemFont(ofSize: 14, weight: .medium)
         
-        let titleHeight = "".height(withConstrainedWidth: width, font: titleFont) * 2
+        let titleHeight = "".height(withConstrainedWidth: width, font: titleFont) * 4
         
         if let overview = season.overview {
             if overview.count > 0 {
@@ -163,8 +175,9 @@ extension SeasonsView: UICollectionViewDelegateFlowLayout {
         }
         let airDateHeight = "".height(withConstrainedWidth: width, font: valueFont)
         let overviewHeight = overviewLabel.height(withConstrainedWidth: width, font: valueFont) + 2
+        let castViewHeight = K.Overview.regularHeightWithSecondary + 10
         
-        let height = marginBottom + lineSpacing + titleHeight + airDateHeight + overviewHeight
+        let height = marginBottom + lineSpacing + titleHeight + airDateHeight + overviewHeight + castViewHeight
         return CGSize(width: collectionView.frame.width, height: height)
     }
 }
@@ -195,11 +208,25 @@ extension SeasonsView: SkeletonCollectionViewDataSource {
         return cell
     }
     
+    func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 2
+    }
+    
     func collectionSkeletonView(_ skeletonView: UICollectionView, supplementaryViewIdentifierOfKind: String, at indexPath: IndexPath) -> ReusableCellIdentifier? {
-        SeasonsOverviewCell.reuseIdentifier
+        SeasonsViewHeader.reuseIdentifier
     }
     
     func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
         return SeasonsViewCell.reuseIdentifier
     }
 }
+
+// MARK: - CastCollectionViewDelegate
+extension SeasonsView: CastCollectionViewDelegate {
+    func select(cast: Cast) {
+        let creditModal = CreditDetailModal(with: cast, using: colors)
+        creditModal.delegate = creditModalDelegate
+        navigationController?.pushViewController(creditModal, animated: true)
+    }
+}
+

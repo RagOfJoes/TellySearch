@@ -10,9 +10,11 @@ import Promises
 import Foundation
 
 struct SeasonDetail: Codable {
+    let credits: Credits?
     let episodes: [Episode]?
     
     enum CodingKeys: String, CodingKey {
+        case credits
         case episodes
     }
 }
