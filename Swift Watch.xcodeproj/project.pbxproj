@@ -59,6 +59,7 @@
 		D6A4DF452523E80F008495AD /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4DF442523E80F008495AD /* Episode.swift */; };
 		D6A4DF4D2523F1EF008495AD /* SeasonsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4DF4C2523F1EF008495AD /* SeasonsViewCell.swift */; };
 		D6A4DF622526409C008495AD /* SeasonsViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4DF612526409C008495AD /* SeasonsViewHeader.swift */; };
+		D6A4DF872527CEBA008495AD /* EpisodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4DF862527CEBA008495AD /* EpisodeView.swift */; };
 		D6BA607D2502243500998093 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA607C2502243500998093 /* Constants.swift */; };
 		D6BA6085250224C100998093 /* CreditsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA6084250224C100998093 /* CreditsTableViewController.swift */; };
 		D6BA6087250224E100998093 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = D6BA6086250224E100998093 /* Keys.plist */; };
@@ -169,6 +170,7 @@
 		D6A4DF442523E80F008495AD /* Episode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
 		D6A4DF4C2523F1EF008495AD /* SeasonsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsViewCell.swift; sourceTree = "<group>"; };
 		D6A4DF612526409C008495AD /* SeasonsViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsViewHeader.swift; sourceTree = "<group>"; };
+		D6A4DF862527CEBA008495AD /* EpisodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeView.swift; sourceTree = "<group>"; };
 		D6BA607C2502243500998093 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		D6BA6084250224C100998093 /* CreditsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditsTableViewController.swift; sourceTree = "<group>"; };
 		D6BA6086250224E100998093 /* Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
@@ -403,6 +405,7 @@
 				D6391E0A251E8D0C00F8C01A /* SeasonsView.swift */,
 				D6A4DF612526409C008495AD /* SeasonsViewHeader.swift */,
 				D6A4DF4C2523F1EF008495AD /* SeasonsViewCell.swift */,
+				D6A4DF862527CEBA008495AD /* EpisodeView.swift */,
 			);
 			path = Shows;
 			sourceTree = "<group>";
@@ -735,6 +738,7 @@
 				D6689DC924DB52580061C45C /* UIImageColors.swift in Sources */,
 				D6D63BBB25058B26002C60FA /* ShowsFeaturedCollectionView.swift in Sources */,
 				D60921B724CB514A001339EE /* FloatingTabBarView.swift in Sources */,
+				D6A4DF872527CEBA008495AD /* EpisodeView.swift in Sources */,
 				D6A4DF622526409C008495AD /* SeasonsViewHeader.swift in Sources */,
 				D64241A524F6C1E700D1372D /* PosterImageView.swift in Sources */,
 				D650B98824CB9C5700DD1E61 /* ReusableCell.swift in Sources */,
@@ -960,6 +964,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9JVZR3762B;
 				INFOPLIST_FILE = "Swift Watch/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -979,6 +984,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9JVZR3762B;
 				INFOPLIST_FILE = "Swift Watch/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
