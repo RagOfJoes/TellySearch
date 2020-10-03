@@ -114,10 +114,9 @@ class BackdropDetail: UIView {
         addSubview(metaStack)
         layer.insertSublayer(gradientLayer, at: 1)
         
-        isSkeletonable = true
-        showAnimatedGradientSkeleton()
-        
         setupAnchors()
+        
+        isSkeletonable = true
     }
     
     override func layoutSubviews() {
@@ -144,7 +143,6 @@ class BackdropDetail: UIView {
             DispatchQueue.main.async {
                 self.setupText(title: title, genres: genres, runtime: runtime, releaseDate: releaseDate)
                 self.setupColor(colors: colors)
-                self.hideSkeleton()
             }
             
             if let safeHandler = completionHandler {
@@ -187,8 +185,6 @@ extension BackdropDetail {
         releaseDate.textColor = colors.secondary
         
         gradientLayer.colors = [UIColor.clear.cgColor, colors.background.cgColor]
-        
-        backdrop.hideSkeleton(transition: .crossDissolve(0.25))
     }
     
     private func setupAnchors() {

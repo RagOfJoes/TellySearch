@@ -58,14 +58,9 @@ class SeasonsViewCell: UICollectionViewCell {
         contentView.addSubview(backdrop)
         contentView.addSubview(name)
         contentView.addSubview(airDate)
-        
-        isSkeletonable = true
-        
+                
         setupAnchors()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
+        isSkeletonable = true
     }
     
     override var isHighlighted: Bool {

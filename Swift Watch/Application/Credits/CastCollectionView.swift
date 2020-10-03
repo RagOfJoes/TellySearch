@@ -18,19 +18,11 @@ class CastCollectionView: GenericCollectionView {
     var colors: UIImageColors?
     weak var delegate: CastCollectionViewDelegate?
     
-    override init(_ type: GenericCollectionViewType) {
-        super.init(type)
-    }
-    
     func configure(with credits: Credits, title: String, colors: UIImageColors) {
         self.colors = colors
         self.credits = credits
         setupHeader(title: title, color: colors.primary)
         hideSkeleton()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 

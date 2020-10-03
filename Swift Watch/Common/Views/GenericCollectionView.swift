@@ -16,7 +16,7 @@ enum GenericCollectionViewType {
     case RegularHasSecondary
 }
 
-class GenericCollectionView: UIView {
+public class GenericCollectionView: UIView {
     // MARK: - Internal Properties
     private let type: GenericCollectionViewType!
     
@@ -56,9 +56,8 @@ class GenericCollectionView: UIView {
         
         setupAnchors()
         isSkeletonable = true
-        
-        collectionView.prepareSkeleton { [weak self] (done) in
-            self?.showAnimatedGradientSkeleton()
+        collectionView.prepareSkeleton { (done) in
+            self.showAnimatedGradientSkeleton()
         }
     }
     
@@ -127,7 +126,7 @@ extension GenericCollectionView {
 }
 
 extension GenericCollectionView: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var width: CGFloat = K.Poster.width
         
         if type == .Featured {
@@ -139,19 +138,19 @@ extension GenericCollectionView: UICollectionViewDelegateFlowLayout {
 
 // MARK: - SkeletonCollectionViewDelegate
 extension GenericCollectionView: SkeletonCollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 0
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         return UICollectionViewCell()
     }
     
-    func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3
     }
     
-    func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
+    public func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
         if type == .Featured {
             return FeaturedCell.reuseIdentifier
         } else {

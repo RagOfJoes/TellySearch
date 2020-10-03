@@ -86,7 +86,6 @@ class RegularCell: UICollectionViewCell {
 }
 extension RegularCell: ConfigurableRegularCell {    
     func configure(primary: String, secondary: String? = nil, image: String? = nil, colors: UIImageColors? = nil) {
-        hideSkeleton()
         DispatchQueue.main.async {
             self.primaryLabel.text = primary
             

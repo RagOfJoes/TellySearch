@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 class SeasonsViewHeader: UICollectionReusableView {
     // MARK: - Internal Properties
@@ -25,11 +26,10 @@ class SeasonsViewHeader: UICollectionReusableView {
         return castView
     }()
     
-    private lazy var episodesLabel: UILabel = {
-        let episodesLabel = UILabel()
-        episodesLabel.setupFont(size: 18, weight: .bold)
-        episodesLabel.textColor = UIColor(named: "primaryTextColor")
+    private lazy var episodesLabel: GenericCollectionViewHeader = {
+        let episodesLabel = GenericCollectionViewHeader()
         episodesLabel.translatesAutoresizingMaskIntoConstraints = false
+        episodesLabel.isSkeletonable = true
         return episodesLabel
     }()
     
@@ -42,6 +42,8 @@ class SeasonsViewHeader: UICollectionReusableView {
         addSubview(castView)
         addSubview(episodesLabel)
         setupAnchors()
+        
+        isSkeletonable = true
     }
     
     required init?(coder: NSCoder) {
@@ -62,14 +64,14 @@ extension SeasonsViewHeader {
         self.airDate.setup(title: "Air Date", value: airDate ?? "-", colors: colors)
         self.overview.setup(title: "Overview", value: overview ?? "-", colors: colors)
         
-        if let safeCredits = credits {
+        if let safeCredits = credits, let cast = safeCredits.cast, cast.count > 0 {
             castView.configure(with: safeCredits, title: "Season's Cast", colors: colors)
         } else {
             castView.removeFromSuperview()
+            episodesLabel.topAnchor.constraint(equalTo: self.overview.bottomAnchor, constant: 35).isActive = true
         }
         
-        episodesLabel.text = "Episodes (\(episodes ?? 0))"
-        episodesLabel.textColor = colors.primary
+        episodesLabel.configure("Episodes (\(episodes ?? 0))", color: colors.primary)
     }
     
     private func setupAnchors() {
@@ -83,7 +85,7 @@ extension SeasonsViewHeader {
         let overviewConstraints: [NSLayoutConstraint] = [
             overview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             overview.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            overview.topAnchor.constraint(equalTo: airDate.bottomAnchor, constant: 15)
+            overview.topAnchor.constraint(equalTo: airDate.bottomAnchor, constant: 35)
         ]
         NSLayoutConstraint.activate(overviewConstraints)
         
@@ -93,7 +95,7 @@ extension SeasonsViewHeader {
             castView.topAnchor.constraint(equalTo: overview.bottomAnchor, constant: 35)
         ]
         NSLayoutConstraint.activate(castViewConstraints)
-        
+ 
         let episodesConstraints: [NSLayoutConstraint] = [
             episodesLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             episodesLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),

@@ -20,7 +20,6 @@ class OverviewHeader: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         setupUI()
     }
     
@@ -29,12 +28,12 @@ class OverviewHeader: UIView {
     }
     
     private func setupUI() {
-        backgroundColor = .clear
+        isSkeletonable = true
         
+        backgroundColor = .clear
         addSubview(title)
         
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: 65),
             title.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
             title.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
             title.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20)

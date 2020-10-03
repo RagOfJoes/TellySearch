@@ -8,6 +8,7 @@
 
 import UIKit
 import Promises
+import SkeletonView
 
 class MovieDetailViewController: UIViewController {
     // MARK: - Internal Properties
@@ -15,12 +16,17 @@ class MovieDetailViewController: UIViewController {
         return true
     }
     
-    let movie: Movie
-    var colors: UIImageColors?
+    private let movie: Movie
+    private var detail: MovieDetail?
+    private var colors: UIImageColors?
     
-    var containerView: UIView
-    var scrollView: UIScrollView
-    private lazy var backdropDetail = BackdropDetail()
+    private var containerView: UIView
+    private var scrollView: UIScrollView
+    private lazy var backdropDetail: BackdropDetail = {
+        let backdropDetail = BackdropDetail()
+        backdropDetail.delegate = self
+        return backdropDetail
+    }()
     
     private lazy var directedBy: CreatorsCollectionView = {
         let directedBy = CreatorsCollectionView()
@@ -83,13 +89,15 @@ class MovieDetailViewController: UIViewController {
         containerView.addSubview(stackView)
         
         setupAnchors()
+        
+        containerView.isSkeletonable = true
+        containerView.showAnimatedGradientSkeleton()
         setupDetailUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupNav(by: true)
-        view.layoutIfNeeded()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -104,6 +112,13 @@ class MovieDetailViewController: UIViewController {
                     self?.navigationController?.navigationBar.tintColor = safeColors.primary
                 }
             }
+        }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        DispatchQueue.main.async {
+            self.updateContentSize()
         }
     }
     
@@ -220,38 +235,21 @@ extension MovieDetailViewController {
     private func setupDetailUI() {
         movie.fetchDetail().then({ data -> Promise<MovieDetail> in
             return MovieDetail.decodeMovieData(data: data)
-        }).then ({ detail -> Promise<Void> in
-            let (genres, runtime) = self.setupBackdropText(with: detail)
+        }).then ({ [weak self] detail in
+            let backdropText = self?.setupBackdropText(with: detail)
             
-            let title = self.movie.title
-            let releaseDate = self.movie.releaseDate
-            let posterURL = self.movie.posterPath != nil ? K.Poster.URL + (self.movie.posterPath!) : nil
-            let backdropURL = self.movie.backdropPath != nil ? K.Backdrop.URL + (self.movie.backdropPath!) : nil
+            let (genres, runtime) = backdropText ?? ("-", "-")
+            
+            let title = self?.movie.title
+            let releaseDate = self?.movie.releaseDate
+            
+            let posterURL = self?.movie.posterPath != nil ? K.Poster.URL + (self?.movie.posterPath!)! : nil
+            let backdropURL = self?.movie.backdropPath != nil ? K.Backdrop.URL + (self?.movie.backdropPath!)! : nil
             
             // Return Void Promise to allow Recommendations to setup UI
-            return Promise<Void>(on: .promises) { (fulfill, reject) in
-                self.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate) { colors in
-                    self.setupCastCollectionView(with: detail.credits, using: colors)
-                    
-                    if let safeDirectors = detail.directors, safeDirectors.count > 0 {
-                        self.directedBy.configure(with: safeDirectors, colors: colors, and: "Directed By")
-                    } else {
-                        self.directedBy.removeFromSuperview()
-                        self.overviewStack.topAnchor.constraint(equalTo: self.backdropDetail.bottomAnchor, constant: 20).isActive = true
-                    }
-                    
-                    if let recommendations = detail.recommendations?.results {
-                        self.setupRecommendationsView(with: recommendations, using: colors)
-                    }
-                    
-                    fulfill(Void())
-                }
-            }
-        }).then {
-            DispatchQueue.main.async {
-                self.updateContentSize()
-            }
-        }
+            self?.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate)
+            self?.detail = detail
+        })
     }
     
     private func setupRecommendationsView(with movies: [Movie], using colors: UIImageColors) {
@@ -321,6 +319,29 @@ extension MovieDetailViewController {
         }
         
         return (genresStr, runtimeStr)
+    }
+}
+
+// MARK: - BackdropDetailDelegate
+extension MovieDetailViewController: BackdropDetailDelegate {
+    func didSetupUI(colors: UIImageColors) {
+        DispatchQueue.main.async {
+            if let safeDirectors = self.detail?.directors, safeDirectors.count > 0 {
+                self.directedBy.configure(with: safeDirectors, colors: colors, and: "Directed By")
+            } else {
+                self.directedBy.removeFromSuperview()
+                self.overviewStack.topAnchor.constraint(equalTo: self.backdropDetail.bottomAnchor, constant: 20).isActive = true
+            }
+            
+            // Setup CollectionViews
+            if let safeCredits = self.detail?.credits {
+                self.setupCastCollectionView(with: safeCredits, using: colors)
+            }
+            if let safeRecommendations = self.detail?.recommendations?.results {
+                self.setupRecommendationsView(with: safeRecommendations, using: colors)
+            }
+            self.containerView.hideSkeleton()
+        }
     }
 }
 

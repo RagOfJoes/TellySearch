@@ -18,9 +18,9 @@ class CreditDetailNotableWorks: GenericCollectionView {
     let colors: UIImageColors
     weak var delegate: CreditDetailNotableWorksDelegate?
     
-    init(_ type: GenericCollectionViewType, colors: UIImageColors) {
+    init(colors: UIImageColors) {
         self.colors = colors
-        super.init(type)
+        super.init(.RegularHasSecondary)
     }
     
     func configure(with media: [Media]) {

@@ -101,7 +101,7 @@ class CreditDetailModal: UIViewController {
     }()
     
     private lazy var notableWorks: CreditDetailNotableWorks = {
-        let notableWorks = CreditDetailNotableWorks(.RegularHasSecondary, colors: colors)
+        let notableWorks = CreditDetailNotableWorks(colors: colors)
         notableWorks.delegate = self
         return notableWorks
     }()
@@ -223,7 +223,7 @@ extension CreditDetailModal {
     
     private func updateContentSize() {
         let viewFrame = view.frame
-        let offsetHeight:CGFloat = K.ScrollOffsetHeight
+        let offsetHeight: CGFloat = K.ScrollOffsetHeight
         
         if notableWorks.isDescendant(of: view) {
             let notableWorksY = notableWorks.frame.maxY + offsetHeight

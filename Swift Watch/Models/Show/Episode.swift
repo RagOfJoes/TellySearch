@@ -11,11 +11,17 @@ import Foundation
 struct Episode: Codable {
     let number: Int
     let name: String
-    let crew: [Crew]
+    let crew: [Crew]?
     let airDate: String?
-    let overview: String
+    let overview: String?
     let backdrop: String?
     let guestStars: [Cast]?
+    
+    var credits: Credits {
+        get {
+            return Credits(id: nil, cast: guestStars, crew: crew)
+        }
+    }
     
     enum CodingKeys: String, CodingKey {
         case name

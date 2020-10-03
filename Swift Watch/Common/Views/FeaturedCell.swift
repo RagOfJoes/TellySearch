@@ -79,7 +79,6 @@ class FeaturedCell: UICollectionViewCell {
 }
 extension FeaturedCell: ConfigurableFeaturedCell {    
     func configure(name: String, image: String? = nil) {
-        hideSkeleton()
         DispatchQueue.main.async {
             self.title.text = name
         }

@@ -50,14 +50,12 @@ class SeasonsView: UIViewController {
         super.viewDidLoad()
         
         setupNav()
-        view.isSkeletonable = true
         view.backgroundColor = colors.background
         
         view.addSubview(collectionView)
+        collectionView.showAnimatedGradientSkeleton()
         
         setupAnchors()
-        view.showAnimatedGradientSkeleton()
-        
         fetchDetails()
     }
     
@@ -95,10 +93,6 @@ extension SeasonsView {
     }
 }
 
-// MARK: - Subviews Setup
-extension SeasonsView {
-}
-
 // MARK: - Data Fetches
 extension SeasonsView {
     private func fetchDetails() {
@@ -106,16 +100,20 @@ extension SeasonsView {
             return SeasonDetail.decodeSeasonData(data: data)
         }.then { [weak self] (detail) in
             self?.detail = detail
-            
-            DispatchQueue.main.async {
-                self?.view.hideSkeleton()
-            }
+            self?.collectionView.hideSkeleton()
         }
     }
 }
 
 // MARK: - UICollectionViewDelegate
 extension SeasonsView: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let episode = detail?.episodes?[indexPath.item] else { return }
+        let episodeVC = EpisodeView(episode: episode, colors: colors)
+        episodeVC.setCastViewDelegate(self)
+        navigationController?.pushViewController(episodeVC, animated: true)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SeasonsViewHeader.reuseIdentifier, for: indexPath) as? SeasonsViewHeader else {
             return UICollectionReusableView()
@@ -160,24 +158,26 @@ extension SeasonsView: UICollectionViewDelegateFlowLayout {
         let width: CGFloat = collectionView.frame.width - 40
         
         var overviewLabel: String = "-"
-        let lineSpacing: CGFloat = 15 * 2
-        let marginBottom: CGFloat = 35 * 2
+        let marginBottom: CGFloat = 35 * 3
         
         let titleFont = UIFont.systemFont(ofSize: 18, weight: .bold)
         let valueFont = UIFont.systemFont(ofSize: 14, weight: .medium)
         
         let titleHeight = "".height(withConstrainedWidth: width, font: titleFont) * 4
-        
-        if let overview = season.overview {
+        if detail != nil, let overview = season.overview {
             if overview.count > 0 {
                 overviewLabel = overview
             }
         }
+        let episodesHeight: CGFloat = 32
+        let castViewHeight = K.Overview.regularHeightWithSecondary
         let airDateHeight = "".height(withConstrainedWidth: width, font: valueFont)
         let overviewHeight = overviewLabel.height(withConstrainedWidth: width, font: valueFont) + 2
-        let castViewHeight = K.Overview.regularHeightWithSecondary + 10
         
-        let height = marginBottom + lineSpacing + titleHeight + airDateHeight + overviewHeight + castViewHeight
+        var height = episodesHeight + marginBottom + titleHeight + airDateHeight + overviewHeight + castViewHeight
+        if let detail = detail, let credits = detail.credits, let cast = credits.cast, cast.count <= 0 {
+            height -= castViewHeight + marginBottom
+        }
         return CGSize(width: collectionView.frame.width, height: height)
     }
 }

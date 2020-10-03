@@ -29,7 +29,6 @@ extension UICollectionView {
         collectionView.contentInsetAdjustmentBehavior = .never
         
         collectionView.isSkeletonable = true
-        collectionView.skeletonCornerRadius = 5
         
         return collectionView
     }

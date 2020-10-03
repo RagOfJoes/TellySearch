@@ -65,14 +65,12 @@ class InfoStackView: UIStackView {
         setCustomSpacing(2, after: titleStackView)
         
         isSkeletonable = true
-        showAnimatedGradientSkeleton()
         
         guard let safeColors = colors else { return }
         setupColors(colors: safeColors)
     }
     
     func setup(title: String, value: String, colors: UIImageColors? = nil) {
-        hideSkeleton()
         let valueText = value.trimmingCharacters(in: .whitespacesAndNewlines)
         
         DispatchQueue.main.async { [weak self] in

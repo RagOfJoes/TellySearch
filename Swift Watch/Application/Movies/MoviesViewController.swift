@@ -32,6 +32,8 @@ class MoviesViewController: UIViewController  {
         tableView.register(MovieCollectionView.self, forCellReuseIdentifier: MovieCollectionView.reuseIdentifier)
         tableView.register(MovieFeaturedCollectionView.self, forCellReuseIdentifier: MovieFeaturedCollectionView.reuseIdentifier)
         
+        tableView.isSkeletonable = true
+        
         return tableView
     }()
     
@@ -44,6 +46,9 @@ class MoviesViewController: UIViewController  {
         
         view.addSubview(tableView)
         tableView.fillSuperview()
+        
+        view.isSkeletonable = true
+        view.showAnimatedGradientSkeleton()
         
         let promises = [
             sections[0].section.fetchSection(with: .popular),
@@ -63,17 +68,18 @@ class MoviesViewController: UIViewController  {
                 self?.movies.append(result)
             }
             
-            // Reload TableView's Data
-            // in the Main Thread
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
-            }
+            self?.view.hideSkeleton()
+            self?.tableView.reloadData()
         }
     }
 }
 
 // MARK: - UITableViewDelegate
 extension MoviesViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 65
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = OverviewHeader()
         

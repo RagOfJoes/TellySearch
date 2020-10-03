@@ -19,19 +19,11 @@ class ShowDetailSeasons: GenericCollectionView {
     
     weak var delegate: ShowDetailSeasonsDelegate?
     
-    override init(_ type: GenericCollectionViewType) {
-        super.init(type)
-    }
-    
     func configure(with seasons: [Season], colors: UIImageColors) {
         self.colors = colors
         self.seasons = seasons
         setupHeader(title: "Seasons", color: self.colors?.primary)
         hideSkeleton()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 

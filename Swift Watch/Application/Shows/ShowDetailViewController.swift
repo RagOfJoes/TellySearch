@@ -15,13 +15,18 @@ class ShowDetailViewController: UIViewController {
         return true
     }
     
-    let show: Show
-    var colors: UIImageColors?
+    private let show: Show
+    private var detail: ShowDetail?
+    private var colors: UIImageColors?
     
-    var containerView: UIView
-    var scrollView: UIScrollView
+    private var containerView: UIView
+    private var scrollView: UIScrollView
+    private lazy var backdropDetail: BackdropDetail = {
+        let backdropDetail = BackdropDetail()
+        backdropDetail.delegate = self
+        return backdropDetail
+    }()
     
-    private lazy var backdropDetail = BackdropDetail()
     private lazy var createdBy: CreatorsCollectionView = {
         let createdBy = CreatorsCollectionView()
         createdBy.delegate = self
@@ -89,13 +94,15 @@ class ShowDetailViewController: UIViewController {
         containerView.addSubview(stackView)
         
         setupAnchors()
+        
+        containerView.isSkeletonable = true
+        containerView.showAnimatedGradientSkeleton()
         setupDetailUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupNav(by: true)
-        view.layoutIfNeeded()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -110,6 +117,13 @@ class ShowDetailViewController: UIViewController {
                     self?.navigationController?.navigationBar.tintColor = safeColors.primary
                 }
             }
+        }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        DispatchQueue.main.async {
+            self.updateContentSize()
         }
     }
     
@@ -226,42 +240,20 @@ extension ShowDetailViewController {
     private func setupDetailUI() {
         show.fetchDetail().then({ data -> Promise<ShowDetail> in
             return ShowDetail.decodeShowData(data: data)
-        }).then({ detail -> Promise<Void> in
-            let (genres, runtime) = self.setupBackdropText(with: detail)
+        }).then({ [weak self] detail in
+            let backdropText = self?.setupBackdropText(with: detail)
             
-            let title = self.show.name
-            let releaseDate = self.show.firstAirDate
-            let posterURL = self.show.posterPath != nil ? K.Poster.URL + (self.show.posterPath!) : nil
-            let backdropURL = self.show.backdropPath != nil ? K.Backdrop.URL + (self.show.backdropPath!) : nil
+            let (genres, runtime) = backdropText ?? ("-", "-")
+            
+            let title = self?.show.name
+            let releaseDate = self?.show.firstAirDate
+            let posterURL = self?.show.posterPath != nil ? K.Poster.URL + ((self?.show.posterPath!)!) : nil
+            let backdropURL = self?.show.backdropPath != nil ? K.Backdrop.URL + (self!.show.backdropPath!) : nil
             
             // Return Void Promise to allow Recommendations to setup UI
-            return Promise<Void>(on: .promises) { (fulfill, reject) in
-                self.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate) { colors in
-                    self.setupSeasonsView(with: detail.seasons, using: colors)
-                    
-                    if let credits = detail.credits {
-                        self.setupCastCollectionView(with: credits, using: colors)
-                    }
-                    
-                    if let safeCreatedBy = detail.createdBy, safeCreatedBy.count > 0 {
-                        self.createdBy.configure(with: safeCreatedBy, colors: colors, and: "Created By")
-                    } else {
-                        self.createdBy.removeFromSuperview()
-                        self.overviewStack.topAnchor.constraint(equalTo: self.backdropDetail.bottomAnchor, constant: 20).isActive = true
-                    }
-                    
-                    if let recommendations = detail.recommendations?.results {
-                        self.setupRecommendationsView(with: recommendations, using: colors)
-                    }
-                    
-                    fulfill(Void())
-                }
-            }
-        }).then {
-            DispatchQueue.main.async {
-                self.updateContentSize()
-            }
-        }
+            self?.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate)
+            self?.detail = detail
+        })
     }
     
     private func setupCastCollectionView(with credits: Credits, using colors: UIImageColors) {
@@ -340,6 +332,32 @@ extension ShowDetailViewController {
         }
         
         return (genresStr, runtimeStr)
+    }
+}
+
+extension ShowDetailViewController: BackdropDetailDelegate {
+    func didSetupUI(colors: UIImageColors) {
+        DispatchQueue.main.async {
+            if let seasons = self.detail?.seasons {
+                self.setupSeasonsView(with: seasons, using: colors)
+            }
+            
+            if let credits = self.detail?.credits {
+                self.setupCastCollectionView(with: credits, using: colors)
+            }
+            
+            if let safeCreatedBy = self.detail?.createdBy, safeCreatedBy.count > 0 {
+                self.createdBy.configure(with: safeCreatedBy, colors: colors, and: "Created By")
+            } else {
+                self.createdBy.removeFromSuperview()
+                self.overviewStack.topAnchor.constraint(equalTo: self.backdropDetail.bottomAnchor, constant: 20).isActive = true
+            }
+            
+            if let recommendations = self.detail?.recommendations?.results {
+                self.setupRecommendationsView(with: recommendations, using: colors)
+            }
+            self.containerView.hideSkeleton()
+        }
     }
 }
 

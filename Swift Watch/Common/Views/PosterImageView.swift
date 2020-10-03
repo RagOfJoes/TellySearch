@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SkeletonView
 
 class PosterImageView: UIImageView {
     static let placeholder: UIImage? = UIImage(named: "placeholderPoster")

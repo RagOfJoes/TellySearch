@@ -17,21 +17,12 @@ class MovieDetailRecommendations: GenericCollectionView {
     var movies: [Movie]?
     var colors: UIImageColors?
     weak var delegate: MovieDetailRecommendationsDelegate?
-    
-    override init(_ type: GenericCollectionViewType) {
-        super.init(type)
-    }
-    
+
     func configure(with movies: [Movie], colors: UIImageColors) {
         self.movies = movies
         self.colors = colors
-        
         setupHeader(title: "Recommendations", color: self.colors?.primary)
         hideSkeleton()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 

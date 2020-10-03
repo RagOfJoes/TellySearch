@@ -42,10 +42,9 @@ class CVTCell: UITableViewCell {
         backgroundColor = .clear
         
         contentView.addSubview(collectionView)
-        
         setupAnchors()
-        isSkeletonable = true
         
+        isSkeletonable = true
         collectionView.prepareSkeleton { [weak self] (done) in
             self?.showAnimatedGradientSkeleton()
         }
