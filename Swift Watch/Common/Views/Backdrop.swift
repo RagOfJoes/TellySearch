@@ -19,7 +19,7 @@ class BackdropDetail: UIView {
     weak var delegate: BackdropDetailDelegate?
     
     // MARK: - UI Declarations
-    lazy var backdrop: UIImageView = {
+    private lazy var backdrop: UIImageView = {
         let backdrop = UIImageView()
         backdrop.clipsToBounds = true
         backdrop.contentMode = .scaleAspectFill
@@ -28,14 +28,14 @@ class BackdropDetail: UIView {
         return backdrop
     }()
     
-    lazy var gradientLayer: CAGradientLayer = {
+    private lazy var gradientLayer: CAGradientLayer = {
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [UIColor.clear.cgColor]
         
         return gradientLayer
     }()
     
-    lazy var poster: UIImageView = {
+    private lazy var poster: UIImageView = {
         let poster = UIImageView()
         poster.clipsToBounds = true
         poster.layer.cornerRadius = 5
@@ -48,60 +48,61 @@ class BackdropDetail: UIView {
         ]
         NSLayoutConstraint.activate(posterConstraints)
         
+        poster.isSkeletonable = true
         return poster
     }()
     
-    lazy var title: UILabel = {
+    private lazy var title: UILabel = {
         let title = UILabel()
         title.numberOfLines = 0
+        title.font = T.Typography(variant: .HeadingOne).font
         title.translatesAutoresizingMaskIntoConstraints = false
-        title.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 24, weight: .bold))
         
         return title
     }()
     
-    lazy var genres: UILabel = {
+    private lazy var genres: UILabel = {
         let genres = UILabel()
         genres.numberOfLines = 0
+        genres.font = T.Typography(variant: .Body).font
         genres.translatesAutoresizingMaskIntoConstraints = false
-        genres.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .bold))
         
         return genres
     }()
     
-    lazy var runtime: UILabel = {
+    private lazy var runtime: UILabel = {
         let runtime = UILabel()
         runtime.alpha = 0.7
+        runtime.font = T.Typography(variant: .Body).font
         runtime.translatesAutoresizingMaskIntoConstraints = false
-        runtime.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .semibold))
         
         return runtime
     }()
     
-    lazy var releaseDate: UILabel = {
+    private lazy var releaseDate: UILabel = {
         let releaseDate = UILabel()
         releaseDate.alpha = 0.7
+        releaseDate.font = T.Typography(variant: .Body).font
         releaseDate.translatesAutoresizingMaskIntoConstraints = false
-        releaseDate.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .semibold))
         
         return releaseDate
     }()
     
-    lazy var titleStack: UIStackView = {
+    private lazy var titleStack: UIStackView = {
         let titleStack = UIStackView(arrangedSubviews: [title, releaseDate])
         titleStack.axis = .vertical
-        titleStack.setCustomSpacing(35, after: title)
         titleStack.translatesAutoresizingMaskIntoConstraints = false
+        titleStack.setCustomSpacing(T.Spacing.Vertical(size: .large), after: title)
         
         return titleStack
     }()
     
-    lazy var metaStack: UIStackView = {
+    private lazy var metaStack: UIStackView = {
         let metaStack = UIStackView(arrangedSubviews: [poster, titleStack])
         metaStack.axis = .horizontal
         metaStack.alignment = .bottom
-        metaStack.setCustomSpacing(5, after: poster)
         metaStack.translatesAutoresizingMaskIntoConstraints = false
+        metaStack.setCustomSpacing(T.Spacing.Vertical(size: .small), after: poster)
         
         return metaStack
     }()
@@ -121,7 +122,7 @@ class BackdropDetail: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        gradientLayer.frame = bounds
+        gradientLayer.frame = CGRect(x: 0, y: 0, width: bounds.width, height: T.Height.Backdrop)
     }
     
     // MARK: - Configure
@@ -188,32 +189,33 @@ extension BackdropDetail {
     }
     
     private func setupAnchors() {
-        heightAnchor.constraint(equalToConstant: K.Backdrop.heightConstant).isActive = true
+        let height: CGFloat = T.Height.Backdrop + T.Spacing.Vertical(size: .large)
+        heightAnchor.constraint(equalToConstant: height).isActive = true
         
         let backdropConstraints: [NSLayoutConstraint] = [
             backdrop.topAnchor.constraint(equalTo: topAnchor),
-            backdrop.heightAnchor.constraint(equalTo: heightAnchor),
             backdrop.leadingAnchor.constraint(equalTo: leadingAnchor),
-            backdrop.trailingAnchor.constraint(equalTo: trailingAnchor)
+            backdrop.trailingAnchor.constraint(equalTo: trailingAnchor),
+            backdrop.heightAnchor.constraint(equalToConstant: T.Height.Backdrop)
         ]
         NSLayoutConstraint.activate(backdropConstraints)
         
         let metsStackConstraints: [NSLayoutConstraint] = [
-            metaStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -35),
-            metaStack.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            metaStack.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20)
+            metaStack.bottomAnchor.constraint(equalTo: backdrop.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
+            metaStack.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: T.Spacing.Horizontal()),
+            metaStack.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(metsStackConstraints)
     }
     
     private func setupRuntimeView() {
-        titleStack.setCustomSpacing(5, after: releaseDate)
         titleStack.insertArrangedSubview(runtime, at: 2)
+        titleStack.setCustomSpacing(T.Spacing.Vertical(size: .small), after: releaseDate)
     }
     
     private func setupGenresView() {
         titleStack.insertArrangedSubview(genres, at: 1)
         titleStack.setCustomSpacing(0, after: title)
-        titleStack.setCustomSpacing(35, after: genres)
+        titleStack.setCustomSpacing(T.Spacing.Vertical(size: .large), after: genres)
     }
 }

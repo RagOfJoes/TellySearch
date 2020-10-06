@@ -12,7 +12,7 @@ import SkeletonView
 
 class SeasonsViewCell: UICollectionViewCell {
     // MARK: - Internal Properties
-    static let height: CGFloat = SeasonsViewCell.backdropHeight + ("".height(withConstrainedWidth: SeasonsViewCell.backdropWidth, font: UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 15, weight: .semibold))) * 2) + "".height(withConstrainedWidth: SeasonsViewCell.backdropWidth, font: UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 13, weight: .medium))) + 5
+    static let height: CGFloat = SeasonsViewCell.backdropHeight + ("".height(withConstrainedWidth: SeasonsViewCell.backdropWidth, font: T.Typography(variant: .Body, weight: .bold).font) * 2) + "".height(withConstrainedWidth: SeasonsViewCell.backdropWidth, font: T.Typography(variant: .Subtitle).font) + T.Spacing.Vertical(size: .small)
     static let backdropWidth: CGFloat = UIScreen.main.bounds.width - 40
     static let backdropHeight: CGFloat = .getHeight(with: SeasonsViewCell.backdropWidth, using: (16 / 9))
     
@@ -31,9 +31,9 @@ class SeasonsViewCell: UICollectionViewCell {
     private lazy var name: UILabel = {
         let name = UILabel()
         name.numberOfLines = 2
-        name.setupFont(size: 15, weight: .semibold)
         name.textColor = UIColor(named: "primaryTextColor")
         name.translatesAutoresizingMaskIntoConstraints = false
+        name.font = T.Typography(variant: .Body, weight: .bold).font
         
         return name
     }()
@@ -41,7 +41,7 @@ class SeasonsViewCell: UICollectionViewCell {
     private lazy var airDate: UILabel = {
         let airDate = UILabel()
         airDate.numberOfLines = 1
-        airDate.setupFont(size: 13, weight: .medium)
+        airDate.font = T.Typography(variant: .Subtitle).font
         airDate.textColor = UIColor(named: "primaryTextColor")
         airDate.translatesAutoresizingMaskIntoConstraints = false
         
@@ -79,23 +79,23 @@ extension SeasonsViewCell {
     private func setupAnchors() {
         let backdropConstraints: [NSLayoutConstraint] = [
             backdrop.topAnchor.constraint(equalTo: topAnchor),
-            backdrop.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            backdrop.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            backdrop.heightAnchor.constraint(equalToConstant: SeasonsViewCell.backdropHeight)
+            backdrop.heightAnchor.constraint(equalToConstant: SeasonsViewCell.backdropHeight),
+            backdrop.leadingAnchor.constraint(equalTo: leadingAnchor, constant: T.Spacing.Horizontal()),
+            backdrop.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(backdropConstraints)
         
         let nameConstraints: [NSLayoutConstraint] = [
-            name.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            name.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            name.topAnchor.constraint(equalTo: backdrop.bottomAnchor, constant: 5),
+            name.leadingAnchor.constraint(equalTo: leadingAnchor, constant: T.Spacing.Horizontal()),
+            name.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -T.Spacing.Horizontal()),
+            name.topAnchor.constraint(equalTo: backdrop.bottomAnchor, constant: T.Spacing.Vertical(size: .small)),
         ]
         NSLayoutConstraint.activate(nameConstraints)
         
         let airDateConstraints: [NSLayoutConstraint] = [
             airDate.topAnchor.constraint(equalTo: name.bottomAnchor),
-            airDate.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            airDate.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 20)
+            airDate.leadingAnchor.constraint(equalTo: leadingAnchor, constant: T.Spacing.Horizontal()),
+            airDate.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(airDateConstraints)
     }

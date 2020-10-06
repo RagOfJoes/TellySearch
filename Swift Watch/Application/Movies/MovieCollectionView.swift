@@ -15,17 +15,14 @@ protocol MovieCollectionViewTableViewCellDelegate: class {
 
 // MARK: - MovieCollectionView
 class MovieCollectionView: CVTCell {
+    // MARK: - Internal Properties
     var section: Int?
     var movies: [Movie]? = nil
     weak var delegate: MovieCollectionViewTableViewCellDelegate?
     
+    // MARK: - Life Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configure(.Regular)
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
     }
     
     func configure(movies: [Movie], section: Int) {
@@ -59,7 +56,7 @@ extension MovieCollectionView {
         
         if let movie = movies?[indexPath.row] {
             if let poster = movie.posterPath {
-                cell.configure(primary: movie.title, image: K.Poster.URL + poster)
+                cell.configure(primary: movie.title, image: K.URL.Poster + poster)
                 return cell
             } else {
                 cell.configure(primary: movie.title)

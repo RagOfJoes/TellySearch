@@ -13,10 +13,10 @@ import SkeletonView
 class ShowsViewController: UIViewController {
     var shows: [[Show]?] = []
     var sections: [ShowSectionCell] = [
-        ShowSectionCell(section: ShowSection(title: "Airing Today"), type: .featured),
-        ShowSectionCell(section: ShowSection(title: "Popular"), type: .regular),
-        ShowSectionCell(section: ShowSection(title: "On The Air"), type: .regular),
-        ShowSectionCell(section: ShowSection(title: "Top Rated"), type: .regular),
+        ShowSectionCell(section: ShowSection(title: "Airing Today"), type: .Featured),
+        ShowSectionCell(section: ShowSection(title: "Popular"), type: .Regular),
+        ShowSectionCell(section: ShowSection(title: "On The Air"), type: .Regular),
+        ShowSectionCell(section: ShowSection(title: "Top Rated"), type: .Regular),
     ]
     
     private lazy var tableView: UITableView = {
@@ -77,7 +77,7 @@ class ShowsViewController: UIViewController {
 // MARK: - UITableViewDelegate
 extension ShowsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 65
+        return T.Spacing.Vertical(size: .large)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -89,12 +89,7 @@ extension ShowsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cellType = sections[indexPath.section].type
-        switch cellType {
-        case .featured:
-            return K.Overview.featuredCellHeight
-        default:
-            return K.Overview.regularHeight
-        }
+        return T.Height.Cell(type: cellType)
     }
 }
 
@@ -111,7 +106,7 @@ extension ShowsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellType = sections[indexPath.section].type
         
-        if cellType == .featured {
+        if cellType == .Featured {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ShowsFeaturedCollectionView.reuseIdentifier, for: indexPath) as? ShowsFeaturedCollectionView else { return UITableViewCell() }
             
             if shows.count > indexPath.section, let data = shows[indexPath.section] {

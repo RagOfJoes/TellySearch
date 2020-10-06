@@ -14,13 +14,18 @@ protocol ShowsCollectionViewDelegate: class {
 }
 
 class ShowsCollectionView: CVTCell {
+    // MARK: - Internal Properties
+    override var type: T.CellType {
+        return .Regular
+    }
+    
     var section: Int?
     var shows: [Show]? = nil
     weak var delegate: ShowsCollectionViewDelegate?
     
+    // MARK: - Life Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configure(.Regular)
     }
     
     func configure(shows: [Show], section: Int) {
@@ -55,7 +60,7 @@ extension ShowsCollectionView {
         
         if let show = shows?[indexPath.row] {
             if let poster = show.posterPath {
-                cell.configure(primary: show.name, image: K.Poster.URL + poster)
+                cell.configure(primary: show.name, image: K.URL.Poster + poster)
                 return cell
             } else {
                 cell.configure(primary: show.name)

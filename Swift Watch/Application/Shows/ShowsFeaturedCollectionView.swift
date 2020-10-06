@@ -10,17 +10,18 @@ import UIKit
 import SkeletonView
 
 class ShowsFeaturedCollectionView: CVTCell {
+    // MARK: - Internal Properties
+    override var type: T.CellType {
+        return .Featured
+    }
+    
     var section: Int?
     var shows: [Show]? = nil
     weak var delegate: ShowsCollectionViewDelegate?
     
+    // MARK: - Life Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configure(.Featured)
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
     }
     
     func configure(shows: [Show], section: Int) {
@@ -54,7 +55,7 @@ extension ShowsFeaturedCollectionView {
         
         if let show = shows?[indexPath.row] {
             if let backdrop = show.backdropPath {
-                cell.configure(name: show.name, image: K.Backdrop.URL + backdrop)
+                cell.configure(name: show.name, image: K.URL.Backdrop + backdrop)
                 return cell
             } else {
                 cell.configure(name: show.name)

@@ -19,13 +19,13 @@ class PosterImageView: UIImageView {
         translatesAutoresizingMaskIntoConstraints = false
         
         let constraints: [NSLayoutConstraint] = [
-            widthAnchor.constraint(equalToConstant: K.Poster.width),
-            heightAnchor.constraint(equalToConstant: K.Poster.height)
+            widthAnchor.constraint(equalToConstant: T.Width.Poster),
+            heightAnchor.constraint(equalToConstant: T.Height.Poster)
         ]
         NSLayoutConstraint.activate(constraints)
 
         guard let safeString = string else { image = PosterImageView.placeholder; return }
-        guard let url = URL(string: K.Credits.profileURL + safeString) else { image = PosterImageView.placeholder; return }
+        guard let url = URL(string: K.URL.Poster + safeString) else { image = PosterImageView.placeholder; return }
         kfSetImage(with: url, using: PosterImageView.placeholder)
     }
     

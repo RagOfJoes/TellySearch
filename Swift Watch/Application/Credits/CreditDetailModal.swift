@@ -36,17 +36,21 @@ class CreditDetailModal: UIViewController {
     private var scrollView: UIScrollView
     private var containerView: UIView
     private lazy var poster: PosterImageView = {
+        var poster: PosterImageView
         if type == .Cast {
-            return PosterImageView(with: cast?.profilePath)
+            poster = PosterImageView(with: cast?.profilePath)
         } else {
-            return PosterImageView(with: crew?.profilePath)
+            poster = PosterImageView(with: crew?.profilePath)
         }
+        poster.isSkeletonable = true
+        return poster
     }()
     
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 0
         label.textColor = colors.primary
-        label.setupFont(size: 22, weight: .bold)
+        label.font = T.Typography(variant: .HeadingOne).font
         label.translatesAutoresizingMaskIntoConstraints = false
         
         if type == .Cast {
@@ -54,6 +58,8 @@ class CreditDetailModal: UIViewController {
         } else {
             label.text = crew?.name
         }
+        
+        label.isSkeletonable = true
         return label
     }()
     
@@ -73,14 +79,19 @@ class CreditDetailModal: UIViewController {
     private lazy var personalStackViews: UIStackView = {
         let personalStackViews = UIStackView(arrangedSubviews: [nameLabel, genderLabels, bornLabels, diedLabels])
         personalStackViews.axis = .vertical
+        
+        personalStackViews.isSkeletonable = true
         return personalStackViews
     }()
     
     private lazy var personStackView: UIStackView = {
         let personStackView = UIStackView(arrangedSubviews: [poster, personalStackViews])
         personStackView.alignment = .bottom
-        personStackView.setCustomSpacing(5, after: poster)
         personStackView.translatesAutoresizingMaskIntoConstraints = false
+        personStackView.setCustomSpacing(T.Spacing.Vertical(size: .small), after: poster)
+        
+        personStackView.isSkeletonable = true
+        personStackView.showAnimatedGradientSkeleton()
         return personStackView
     }()
     
@@ -97,6 +108,9 @@ class CreditDetailModal: UIViewController {
         let bodyStackView = UIStackView(arrangedSubviews: [knownForStack, biographyStack])
         bodyStackView.axis = .vertical
         bodyStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        bodyStackView.isSkeletonable = true
+        bodyStackView.showAnimatedGradientSkeleton()
         return bodyStackView
     }()
     
@@ -144,9 +158,17 @@ class CreditDetailModal: UIViewController {
         containerView.addSubview(personStackView)
         containerView.addSubview(bodyStackView)
         containerView.addSubview(notableWorks)
+        containerView.showAnimatedGradientSkeleton()
         
         setupAnchors()
         fetchDetails()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        DispatchQueue.main.async {
+            self.updateContentSize()
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -175,7 +197,7 @@ extension CreditDetailModal {
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ]
         NSLayoutConstraint.activate(scrollViewConstraints)
         
@@ -188,17 +210,17 @@ extension CreditDetailModal {
         NSLayoutConstraint.activate(containerViewConstraints)
         
         let hStackConstraints: [NSLayoutConstraint] = [
-            personStackView.heightAnchor.constraint(equalToConstant: K.Poster.height),
             personStackView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            personStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-            personStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+            personStackView.heightAnchor.constraint(equalToConstant: T.Height.Poster),
+            personStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
+            personStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal()),
         ]
         NSLayoutConstraint.activate(hStackConstraints)
         
         let bodyStackConstraints: [NSLayoutConstraint] = [
-            bodyStackView.topAnchor.constraint(equalTo: personStackView.bottomAnchor, constant: 20),
-            bodyStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-            bodyStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+            bodyStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
+            bodyStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal()),
+            bodyStackView.topAnchor.constraint(equalTo: personStackView.bottomAnchor, constant: T.Spacing.Vertical(size: .large))
         ]
         NSLayoutConstraint.activate(bodyStackConstraints)
         
@@ -216,7 +238,7 @@ extension CreditDetailModal {
         let collectionViewConstraints: [NSLayoutConstraint] = [
             notableWorksLeading,
             notableWorksTrailing,
-            notableWorks.topAnchor.constraint(equalTo: bodyStackView.bottomAnchor, constant: 20),
+            notableWorks.topAnchor.constraint(equalTo: bodyStackView.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
         ]
         NSLayoutConstraint.activate(collectionViewConstraints)
     }
@@ -260,7 +282,7 @@ extension CreditDetailModal {
         }
         
         guard let safePreviousView = previousView else { return }
-        safeParent.setCustomSpacing(20, after: safePreviousView)
+        safeParent.setCustomSpacing(T.Spacing.Vertical(size: .large), after: safePreviousView)
     }
 }
 
@@ -305,9 +327,9 @@ extension CreditDetailModal {
             } else {
                 self?.notableWorks.removeFromSuperview()
             }
-        }.always { [weak self] in
+            
             DispatchQueue.main.async {
-                self?.updateContentSize()
+                self?.containerView.hideSkeleton()
             }
         }
     }
@@ -317,7 +339,6 @@ extension CreditDetailModal {
 extension CreditDetailModal: InfoStackViewDelegate {
     func didReadMore() {
         DispatchQueue.main.async {
-            self.scrollView.layoutIfNeeded()
             self.updateContentSize()
         }
     }

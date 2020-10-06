@@ -10,17 +10,18 @@ import UIKit
 import SkeletonView
 
 class MovieFeaturedCollectionView: CVTCell {
+    // MARK: - Internal Properties
+    override var type: T.CellType {
+        return .Featured
+    }
+    
     var section: Int?
     var movies: [Movie]? = nil
     weak var delegate: MovieCollectionViewTableViewCellDelegate?
     
+    // MARK: - Life Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configure(.Featured)
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
     }
     
     func configure(movies: [Movie], section: Int) {
@@ -54,7 +55,7 @@ extension MovieFeaturedCollectionView {
         
         if let movie = movies?[indexPath.row] {
             if let backdrop = movie.backdropPath {
-                cell.configure(name: movie.title, image: K.Backdrop.URL + backdrop)
+                cell.configure(name: movie.title, image: K.URL.Backdrop + backdrop)
                 return cell
             } else {
                 cell.configure(name: movie.title)

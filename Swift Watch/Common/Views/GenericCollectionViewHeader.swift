@@ -11,10 +11,10 @@ import UIKit
 class GenericCollectionViewHeader: UIView {
     private lazy var title: UILabel = {
         let title = UILabel()
+        title.font = T.Typography(variant: .Title).font
         title.textColor = UIColor(named: "primaryTextColor")
         title.translatesAutoresizingMaskIntoConstraints = false
-        title.font = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 18, weight: .bold))
-        
+
         return title
     }()
     
@@ -28,7 +28,7 @@ class GenericCollectionViewHeader: UIView {
         title.text = text
         
         if color != nil {
-            title.textColor = color            
+            title.textColor = color
         }
     }
     

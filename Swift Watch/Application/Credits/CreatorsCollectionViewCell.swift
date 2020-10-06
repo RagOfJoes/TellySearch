@@ -17,29 +17,28 @@ class CreatorsCollectionViewCell: UICollectionViewCell {
     private lazy var primaryLabel: UILabel = {
         let primaryLabel = UILabel()
         primaryLabel.numberOfLines = 1
-        primaryLabel.setupFont(size: 14, weight: .bold)
+        primaryLabel.translatesAutoresizingMaskIntoConstraints = false
+        primaryLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        primaryLabel.font = T.Typography(variant: .Body, weight: .bold).font
         
-        primaryLabel.isSkeletonable = true
         return primaryLabel
     }()
     
     private lazy var secondaryLabel: UILabel = {
         let secondaryLabel = UILabel()
         secondaryLabel.numberOfLines = 1
-        secondaryLabel.setupFont(size: 13, weight: .medium)
-        
-        secondaryLabel.isSkeletonable = true
+        secondaryLabel.font = T.Typography(variant: .Subtitle).font
+        secondaryLabel.translatesAutoresizingMaskIntoConstraints = false
+        secondaryLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+
         return secondaryLabel
     }()
     
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView()
+        let stackView = UIStackView(arrangedSubviews: [primaryLabel, secondaryLabel])
         stackView.axis = .vertical
-        stackView.alignment = .leading
+        stackView.alignment = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        stackView.addArrangedSubview(primaryLabel)
-        stackView.addArrangedSubview(secondaryLabel)
         
         isSkeletonable = true
         return stackView
@@ -48,16 +47,22 @@ class CreatorsCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         clipsToBounds = true
-        translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(stackView)
+        contentView.addSubview(primaryLabel)
+        contentView.addSubview(secondaryLabel)
 
-        let stackViewConstraints: [NSLayoutConstraint] = [
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            stackView.heightAnchor.constraint(equalTo: contentView.heightAnchor),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+        let primaryLabelConstraints: [NSLayoutConstraint] = [
+            primaryLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
+            primaryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            primaryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ]
-        NSLayoutConstraint.activate(stackViewConstraints)
+        NSLayoutConstraint.activate(primaryLabelConstraints)
+        
+        let secondarLabelConstraints: [NSLayoutConstraint] = [
+            secondaryLabel.topAnchor.constraint(equalTo: primaryLabel.bottomAnchor),
+            secondaryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            secondaryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+        ]
+        NSLayoutConstraint.activate(secondarLabelConstraints)
         
         isSkeletonable = true
     }
@@ -77,11 +82,9 @@ extension CreatorsCollectionViewCell: ConfigureCreatorsCollectionViewCell {
     static var reuseIdentifier = "CreatorCollectionViewCell"
     
     func configure(primary: String, secondary: String, color: UIColor) {
-        hideSkeleton()
-        
         let underlineAttributes: [NSAttributedString.Key: Any] = [
             .underlineStyle: NSUnderlineStyle.single.rawValue,
-            .font: primaryLabel.font ?? UIFont.systemFont(ofSize: 14, weight: .bold),
+            .font: primaryLabel.font ?? T.Typography(variant: .Body, weight: .bold).font,
         ]
         let underlineString: NSAttributedString = NSAttributedString(string: primary, attributes: underlineAttributes)
         DispatchQueue.main.async { [weak self] in

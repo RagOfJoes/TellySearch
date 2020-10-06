@@ -18,9 +18,9 @@ class RegularCell: UICollectionViewCell {
     private lazy var primaryLabel: UILabel = {
         let primaryLabel = UILabel()
         primaryLabel.numberOfLines = 2
-        primaryLabel.setupFont(size: 14, weight: .bold)
         primaryLabel.textColor = UIColor(named: "primaryTextColor")
         primaryLabel.translatesAutoresizingMaskIntoConstraints = false
+        primaryLabel.font = T.Typography(variant: .Body, weight: .bold).font
         
         return primaryLabel
     }()
@@ -28,10 +28,10 @@ class RegularCell: UICollectionViewCell {
     private lazy var secondaryLabel: UILabel = {
         let secondaryLabel = UILabel()
         secondaryLabel.numberOfLines = 2
-        secondaryLabel.setupFont(size: 13, weight: .medium)
         secondaryLabel.textColor = UIColor(named: "secondaryTextColor")
         secondaryLabel.translatesAutoresizingMaskIntoConstraints = false
-        
+        secondaryLabel.font = T.Typography(variant: .Subtitle, weight: .medium).font
+
         return secondaryLabel
     }()
     
@@ -58,13 +58,13 @@ class RegularCell: UICollectionViewCell {
         
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: K.Poster.height),
+            imageView.heightAnchor.constraint(equalToConstant: T.Height.Poster),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
 
             primaryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             primaryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            primaryLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 5),
+            primaryLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: T.Spacing.Vertical(size: .small)),
 
             secondaryLabel.topAnchor.constraint(equalTo: primaryLabel.bottomAnchor),
             secondaryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),

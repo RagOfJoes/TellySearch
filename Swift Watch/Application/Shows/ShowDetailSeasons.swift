@@ -51,7 +51,7 @@ extension ShowDetailSeasons {
         if let season = seasons?[indexPath.row] {
             let episodeCountStr = "\(season.episodeCount) episodes"
             if let safePoster = season.posterPath {
-                cell.configure(primary: season.name, secondary: episodeCountStr, image: K.Poster.URL + safePoster, colors: colors)
+                cell.configure(primary: season.name, secondary: episodeCountStr, image: K.URL.Poster + safePoster, colors: colors)
             } else {
                 cell.configure(primary: season.name, secondary: episodeCountStr, colors: colors)
             }

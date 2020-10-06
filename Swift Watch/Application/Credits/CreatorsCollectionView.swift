@@ -30,7 +30,7 @@ class CreatorsCollectionView: UIView {
     
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: T.Spacing.Horizontal(), bottom: 0, right: T.Spacing.Horizontal())
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.delegate = self
@@ -52,8 +52,8 @@ class CreatorsCollectionView: UIView {
     
     private let heightConstant: CGFloat = {
         let placeholderText = "Lorem"
-        let primaryFont = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .bold))
-        let secondaryFont = UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 13, weight: .medium))
+        let secondaryFont = T.Typography(variant: .Subtitle).font
+        let primaryFont = T.Typography(variant: .Body, weight: .bold).font
         let heightConstant: CGFloat = placeholderText.height(font: primaryFont) + placeholderText.height(font: secondaryFont)
         return heightConstant
     }()
@@ -105,8 +105,8 @@ extension CreatorsCollectionView {
             
             header.topAnchor.constraint(equalTo: topAnchor),
             header.heightAnchor.constraint(equalToConstant: 30),
-            header.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            header.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            header.leadingAnchor.constraint(equalTo: leadingAnchor, constant: T.Spacing.Horizontal()),
+            header.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -T.Spacing.Horizontal()),
         ])
         
         var collectionViewLeading: NSLayoutConstraint!
@@ -124,7 +124,7 @@ extension CreatorsCollectionView {
             collectionViewLeading,
             collectionViewTrailing,
             collectionView.heightAnchor.constraint(equalTo: heightAnchor, constant: -35),
-            collectionView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 2),
+            collectionView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: T.Spacing.Vertical(size: .small)),
         ]
         NSLayoutConstraint.activate(collectionViewConstraints)
     }

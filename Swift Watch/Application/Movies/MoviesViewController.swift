@@ -13,10 +13,10 @@ import SkeletonView
 class MoviesViewController: UIViewController  {
     var movies: [[Movie]?] = []
     var sections: [MovieSectionCell] = [
-        MovieSectionCell(section: MovieSection(title: "Popular"), type: .featured),
-        MovieSectionCell(section: MovieSection(title: "In Theatres"), type: .regular),
-        MovieSectionCell(section: MovieSection(title: "Top Rated"), type: .regular),
-        MovieSectionCell(section: MovieSection(title: "Upcoming"), type: .regular),
+        MovieSectionCell(section: MovieSection(title: "Popular"), type: .Featured),
+        MovieSectionCell(section: MovieSection(title: "In Theatres"), type: .Regular),
+        MovieSectionCell(section: MovieSection(title: "Top Rated"), type: .Regular),
+        MovieSectionCell(section: MovieSection(title: "Upcoming"), type: .Regular),
     ]
     
     private lazy var tableView: UITableView = {
@@ -77,7 +77,7 @@ class MoviesViewController: UIViewController  {
 // MARK: - UITableViewDelegate
 extension MoviesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 65
+        return T.Spacing.Vertical(size: .large)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -89,12 +89,7 @@ extension MoviesViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cellType = sections[indexPath.section].type
-        switch cellType {
-        case .featured:
-            return K.Overview.featuredCellHeight
-        default:
-            return K.Overview.regularHeight
-        }
+        return T.Height.Cell(type: cellType)
     }
 }
 
@@ -111,7 +106,7 @@ extension MoviesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellType = sections[indexPath.section].type
         
-        if cellType == .featured {
+        if cellType == .Featured {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieFeaturedCollectionView.reuseIdentifier, for: indexPath) as? MovieFeaturedCollectionView else {
                 return UITableViewCell()
             }

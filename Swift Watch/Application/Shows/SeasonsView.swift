@@ -9,7 +9,7 @@
 import UIKit
 import SkeletonView
 
-class SeasonsView: UIViewController {
+class SeasonsView: UICollectionViewController {
     // MARK: - Internal Properties
     let tvId: Int
     let season: Season
@@ -18,44 +18,27 @@ class SeasonsView: UIViewController {
     
     weak var creditModalDelegate: CreditDetailModalDelegate?
     
-    private lazy var collectionView: UICollectionView = {
-        let layout = CollectionViewLayout()
-        layout.minimumLineSpacing = 35
-        layout.scrollDirection = .vertical
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
-        collectionView.bounces = true
-        collectionView.backgroundColor = .clear
-        collectionView.delaysContentTouches = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(SeasonsViewCell.self, forCellWithReuseIdentifier: SeasonsViewCell.reuseIdentifier)
-        collectionView.register(SeasonsViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SeasonsViewHeader.reuseIdentifier)
-        
-        collectionView.isSkeletonable = true
-        return collectionView
-    }()
-    
     // MARK: - Life Cycle
     init(tvId: Int, season: Season, colors: UIImageColors) {
         self.tvId = tvId
         self.season = season
         self.colors = colors
-        super.init(nibName: nil, bundle: nil)
+        
+        let layout = CollectionViewLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = T.Spacing.Vertical(size: .large)
+        
+        super.init(collectionViewLayout: layout)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        // Setup View
         setupNav()
         view.backgroundColor = colors.background
-        
-        view.addSubview(collectionView)
-        collectionView.showAnimatedGradientSkeleton()
-        
-        setupAnchors()
+        // Setup CollectionView
+        setupCollectionView()
+        // Call Data Fetcher
         fetchDetails()
     }
     
@@ -73,7 +56,8 @@ extension SeasonsView {
     private func setupNav() {        
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.setBackgroundImage(UIImage.from(color: colors.background), for: .default)
+        navigationController?.navigationBar.backgroundColor = colors.background
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         
         navigationController?.navigationBar.tintColor = colors.primary
         let backBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(onBackButton))
@@ -82,14 +66,13 @@ extension SeasonsView {
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: colors.primary!]
     }
     
-    private func setupAnchors() {
-        let collectionViewConstraints: [NSLayoutConstraint] = [
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.heightAnchor.constraint(equalTo: view.heightAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ]
-        NSLayoutConstraint.activate(collectionViewConstraints)
+    private func setupCollectionView() {
+        collectionView.backgroundColor = .clear
+        collectionView.delaysContentTouches = false
+        collectionView.register(SeasonsViewCell.self, forCellWithReuseIdentifier: SeasonsViewCell.reuseIdentifier)
+        collectionView.register(SeasonsViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SeasonsViewHeader.reuseIdentifier)
+        collectionView.isSkeletonable = true
+        collectionView.showAnimatedGradientSkeleton()
     }
 }
 
@@ -106,15 +89,15 @@ extension SeasonsView {
 }
 
 // MARK: - UICollectionViewDelegate
-extension SeasonsView: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+extension SeasonsView {
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let episode = detail?.episodes?[indexPath.item] else { return }
         let episodeVC = EpisodeView(episode: episode, colors: colors)
         episodeVC.setCastViewDelegate(self)
         navigationController?.pushViewController(episodeVC, animated: true)
     }
     
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SeasonsViewHeader.reuseIdentifier, for: indexPath) as? SeasonsViewHeader else {
             return UICollectionReusableView()
         }
@@ -158,25 +141,23 @@ extension SeasonsView: UICollectionViewDelegateFlowLayout {
         let width: CGFloat = collectionView.frame.width - 40
         
         var overviewLabel: String = "-"
-        let marginBottom: CGFloat = 35 * 3
-        
-        let titleFont = UIFont.systemFont(ofSize: 18, weight: .bold)
-        let valueFont = UIFont.systemFont(ofSize: 14, weight: .medium)
-        
-        let titleHeight = "".height(withConstrainedWidth: width, font: titleFont) * 4
+        let marginBottom: CGFloat = T.Spacing.Vertical(size: .large) * 3
+                
+        let titleHeight = "".height(withConstrainedWidth: width, font: T.Typography(variant: .Title).font)
         if detail != nil, let overview = season.overview {
             if overview.count > 0 {
                 overviewLabel = overview
             }
         }
-        let episodesHeight: CGFloat = 32
-        let castViewHeight = K.Overview.regularHeightWithSecondary
-        let airDateHeight = "".height(withConstrainedWidth: width, font: valueFont)
-        let overviewHeight = overviewLabel.height(withConstrainedWidth: width, font: valueFont) + 2
+        let titlesHeight = titleHeight * 4
+        let castViewHeight = T.Height.Cell(type: .RegularSecondary)
+        let episodesHeight: CGFloat = 30 + T.Spacing.Vertical(size: .small)
+        let airDateHeight = "".height(withConstrainedWidth: width, font: T.Typography(variant: .Body).font)
+        let overviewHeight = overviewLabel.height(withConstrainedWidth: width, font: T.Typography(variant: .Body).font) + 2
         
-        var height = episodesHeight + marginBottom + titleHeight + airDateHeight + overviewHeight + castViewHeight
+        var height = episodesHeight + marginBottom + titlesHeight + airDateHeight + overviewHeight + castViewHeight
         if let detail = detail, let credits = detail.credits, let cast = credits.cast, cast.count <= 0 {
-            height -= castViewHeight + marginBottom
+            height -= castViewHeight + marginBottom - episodesHeight
         }
         return CGSize(width: collectionView.frame.width, height: height)
     }
@@ -184,7 +165,7 @@ extension SeasonsView: UICollectionViewDelegateFlowLayout {
 
 // MARK: - SkeletonCollectionViewDataSource
 extension SeasonsView: SkeletonCollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let episodes = detail?.episodes {
             return episodes.count
         }
@@ -192,7 +173,7 @@ extension SeasonsView: SkeletonCollectionViewDataSource {
         return 0
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SeasonsViewCell.reuseIdentifier, for: indexPath) as? SeasonsViewCell else {
             return UICollectionViewCell()
         }
@@ -200,7 +181,7 @@ extension SeasonsView: SkeletonCollectionViewDataSource {
         if let episodes = detail?.episodes {
             let episode = episodes[indexPath.item]
             let name = "\(indexPath.item + 1). \(episode.name)"
-            let url = episode.backdrop != nil ? K.Backdrop.URL + episode.backdrop! : nil
+            let url = episode.backdrop != nil ? K.URL.Backdrop + episode.backdrop! : nil
             
             cell.configure(url: url, name: name, airDate: episode.airDate, colors: colors)
         }

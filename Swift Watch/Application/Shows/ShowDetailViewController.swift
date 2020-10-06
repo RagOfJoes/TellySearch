@@ -35,18 +35,18 @@ class ShowDetailViewController: UIViewController {
     }()
     
     private lazy var overviewStack: InfoStackView = {
-        let overviewStack = InfoStackView(fontSize: (18, 14))
+        let overviewStack = InfoStackView()
         return overviewStack
     }()
     
     private lazy var seasonsView: ShowDetailSeasons = {
-        let seasonsView = ShowDetailSeasons(.Regular)
+        let seasonsView = ShowDetailSeasons(.RegularSecondary)
         seasonsView.delegate = self
         return seasonsView
     }()
     
     private lazy var castCollectionView: CastCollectionView = {
-        let castCollectionView = CastCollectionView(.RegularHasSecondary)
+        let castCollectionView = CastCollectionView(.RegularSecondary)
         castCollectionView.delegate = self
         return castCollectionView
     }()
@@ -62,9 +62,9 @@ class ShowDetailViewController: UIViewController {
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        stackView.setCustomSpacing(20, after: seasonsView)
-        stackView.setCustomSpacing(20, after: castCollectionView)
-        stackView.setCustomSpacing(20, after: recommendationsView)
+        stackView.setCustomSpacing(T.Spacing.Vertical(size: .large), after: seasonsView)
+        stackView.setCustomSpacing(T.Spacing.Vertical(size: .large), after: castCollectionView)
+        stackView.setCustomSpacing(T.Spacing.Vertical(size: .large), after: recommendationsView)
         
         return stackView
     }()
@@ -151,9 +151,6 @@ extension ShowDetailViewController {
         if disappearing {
             navigationController?.navigationBar.shadowImage = UIImage()
             navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-            
-            guard let tbc = tabBarController as? TabBarController else { return }
-            tbc.hideTabBar(hide: true)
         } else {
             navigationController?.navigationBar.shadowImage = nil
             navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
@@ -161,10 +158,9 @@ extension ShowDetailViewController {
             UIView.animate(withDuration: 0.25) {
                 self.navigationController?.navigationBar.prefersLargeTitles = true
             }
-            
-            guard let tbc = tabBarController as? TabBarController else { return }
-            tbc.hideTabBar(hide: false)
         }
+        guard let tbc = tabBarController as? TabBarController else { return }
+        tbc.hideTabBar(hide: disappearing)
     }
     
     private func setupAnchors() {
@@ -194,14 +190,14 @@ extension ShowDetailViewController {
         let createdByConstraints: [NSLayoutConstraint] = [
             createdBy.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             createdBy.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            createdBy.topAnchor.constraint(equalTo: backdropDetail.bottomAnchor, constant: 20),
+            createdBy.topAnchor.constraint(equalTo: backdropDetail.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
         ]
         NSLayoutConstraint.activate(createdByConstraints)
         
         let overviewStackConstraints: [NSLayoutConstraint] = [
-            overviewStack.topAnchor.constraint(equalTo: createdBy.bottomAnchor, constant: 20),
-            overviewStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-            overviewStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20)
+            overviewStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
+            overviewStack.topAnchor.constraint(equalTo: createdBy.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
+            overviewStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(overviewStackConstraints)
         
@@ -217,7 +213,7 @@ extension ShowDetailViewController {
         let stackViewConstraints: [NSLayoutConstraint] = [
             stackViewLeadingAnchor,
             stackViewTrailingAnhor,
-            stackView.topAnchor.constraint(equalTo: overviewStack.bottomAnchor, constant: 20)
+            stackView.topAnchor.constraint(equalTo: overviewStack.bottomAnchor, constant: T.Spacing.Vertical(size: .large))
         ]
         NSLayoutConstraint.activate(stackViewConstraints)
     }
@@ -247,8 +243,8 @@ extension ShowDetailViewController {
             
             let title = self?.show.name
             let releaseDate = self?.show.firstAirDate
-            let posterURL = self?.show.posterPath != nil ? K.Poster.URL + ((self?.show.posterPath!)!) : nil
-            let backdropURL = self?.show.backdropPath != nil ? K.Backdrop.URL + (self!.show.backdropPath!) : nil
+            let posterURL = self?.show.posterPath != nil ? K.URL.Poster + ((self?.show.posterPath!)!) : nil
+            let backdropURL = self?.show.backdropPath != nil ? K.URL.Backdrop + (self!.show.backdropPath!) : nil
             
             // Return Void Promise to allow Recommendations to setup UI
             self?.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate)
@@ -350,7 +346,7 @@ extension ShowDetailViewController: BackdropDetailDelegate {
                 self.createdBy.configure(with: safeCreatedBy, colors: colors, and: "Created By")
             } else {
                 self.createdBy.removeFromSuperview()
-                self.overviewStack.topAnchor.constraint(equalTo: self.backdropDetail.bottomAnchor, constant: 20).isActive = true
+                self.overviewStack.topAnchor.constraint(equalTo: self.backdropDetail.bottomAnchor, constant: T.Spacing.Vertical(size: .large)).isActive = true
             }
             
             if let recommendations = self.detail?.recommendations?.results {

@@ -22,7 +22,7 @@ class ShowDetailRecommendations: GenericCollectionView {
     func configure(with shows: [Show], colors: UIImageColors) {
         self.shows = shows
         self.colors = colors
-        setupHeader(title: "Recommendations", color: self.colors?.primary)
+        setupHeader(title: "Recommendations", color: colors.primary)
         hideSkeleton()
     }
 }
@@ -50,7 +50,7 @@ extension ShowDetailRecommendations {
         
         if let show = shows?[indexPath.row] {
             if let safePoster = show.posterPath {
-                cell.configure(primary: show.name, image: K.Poster.URL + safePoster, colors: colors)
+                cell.configure(primary: show.name, image: K.URL.Poster + safePoster, colors: colors)
             } else {
                 cell.configure(primary: show.name, colors: colors)
             }

@@ -15,17 +15,21 @@ enum CVTCellType {
 }
 
 class CVTCell: UITableViewCell {
+    // MARK: - Internal Properties
     static var reuseIdentifier: String {
         get {
             return String(describing: self)
         }
     }
     
-    // MARK: - Internal Properties
-    private var type: CVTCellType!
+    open var type: T.CellType {
+        get {
+            return .Regular
+        }
+    }
     
     private lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView.createHorizontalCollectionView(minimumLineSpacing: 20)
+        let collectionView = UICollectionView.createHorizontalCollectionView(minimumLineSpacing: T.Spacing.Horizontal())
         collectionView.delegate = self
         collectionView.dataSource = self
         
@@ -50,10 +54,6 @@ class CVTCell: UITableViewCell {
         }
     }
     
-    public func configure(_ type: CVTCellType) {
-        self.type = type
-    }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -62,7 +62,6 @@ class CVTCell: UITableViewCell {
 // MARK: - Helper Functions
 extension CVTCell {
     private func setupAnchors() {
-        var collectionViewHeight: NSLayoutConstraint!
         var collectionViewLeading: NSLayoutConstraint!
         var collectionViewTrailing: NSLayoutConstraint!
         
@@ -74,17 +73,11 @@ extension CVTCell {
             collectionViewTrailing = collectionView.trailingAnchor.constraint(equalTo: trailingAnchor)
         }
         
-        if type == .Featured {
-            collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: K.Overview.featuredCellHeight)
-        } else {
-            collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: K.Overview.regularHeight)
-        }
-        
         let collectionViewConstraints: [NSLayoutConstraint] = [
-            collectionViewHeight,
             collectionViewLeading,
             collectionViewTrailing,
             collectionView.topAnchor.constraint(equalTo: topAnchor),
+            collectionView.heightAnchor.constraint(equalToConstant: T.Height.Cell(type: type))
         ]
         NSLayoutConstraint.activate(collectionViewConstraints)
     }
@@ -117,12 +110,11 @@ extension CVTCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var width: CGFloat = K.Poster.width
+        var width: CGFloat = T.Width.Cell(type: .Regular)
         
         if type == .Featured {
-            width = K.Overview.featuredCellWidth
+            width = T.Width.Cell(type: .Featured)
         }
-        
         return CGSize(width: width, height: collectionView.frame.height)
     }
 }

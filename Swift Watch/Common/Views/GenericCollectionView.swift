@@ -9,16 +9,9 @@
 import UIKit
 import SkeletonView
 
-enum GenericCollectionViewType {
-    case Featured
-    
-    case Regular
-    case RegularHasSecondary
-}
-
 public class GenericCollectionView: UIView {
     // MARK: - Internal Properties
-    private let type: GenericCollectionViewType!
+    private let type: T.CellType!
     
     private lazy var header: GenericCollectionViewHeader = {
         let header = GenericCollectionViewHeader()
@@ -28,7 +21,7 @@ public class GenericCollectionView: UIView {
     }()
     
     private lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView.createHorizontalCollectionView(minimumLineSpacing: 10)
+        let collectionView = UICollectionView.createHorizontalCollectionView(minimumLineSpacing: T.Spacing.Horizontal(size: .small))
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -37,14 +30,14 @@ public class GenericCollectionView: UIView {
         if type == .Featured {
             collectionView.register(FeaturedCell.self, forCellWithReuseIdentifier: FeaturedCell.reuseIdentifier)
         } else {
-            collectionView.register(RegularCell.self, forCellWithReuseIdentifier: RegularCell.reuseIdentifier)            
+            collectionView.register(RegularCell.self, forCellWithReuseIdentifier: RegularCell.reuseIdentifier)
         }
         
         return collectionView
     }()
     
     // MARK: - Lifecycle
-    init(_ type: GenericCollectionViewType) {
+    init(_ type: T.CellType) {
         self.type = type
         super.init(frame: .zero)
         clipsToBounds = true
@@ -73,40 +66,20 @@ public class GenericCollectionView: UIView {
 // MARK: - Constraints
 extension GenericCollectionView {
     private func setupAnchors() {
-        var heightConstraint: NSLayoutConstraint!
-        var collectionViewHeight: NSLayoutConstraint!
-        
-        let regularHeightConstraint = heightAnchor.constraint(equalToConstant: K.Overview.regularHeight + 35)
-        let regularHeightSecondaryConstraint = heightAnchor.constraint(equalToConstant: K.Overview.regularHeightWithSecondary + 35)
-        let featuredHeightConstraint = heightAnchor.constraint(equalToConstant: K.Overview.featuredCellHeight - 100)
-        
-        switch type {
-        case .Featured:
-            heightConstraint = featuredHeightConstraint
-            collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: K.Overview.featuredCellHeight)
-            break
-        case .RegularHasSecondary:
-            heightConstraint = regularHeightSecondaryConstraint
-            collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: K.Overview.regularHeightWithSecondary)
-            break
-        default:
-            heightConstraint = regularHeightConstraint
-            collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: K.Overview.regularHeight)
-            break
-        }
-        
+        let heightConstant: CGFloat = type == .Featured ? -100 : 35
+        let heightConstraint: NSLayoutConstraint = heightAnchor.constraint(equalToConstant: T.Height.Cell(type: type) + heightConstant)
         NSLayoutConstraint.activate([
             heightConstraint,
             
             header.topAnchor.constraint(equalTo: topAnchor),
             header.heightAnchor.constraint(equalToConstant: 30),
-            header.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            header.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            header.leadingAnchor.constraint(equalTo: leadingAnchor, constant: T.Spacing.Horizontal()),
+            header.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -T.Spacing.Horizontal()),
         ])
         
         var collectionViewLeading: NSLayoutConstraint!
         var collectionViewTrailing: NSLayoutConstraint!
-        
+        let collectionViewHeight: NSLayoutConstraint = collectionView.heightAnchor.constraint(equalToConstant: T.Height.Cell(type: type))
         if #available(iOS 11, *) {
             collectionViewLeading = collectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor)
             collectionViewTrailing = collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
@@ -114,23 +87,23 @@ extension GenericCollectionView {
             collectionViewLeading = collectionView.leadingAnchor.constraint(equalTo: leadingAnchor)
             collectionViewTrailing = collectionView.trailingAnchor.constraint(equalTo: trailingAnchor)
         }
-        
         let collectionViewConstraints: [NSLayoutConstraint] = [
             collectionViewHeight,
             collectionViewLeading,
             collectionViewTrailing,
-            collectionView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 2)
+            collectionView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: T.Spacing.Vertical(size: .small))
         ]
         NSLayoutConstraint.activate(collectionViewConstraints)
     }
 }
 
+// MARK: - UICollectionViewDelegateFlowLayout
 extension GenericCollectionView: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var width: CGFloat = K.Poster.width
+        var width: CGFloat = T.Width.Cell(type: .Regular)
         
         if type == .Featured {
-            width = K.Overview.featuredCellWidth
+            width = T.Width.Cell(type: .Featured)
         }
         return CGSize(width: width, height: collectionView.frame.height)
     }

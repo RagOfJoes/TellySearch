@@ -41,7 +41,7 @@ class EpisodeView: UIViewController {
     }()
     
     private lazy var guestStars: CastCollectionView = {
-        let guestStars = CastCollectionView(.RegularHasSecondary)
+        let guestStars = CastCollectionView(.RegularSecondary)
         return guestStars
     }()
     
@@ -58,7 +58,7 @@ class EpisodeView: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = episode.name
+        setupNav()
         view.backgroundColor = colors.background
         
         view.addSubview(scrollView)
@@ -87,6 +87,23 @@ class EpisodeView: UIViewController {
 
 // MARK: - Views Setup
 extension EpisodeView {
+    @objc func onBackButton() {
+        dismiss(animated: true)
+    }
+    
+    private func setupNav() {
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.setBackgroundImage(UIImage.from(color: colors.background), for: .default)
+        
+        navigationController?.navigationBar.tintColor = colors.primary
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: colors.primary!]
+
+        let backBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(onBackButton))
+        navigationItem.title = episode.name
+        navigationItem.rightBarButtonItem = backBarButton
+    }
+    
     private func setupAnchor() {
         let scrollViewConstraints: [NSLayoutConstraint] = [
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -107,29 +124,29 @@ extension EpisodeView {
         let backdropConstraints: [NSLayoutConstraint] = [
             backdrop.topAnchor.constraint(equalTo: containerView.topAnchor),
             backdrop.heightAnchor.constraint(equalToConstant: SeasonsViewCell.backdropHeight),
-            backdrop.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-            backdrop.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20)
+            backdrop.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
+            backdrop.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(backdropConstraints)
         
         let airDateConstraints: [NSLayoutConstraint] = [
-            airDate.topAnchor.constraint(equalTo: backdrop.bottomAnchor, constant: 35),
-            airDate.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-            airDate.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20)
+            airDate.topAnchor.constraint(equalTo: backdrop.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
+            airDate.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
+            airDate.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(airDateConstraints)
         
         let overviewConstraints: [NSLayoutConstraint] = [
-            overview.topAnchor.constraint(equalTo: airDate.bottomAnchor, constant: 35),
-            overview.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-            overview.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20)
+            overview.topAnchor.constraint(equalTo: airDate.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
+            overview.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
+            overview.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(overviewConstraints)
         
         let guestStarsConstraints: [NSLayoutConstraint] = [
             guestStars.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             guestStars.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            guestStars.topAnchor.constraint(equalTo: overview.bottomAnchor, constant: 35)
+            guestStars.topAnchor.constraint(equalTo: overview.bottomAnchor, constant: T.Spacing.Vertical(size: .large))
         ]
         NSLayoutConstraint.activate(guestStarsConstraints)
     }
@@ -165,7 +182,7 @@ extension EpisodeView {
     private func configureSubviews() {
         let placeholder = UIImage(named: "placeholderBackdrop")
         if let urlString = episode.backdrop {
-            let validURL = URL(string: K.Backdrop.URL + urlString)
+            let validURL = URL(string: K.URL.Backdrop + urlString)
             let options: KingfisherOptionsInfo = [
                 .scaleFactor(UIScreen.main.scale),
                 .transition(.fade(1)),

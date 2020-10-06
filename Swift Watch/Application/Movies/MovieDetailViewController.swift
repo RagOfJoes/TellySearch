@@ -41,7 +41,7 @@ class MovieDetailViewController: UIViewController {
     }()
     
     private lazy var castCollectionView: CastCollectionView = {
-        let castCollectionView = CastCollectionView(.RegularHasSecondary)
+        let castCollectionView = CastCollectionView(.RegularSecondary)
         castCollectionView.delegate = self
         return castCollectionView
     }()
@@ -57,8 +57,8 @@ class MovieDetailViewController: UIViewController {
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        stackView.setCustomSpacing(20, after: castCollectionView)
-        stackView.setCustomSpacing(20, after: recommendationsView)
+        stackView.setCustomSpacing(T.Spacing.Vertical(size: .large), after: castCollectionView)
+        stackView.setCustomSpacing(T.Spacing.Vertical(size: .large), after: recommendationsView)
         
         return stackView
     }()
@@ -146,9 +146,6 @@ extension MovieDetailViewController {
         if disappearing {
             navigationController?.navigationBar.shadowImage = UIImage()
             navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-            
-            guard let tbc = tabBarController as? TabBarController else { return }
-            tbc.hideTabBar(hide: true)
         } else {
             navigationController?.navigationBar.shadowImage = nil
             navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
@@ -156,10 +153,10 @@ extension MovieDetailViewController {
             UIView.animate(withDuration: 0.25) {
                 self.navigationController?.navigationBar.prefersLargeTitles = true
             }
-            
-            guard let tbc = tabBarController as? TabBarController else { return }
-            tbc.hideTabBar(hide: false)
         }
+        
+        guard let tbc = tabBarController as? TabBarController else { return }
+        tbc.hideTabBar(hide: disappearing)
     }
     
     private func setupAnchors() {
@@ -189,14 +186,14 @@ extension MovieDetailViewController {
         let directedByConstraints: [NSLayoutConstraint] = [
             directedBy.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             directedBy.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            directedBy.topAnchor.constraint(equalTo: backdropDetail.bottomAnchor, constant: 20),
+            directedBy.topAnchor.constraint(equalTo: backdropDetail.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
         ]
         NSLayoutConstraint.activate(directedByConstraints)
         
         let overviewStackConstraints: [NSLayoutConstraint] = [
-            overviewStack.topAnchor.constraint(equalTo: directedBy.bottomAnchor, constant: 20),
-            overviewStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-            overviewStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20)
+            overviewStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
+            overviewStack.topAnchor.constraint(equalTo: directedBy.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
+            overviewStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(overviewStackConstraints)
         
@@ -212,7 +209,7 @@ extension MovieDetailViewController {
         let stackViewConstraints: [NSLayoutConstraint] = [
             stackViewLeadingAnchor,
             stackViewTrailingAnhor,
-            stackView.topAnchor.constraint(equalTo: overviewStack.bottomAnchor, constant: 20)
+            stackView.topAnchor.constraint(equalTo: overviewStack.bottomAnchor, constant: T.Spacing.Vertical(size: .large))
         ]
         NSLayoutConstraint.activate(stackViewConstraints)
     }
@@ -243,8 +240,8 @@ extension MovieDetailViewController {
             let title = self?.movie.title
             let releaseDate = self?.movie.releaseDate
             
-            let posterURL = self?.movie.posterPath != nil ? K.Poster.URL + (self?.movie.posterPath!)! : nil
-            let backdropURL = self?.movie.backdropPath != nil ? K.Backdrop.URL + (self?.movie.backdropPath!)! : nil
+            let posterURL = self?.movie.posterPath != nil ? K.URL.Poster + (self?.movie.posterPath!)! : nil
+            let backdropURL = self?.movie.backdropPath != nil ? K.URL.Backdrop + (self?.movie.backdropPath!)! : nil
             
             // Return Void Promise to allow Recommendations to setup UI
             self?.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate)
@@ -330,7 +327,7 @@ extension MovieDetailViewController: BackdropDetailDelegate {
                 self.directedBy.configure(with: safeDirectors, colors: colors, and: "Directed By")
             } else {
                 self.directedBy.removeFromSuperview()
-                self.overviewStack.topAnchor.constraint(equalTo: self.backdropDetail.bottomAnchor, constant: 20).isActive = true
+                self.overviewStack.topAnchor.constraint(equalTo: self.backdropDetail.bottomAnchor, constant: T.Spacing.Vertical(size: .large)).isActive = true
             }
             
             // Setup CollectionViews

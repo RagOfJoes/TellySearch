@@ -9,10 +9,10 @@
 import UIKit
 
 class OverviewHeader: UIView {
-    lazy var title: UILabel = {
+    private lazy var title: UILabel = {
         let title = UILabel()
-        title.setupFont(size: 22, weight: .bold)
         title.textColor = UIColor(named: "primaryTextColor")
+        title.font = T.Typography(variant: .HeadingOne).font
         title.translatesAutoresizingMaskIntoConstraints = false
         
         return title
@@ -34,9 +34,9 @@ class OverviewHeader: UIView {
         addSubview(title)
         
         NSLayoutConstraint.activate([
-            title.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
-            title.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            title.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20)
+            title.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -T.Spacing.Vertical()),
+            title.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: T.Spacing.Horizontal()),
+            title.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -T.Spacing.Horizontal())
         ])
     }
     

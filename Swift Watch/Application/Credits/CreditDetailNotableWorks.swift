@@ -20,7 +20,7 @@ class CreditDetailNotableWorks: GenericCollectionView {
     
     init(colors: UIImageColors) {
         self.colors = colors
-        super.init(.RegularHasSecondary)
+        super.init(.RegularSecondary)
     }
     
     func configure(with media: [Media]) {
@@ -60,7 +60,7 @@ extension CreditDetailNotableWorks {
             let primary = media.name ?? media.title ?? "-"
             let secondary = media.character ?? media.job ?? "-"
             if let safePoster = media.posterPath {
-                cell.configure(primary: primary, secondary: secondary, image: K.Poster.URL + safePoster, colors: colors)
+                cell.configure(primary: primary, secondary: secondary, image: K.URL.Poster + safePoster, colors: colors)
             } else {
                 cell.configure(primary: primary, secondary: secondary, colors: colors)
             }

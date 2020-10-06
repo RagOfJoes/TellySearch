@@ -56,7 +56,7 @@ extension CastCollectionView {
                 cell.configure(primary: cast.name, secondary: cast.character, colors: safeColors)
                 return cell
             }
-            cell.configure(primary: cast.name, secondary: cast.character, image: K.Credits.profileURL + profile, colors: safeColors)
+            cell.configure(primary: cast.name, secondary: cast.character, image: K.URL.Poster + profile, colors: safeColors)
         }
         
         return cell

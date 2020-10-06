@@ -123,6 +123,7 @@ extension FloatingTabBarView {
             layer.shadowColor = UIColor.black.cgColor
             layer.rasterizationScale = UIScreen.main.scale
             layer.shadowOffset = CGSize(width: 0, height: 0)
+            layer.shadowPath = UIBezierPath(rect: bounds).cgPath
         }
     }
     

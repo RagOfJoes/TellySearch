@@ -52,7 +52,7 @@ class InfoStackView: UIStackView {
         return valueLabel
     }()
     
-    init(using colors: UIImageColors? = nil, hasReadMore: Bool = false, fontSize: (CGFloat, CGFloat) = (18, 14), fontWeight: (UIFont.Weight, UIFont.Weight) = (.bold, .medium)) {
+    init(using colors: UIImageColors? = nil, hasReadMore: Bool = false, fontSize: (CGFloat, CGFloat) = (T.Typography.Sizes[.Title] ?? 18, T.Typography.Sizes[.Body] ?? 14), fontWeight: (UIFont.Weight, UIFont.Weight) = (T.Typography.Weights[.Title] ?? .bold, T.Typography.Weights[.Body] ?? .medium)) {
         super.init(frame: .zero)
         axis = .vertical
         translatesAutoresizingMaskIntoConstraints = false
@@ -62,7 +62,7 @@ class InfoStackView: UIStackView {
         
         addArrangedSubview(titleStackView)
         addArrangedSubview(valueLabel)
-        setCustomSpacing(2, after: titleStackView)
+        setCustomSpacing(T.Spacing.Vertical(size: .small), after: titleStackView)
         
         isSkeletonable = true
         
@@ -133,8 +133,8 @@ extension InfoStackView {
         
         let placeholderText: String = "Lorem"
         NSLayoutConstraint.activate([
-            titleLabel.heightAnchor.constraint(equalToConstant: placeholderText.height(font: titleLabel.font) + 2),
-            valueLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: placeholderText.height(font: valueLabel.font))
+            valueLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: placeholderText.height(font: valueLabel.font)),
+            titleLabel.heightAnchor.constraint(equalToConstant: placeholderText.height(font: titleLabel.font) + T.Spacing.Vertical(size: .small))
         ])
     }
     

@@ -49,7 +49,7 @@ extension MovieDetailRecommendations {
         
         if let movie = movies?[indexPath.row] {
             if let safePoster = movie.posterPath {
-                cell.configure(primary: movie.title, image: K.Poster.URL + safePoster, colors: colors)
+                cell.configure(primary: movie.title, image: K.URL.Poster + safePoster, colors: colors)
             } else {
                 cell.configure(primary: movie.title, colors: colors)
             }
