@@ -10,7 +10,11 @@ import UIKit
 import Kingfisher
 
 class TabBarController: UITabBarController {
-    let floatingTabBarView: FloatingTabBarView = FloatingTabBarView(items: ["movies", "shows"], backgroundColor: UIColor(named: "tabBarColor"))
+    private lazy var floatingTabBarView: FloatingTabBarView = {
+        let floatingTabBarView: FloatingTabBarView = FloatingTabBarView(items: ["movies", "shows", "search"], shouldBlur: false)
+        floatingTabBarView.backgroundColor = UIColor(named: "tabBarColor")
+        return floatingTabBarView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
