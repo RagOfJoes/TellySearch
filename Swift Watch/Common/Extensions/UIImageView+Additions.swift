@@ -17,12 +17,15 @@ extension UIImageView {
         if completionHandler != nil {
             kf.setImage(with: url, placeholder: placeholder, options: options, completionHandler: completionHandler)
         } else {
-            kf.setImage(with: url, placeholder: placeholder, options: options, completionHandler:  { result in
+            kf.setImage(with: url, placeholder: placeholder, options: options, completionHandler:  { [weak self] result in
                 switch result {
                 case .success:
                     return
-                case .failure:
-                    self.image = placeholder
+                case .failure(let e):
+                    // If Image actually failed to Fetch
+                    if !e.isTaskCancelled && !e.isNotCurrentTask {
+                        self?.image = placeholder
+                    }
                     return
                 }
             })
