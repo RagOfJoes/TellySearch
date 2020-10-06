@@ -181,6 +181,7 @@
 		D6C39B0B24EBD1810033C11B /* MovieFeaturedCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieFeaturedCollectionView.swift; sourceTree = "<group>"; };
 		D6C39B0D24F43E820033C11B /* PersonDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonDetail.swift; sourceTree = "<group>"; };
 		D6C39B1324F4B5400033C11B /* Media.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
+		D6CB0EC8252BB73000F46C02 /* search.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = search.pdf; sourceTree = "<group>"; };
 		D6D63BB8250589EA002C60FA /* ShowsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowsCollectionView.swift; sourceTree = "<group>"; };
 		D6D63BBA25058B26002C60FA /* ShowsFeaturedCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowsFeaturedCollectionView.swift; sourceTree = "<group>"; };
 		D6D63BBC25058D63002C60FA /* Show.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Show.swift; sourceTree = "<group>"; };
@@ -365,6 +366,7 @@
 				D65994B524D1E45F003C7DF9 /* placeholderPoster.pdf */,
 				D6689DC024DA11F80061C45C /* placeholderBackdrop_dark.pdf */,
 				D6689DC124DA11F90061C45C /* placeholderBackdrop.pdf */,
+				D6CB0EC8252BB73000F46C02 /* search.pdf */,
 				D65994B424D1E45F003C7DF9 /* placeholderPoster_dark.pdf */,
 				D6EE659F24CAAE9C0033C9F2 /* movies.pdf */,
 				D6EE659E24CAAE9C0033C9F2 /* shows.pdf */,
@@ -593,6 +595,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6CB0EC9252BB73000F46C02 /* search.pdf in Resources */,
 				D6464FD224CA306F00C4497E /* LaunchScreen.storyboard in Resources */,
 				D6EE65A124CAAE9C0033C9F2 /* movies.pdf in Resources */,
 				D6689DC324DA11F90061C45C /* placeholderBackdrop.pdf in Resources */,
