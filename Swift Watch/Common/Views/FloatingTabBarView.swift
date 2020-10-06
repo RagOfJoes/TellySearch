@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol FloatingTabBarViewDelegate: AnyObject {
+protocol FloatingTabBarViewDelegate: class {
     func did(selectIndex: Int)
 }
 
@@ -18,30 +18,30 @@ protocol FloatingTabBarViewDelegate: AnyObject {
  Initialize by defining an Array of Image Names and a (optional) background Color
  */
 class FloatingTabBarView: UIView {
+    // MARK: - Internal Properties
+    var padding: CGFloat = 16
+    var cornerRadius: CGFloat = 20
+    
+    private var buttons: [UIButton] = []
+    
     weak var delegate: FloatingTabBarViewDelegate?
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
     
-    var buttons: [UIButton] = []
-    
-    init(items: [String], backgroundColor bgColor: UIColor?, shouldBlur: Bool = true) {
+    // MARK: - Life Cycle
+    init(items: [String], shouldBlur: Bool = true) {
         super.init(frame: .zero)
-        var _bgColor: UIColor!
-        if bgColor == nil {
-            if #available(iOS 13, *) {
-                _bgColor = .systemBackground
-            } else {
-                if #available(iOS 12, *), traitCollection.userInterfaceStyle == .dark {
-                    _bgColor = .black
-                } else {
-                    _bgColor = .white
-                }
-            }
-        } else {
-            _bgColor = bgColor
+        setupBackground()
+        if shouldBlur {
+            setupBlurView()
         }
         
-        backgroundColor = _bgColor
-        
-        setupStackView(with: items, shouldBlur: shouldBlur)
+        // Setup StackView
+        addSubview(stackView)
+        setupStackView(with: items)
         
         UIView.animate(withDuration: 0.2) {
             self.updateUI(selectedIndex: 0)
@@ -50,67 +50,8 @@ class FloatingTabBarView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        let cornerRadius: CGFloat = 20
-        // Rounded Corners
         layer.cornerRadius = cornerRadius
-    }
-    
-    private func setupStackView(with items: [String], shouldBlur: Bool) {
-        for (index, item) in items.enumerated() {
-            let normalImage = UIImage(named: item)?.withRenderingMode(.alwaysTemplate) ?? UIImage()
-            let selectedImage = UIImage(named: "\(item).fill")?.withRenderingMode(.alwaysTemplate) ?? normalImage
-            
-            let button: UIButton = UIButton.createButton(normalImage: normalImage, selectedImage: selectedImage, index: index)
-            button.addTarget(self, action: #selector(changeTab(_:)), for: .touchUpInside)
-            buttons.append(button)
-        }
-        
-        let stackView = UIStackView(arrangedSubviews: buttons)
-        
-        addSubview(stackView)
-        stackView.fillSuperview(padding: .init(top: 0, left: 16, bottom: 0, right: 16))
-        
-        if shouldBlur {
-            backgroundColor = backgroundColor?.withAlphaComponent(0.2)
-            
-            var blurEffect: UIBlurEffect!
-            
-            if #available(iOS 10.0, *) {
-                blurEffect = UIBlurEffect(style: .dark)
-            } else {
-                blurEffect = UIBlurEffect(style: .light)
-            }
-            
-            let blurView = UIVisualEffectView(effect: blurEffect)
-            blurView.frame = bounds
-            blurView.roundCorners(.allCorners, radius: 20)
-            blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            
-            insertSubview(blurView, at: 0)
-        }
-    }
-    
-    @objc private func changeTab(_ sender: UIButton) {
-        delegate?.did(selectIndex: sender.tag)
-        // updateUI(selectedIndex: sender.tag)
-        UIView.animate(withDuration: 0.2) {
-            self.updateUI(selectedIndex: sender.tag)
-        }
-    }
-    
-    private func updateUI(selectedIndex: Int) {
-        for (index, button) in buttons.enumerated() {
-            if index == selectedIndex {
-                button.alpha = 1.0
-                button.isSelected = true
-                button.tintColor = .systemOrange
-            } else {
-                button.alpha = 0.4
-                button.isSelected = false
-                button.tintColor = .systemOrange
-            }
-        }
+        setupShadow()
     }
     
     func hideTabBar(_ hide: Bool) {
@@ -129,5 +70,113 @@ class FloatingTabBarView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: - Helpers
+extension FloatingTabBarView {
+    private func updateUI(selectedIndex: Int) {
+        for (index, button) in buttons.enumerated() {
+            let tintColor: UIColor = .systemOrange
+            let isSelected: Bool = index == selectedIndex
+            let alpha: CGFloat = index == selectedIndex ? 1.0 : 0.4
+            
+            button.alpha = alpha
+            button.tintColor = tintColor
+            button.isSelected = isSelected
+        }
+    }
+    
+    @objc private func changeTab(_ sender: UIButton) {
+        delegate?.did(selectIndex: sender.tag)
+        
+        UIView.animate(withDuration: 0.2) {
+            self.updateUI(selectedIndex: sender.tag)
+        }
+    }
+}
+
+// MARK: - View Setup
+extension FloatingTabBarView {
+    private func setupBackground() {
+        var bg: UIColor
+        if #available(iOS 13, *) {
+            bg = .systemBackground
+        } else {
+            if #available(iOS 12, *), traitCollection.userInterfaceStyle == .dark {
+                bg = .black
+            } else {
+                bg = .white
+            }
+        }
+        backgroundColor = bg
+    }
+    
+    private func setupShadow() {
+        if #available(iOS 12, *), traitCollection.userInterfaceStyle == .dark {
+            
+        } else {
+            layer.shadowOpacity = 0.18
+            layer.masksToBounds = false
+            layer.shouldRasterize = true
+            layer.shadowRadius = cornerRadius
+            layer.shadowColor = UIColor.black.cgColor
+            layer.rasterizationScale = UIScreen.main.scale
+            layer.shadowOffset = CGSize(width: 0, height: 0)
+        }
+    }
+    
+    private func setupBlurView() {
+        backgroundColor = .clear
+        
+        var blurEffect: UIBlurEffect!
+        
+        if #available(iOS 10.0, *) {
+            blurEffect = UIBlurEffect(style: .dark)
+        } else {
+            blurEffect = UIBlurEffect(style: .light)
+        }
+        
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.frame = bounds
+        blurView.roundCorners(.allCorners, radius: 20)
+        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        insertSubview(blurView, at: 0)
+    }
+}
+
+// MARK: - Subviews Setup
+extension FloatingTabBarView {
+    private func setupStackView(with items: [String]) {
+        buttons = items.enumerated().map({ (item) -> UIButton in
+            let (offset, element) = item
+            let normalImage = UIImage(named: element)?.withRenderingMode(.alwaysTemplate) ?? UIImage()
+            let selectedImage = UIImage(named: "\(element).fill")?.withRenderingMode(.alwaysTemplate) ?? normalImage
+            
+            let button: UIButton = .createButton(normalImage: normalImage, selectedImage: selectedImage, index: offset)
+            button.addTarget(self, action: #selector(changeTab(_:)), for: .touchUpInside)
+            return button
+        })
+        
+        for button in buttons {
+            DispatchQueue.main.async {
+                self.stackView.addArrangedSubview(button)
+            }
+        }
+        stackView.fillSuperview(padding: .init(top: 0, left: padding, bottom: 0, right: padding))
+    }
+}
+
+extension UIButton {
+    static func createButton(normalImage: UIImage, selectedImage: UIImage?, index: Int) -> UIButton {
+        let button = UIButton()
+        button.constrainWidth(constant: 60)
+        button.constrainHeight(constant: 60)
+        button.setImage(normalImage, for: .normal)
+        button.setImage(selectedImage ?? normalImage, for: .selected)
+        button.tag = index
+        button.adjustsImageWhenHighlighted = false
+                
+        return button
     }
 }
