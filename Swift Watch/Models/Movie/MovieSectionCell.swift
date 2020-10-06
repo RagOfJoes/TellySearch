@@ -10,5 +10,5 @@ import Foundation
 
 struct MovieSectionCell {
     let section: MovieSection
-    let type: K.Overview.CellType
+    let type: T.CellType
 }

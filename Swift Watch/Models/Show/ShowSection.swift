@@ -9,9 +9,7 @@
 import Promises
 import Foundation
 
-struct ShowSection: Codable {
-    static let baseURL = "https://api.themoviedb.org/3/tv"
-    
+struct ShowSection: Codable {    
     // Section Title
     let title: String?
     let results: [Show]?
@@ -23,7 +21,7 @@ struct ShowSection: Codable {
     
     func fetchSection(with type: FetchTypes) -> Promise<Data> {
         return Promise<Data>(on: .global(qos: .userInitiated)) { (fullfill, reject) in
-            if let url = URL(string: "\(ShowSection.baseURL)/\(type.rawValue)\(K.CommonQuery)") {
+            if let url = URL(string: "\(K.URL.Show)/\(type.rawValue)\(K.CommonQuery)") {
                 let session = URLSession(configuration: .default)
                 
                 session.dataTask(with: url, completionHandler: { (data, response, error) in

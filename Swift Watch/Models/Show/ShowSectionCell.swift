@@ -10,5 +10,5 @@ import Foundation
 
 struct ShowSectionCell {
     let section: ShowSection
-    let type: K.Overview.CellType
+    let type: T.CellType
 }

@@ -54,7 +54,7 @@ extension Movie {
                 return
             }
             
-            let urlString = "\(MovieSection.baseURL)/\(id)\(K.CommonQuery)&append_to_response=credits,recommendations"
+            let urlString = "\(K.URL.Movie)/\(id)\(K.CommonQuery)&append_to_response=credits,recommendations"
             if let url = URL(string: urlString) {
                 let session = URLSession(configuration: .default)
                 

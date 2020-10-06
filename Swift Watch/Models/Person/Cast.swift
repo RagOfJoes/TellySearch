@@ -37,7 +37,7 @@ extension Cast {
                 return
             }
             
-            let urlString = "\(K.Credits.baseURL)/\(id)\(K.CommonQuery)&append_to_response=combined_credits"
+            let urlString = "\(K.URL.Credits)/\(id)\(K.CommonQuery)&append_to_response=combined_credits"
             if let url = URL(string: urlString) {
                 let session = URLSession(configuration: .default)
                 

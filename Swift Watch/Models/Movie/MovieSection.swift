@@ -10,9 +10,7 @@ import Promises
 import Foundation
 
 // MARK: - MovieSection
-struct MovieSection: Codable {
-    static let baseURL = "https://api.themoviedb.org/3/movie"
-    
+struct MovieSection: Codable {    
     // Section Title
     let title: String?
     let results: [Movie]?
@@ -24,7 +22,7 @@ struct MovieSection: Codable {
     
     func fetchSection(with type: FetchTypes) -> Promise<Data> {
         return Promise<Data>(on: .global(qos: .userInitiated)) { (fullfill, reject) in
-            if let url = URL(string: "\(MovieSection.baseURL)/\(type.rawValue)\(K.CommonQuery)") {
+            if let url = URL(string: "\(K.URL.Movie)/\(type.rawValue)\(K.CommonQuery)") {
                 let session = URLSession(configuration: .default)
                 
                 session.dataTask(with: url, completionHandler: { (data, response, error) in
