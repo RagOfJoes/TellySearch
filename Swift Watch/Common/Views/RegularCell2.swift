@@ -1,8 +1,8 @@
 //
-//  RegularCell.swift
+//  RegularCell2.swift
 //  Swift Watch
 //
-//  Created by Victor Ragojos on 7/24/20.
+//  Created by Victor Ragojos on 10/7/20.
 //  Copyright © 2020 Victor Ragojos. All rights reserved.
 //
 
@@ -10,11 +10,11 @@ import UIKit
 import Kingfisher
 import SkeletonView
 
-protocol ConfigurableRegularCell: ReusableCell {
-    func configure(primary: String, image: String?, colors: UIImageColors?)
+protocol ConfigurableRegularCell2: ReusableCell {
+    func configure(primary: String, secondary: String?, image: String?, colors: UIImageColors?)
 }
 
-class RegularCell: UICollectionViewCell {
+class RegularCell2: UICollectionViewCell {
     private lazy var primaryLabel: UILabel = {
         let primaryLabel = UILabel()
         primaryLabel.numberOfLines = 2
@@ -23,6 +23,16 @@ class RegularCell: UICollectionViewCell {
         primaryLabel.font = T.Typography(variant: .Body, weight: .bold).font
         
         return primaryLabel
+    }()
+    
+    private lazy var secondaryLabel: UILabel = {
+        let secondaryLabel = UILabel()
+        secondaryLabel.numberOfLines = 2
+        secondaryLabel.textColor = UIColor(named: "secondaryTextColor")
+        secondaryLabel.translatesAutoresizingMaskIntoConstraints = false
+        secondaryLabel.font = T.Typography(variant: .Subtitle, weight: .medium).font
+        
+        return secondaryLabel
     }()
     
     private lazy var imageView: UIImageView = {
@@ -44,6 +54,7 @@ class RegularCell: UICollectionViewCell {
         
         contentView.addSubview(imageView)
         contentView.addSubview(primaryLabel)
+        contentView.addSubview(secondaryLabel)
         
         setupAnchors()
         isSkeletonable = true
@@ -60,13 +71,16 @@ class RegularCell: UICollectionViewCell {
     }
 }
 
-extension RegularCell {
+extension RegularCell2 {
     private func getLabelHeight() -> CGFloat {
         let placeholder = "Lorem"
         let primaryFont = T.Typography(variant: .Body, weight: .bold).font
-        let primaryHeight = placeholder.height(font: primaryFont) * CGFloat(primaryLabel.numberOfLines) + T.Spacing.Vertical(size: .small)
+        let primaryHeight = placeholder.height(font: primaryFont) * 2 + T.Spacing.Vertical(size: .small)
         
-        return primaryHeight
+        let secondaryFont = T.Typography(variant: .Subtitle, weight: .medium).font
+        let secondaryHeight = placeholder.height(font: secondaryFont) * 2
+        
+        return primaryHeight + secondaryHeight
     }
     
     private func setupAnchors() {
@@ -79,15 +93,20 @@ extension RegularCell {
             
             primaryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             primaryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            primaryLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: T.Spacing.Vertical(size: .small))
+            primaryLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: T.Spacing.Vertical(size: .small)),
+            
+            secondaryLabel.topAnchor.constraint(equalTo: primaryLabel.bottomAnchor),
+            secondaryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            secondaryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
     }
 }
 
-extension RegularCell: ConfigurableRegularCell {
-    func configure(primary: String, image: String? = nil, colors: UIImageColors? = nil) {
+extension RegularCell2: ConfigurableRegularCell2 {
+    func configure(primary: String, secondary: String? = "-", image: String? = nil, colors: UIImageColors? = nil) {
         DispatchQueue.main.async {
             self.primaryLabel.text = primary
+            self.secondaryLabel.text = secondary
         }
         
         let placeholder = UIImage(named: "placeholderPoster")
@@ -109,5 +128,6 @@ extension RegularCell: ConfigurableRegularCell {
     
     private func setupColors(colors: UIImageColors) {
         primaryLabel.textColor = colors.primary
+        secondaryLabel.textColor = colors.secondary
     }
 }

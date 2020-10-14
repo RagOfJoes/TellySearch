@@ -52,7 +52,7 @@ extension CreditDetailNotableWorks {
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RegularCell.reuseIdentifier, for: indexPath) as? RegularCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RegularCell2.reuseIdentifier, for: indexPath) as? RegularCell2 else {
             return UICollectionViewCell()
         }
         

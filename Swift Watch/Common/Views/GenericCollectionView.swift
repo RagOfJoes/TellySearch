@@ -19,7 +19,6 @@ public class GenericCollectionView: UIView {
         header.isSkeletonable = true
         return header
     }()
-    
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView.createHorizontalCollectionView(minimumLineSpacing: T.Spacing.Horizontal(size: .small))
         collectionView.delegate = self
@@ -29,6 +28,8 @@ public class GenericCollectionView: UIView {
         // Only Register the Cell's that are required
         if type == .Featured {
             collectionView.register(FeaturedCell.self, forCellWithReuseIdentifier: FeaturedCell.reuseIdentifier)
+        } else if type == .RegularSecondary {
+            collectionView.register(RegularCell2.self, forCellWithReuseIdentifier: RegularCell2.reuseIdentifier)
         } else {
             collectionView.register(RegularCell.self, forCellWithReuseIdentifier: RegularCell.reuseIdentifier)
         }
@@ -126,6 +127,8 @@ extension GenericCollectionView: SkeletonCollectionViewDataSource {
     public func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
         if type == .Featured {
             return FeaturedCell.reuseIdentifier
+        } else if type == .RegularSecondary {
+            return RegularCell2.reuseIdentifier
         } else {
             return RegularCell.reuseIdentifier
         }

@@ -61,6 +61,7 @@
 		D6A4DF4D2523F1EF008495AD /* SeasonsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4DF4C2523F1EF008495AD /* SeasonsViewCell.swift */; };
 		D6A4DF622526409C008495AD /* SeasonsViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4DF612526409C008495AD /* SeasonsViewHeader.swift */; };
 		D6A4DF872527CEBA008495AD /* EpisodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4DF862527CEBA008495AD /* EpisodeView.swift */; };
+		D6A961D4252E36B40021D6CE /* RegularCell2.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A961D3252E36B40021D6CE /* RegularCell2.swift */; };
 		D6BA607D2502243500998093 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA607C2502243500998093 /* Constants.swift */; };
 		D6BA6087250224E100998093 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = D6BA6086250224E100998093 /* Keys.plist */; };
 		D6C39B0424EB64000033C11B /* UICollectionView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C39B0324EB64000033C11B /* UICollectionView+Additions.swift */; };
@@ -174,6 +175,7 @@
 		D6A4DF4C2523F1EF008495AD /* SeasonsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsViewCell.swift; sourceTree = "<group>"; };
 		D6A4DF612526409C008495AD /* SeasonsViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsViewHeader.swift; sourceTree = "<group>"; };
 		D6A4DF862527CEBA008495AD /* EpisodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeView.swift; sourceTree = "<group>"; };
+		D6A961D3252E36B40021D6CE /* RegularCell2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularCell2.swift; sourceTree = "<group>"; };
 		D6BA607C2502243500998093 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		D6BA6086250224E100998093 /* Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		D6C39B0324EB64000033C11B /* UICollectionView+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Additions.swift"; sourceTree = "<group>"; };
@@ -425,6 +427,7 @@
 				D6040F3124DCB02F0020815B /* Backdrop.swift */,
 				D650B98724CB9C5700DD1E61 /* ReusableCell.swift */,
 				D6689DC624DB4CAF0061C45C /* RegularCell.swift */,
+				D6A961D3252E36B40021D6CE /* RegularCell2.swift */,
 				D6C39B0724EBC8770033C11B /* FeaturedCell.swift */,
 				D64241A424F6C1E700D1372D /* PosterImageView.swift */,
 				D648C05024F8CB1E00733F8B /* InfoStackView.swift */,
@@ -769,6 +772,7 @@
 				D6A4DF402523E7D9008495AD /* SeasonDetail.swift in Sources */,
 				D6464FC624CA306E00C4497E /* AppDelegate.swift in Sources */,
 				D619A784251496E6002639B2 /* Season.swift in Sources */,
+				D6A961D4252E36B40021D6CE /* RegularCell2.swift in Sources */,
 				D611F76324CA753700B3FE6A /* UIView+Additions.swift in Sources */,
 				D62B4518251D072B00FF31DA /* Cache.swift in Sources */,
 				D6F545CF24FD5C0F00700677 /* CreditDetailNotableWorks.swift in Sources */,
