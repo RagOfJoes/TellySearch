@@ -25,9 +25,7 @@ class CreditDetailNotableWorks: GenericCollectionView {
     
     func configure(with media: [Media]) {
         self.media = media
-        setupHeader(title: "Notable Works", color: colors.primary)
-        
-        hideSkeleton()
+        setupHeader(title: "Notable Works", color: colors.primary)        
     }
     
     required init?(coder: NSCoder) {

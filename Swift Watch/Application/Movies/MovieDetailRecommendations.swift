@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SkeletonView
 
 protocol MovieDetailRecommendationsDelegate: class {
     func select(movie: Movie)
@@ -22,7 +21,6 @@ class MovieDetailRecommendations: GenericCollectionView {
         self.movies = movies
         self.colors = colors
         setupHeader(title: "Recommendations", color: self.colors?.primary)
-        hideSkeleton()
     }
 }
 

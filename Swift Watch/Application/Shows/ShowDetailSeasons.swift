@@ -23,7 +23,6 @@ class ShowDetailSeasons: GenericCollectionView {
         self.colors = colors
         self.seasons = seasons
         setupHeader(title: "Seasons", color: self.colors?.primary)
-        hideSkeleton()
     }
 }
 

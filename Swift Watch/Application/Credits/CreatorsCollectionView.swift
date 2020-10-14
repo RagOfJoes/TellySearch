@@ -44,9 +44,7 @@ class CreatorsCollectionView: UIView {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         
-        collectionView.isSkeletonable = true
-        collectionView.skeletonCornerRadius = 5
-        
+        collectionView.isSkeletonable = true        
         return collectionView
     }()
     
@@ -68,9 +66,6 @@ class CreatorsCollectionView: UIView {
         addSubview(header)
         addSubview(collectionView)
         isSkeletonable = true
-        collectionView.prepareSkeleton { (done) in
-            self.showAnimatedGradientSkeleton()
-        }
         setupAnchors()
     }
     

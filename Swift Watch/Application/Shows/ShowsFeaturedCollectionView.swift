@@ -27,7 +27,6 @@ class ShowsFeaturedCollectionView: CVTCell {
     func configure(shows: [Show], section: Int) {
         self.shows = shows
         self.section = section
-        hideSkeleton()
     }
     
     required init?(coder: NSCoder) {

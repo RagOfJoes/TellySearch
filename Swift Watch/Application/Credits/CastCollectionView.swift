@@ -22,7 +22,6 @@ class CastCollectionView: GenericCollectionView {
         self.colors = colors
         self.credits = credits
         setupHeader(title: title, color: colors.primary)
-        hideSkeleton()
     }
 }
 

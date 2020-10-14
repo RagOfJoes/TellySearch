@@ -15,6 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         guard #available(iOS 13, *) else {
+            SkeletonAppearance.default.tintColor = .silver
             SkeletonAppearance.default.gradient = SkeletonGradient(baseColor: .lightGray, secondaryColor: .darkGray)
             
             window = UIWindow()

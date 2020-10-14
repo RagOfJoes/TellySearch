@@ -28,7 +28,6 @@ class MovieCollectionView: CVTCell {
     func configure(movies: [Movie], section: Int) {
         self.movies = movies
         self.section = section
-        hideSkeleton()
     }
     
     required init?(coder: NSCoder) {

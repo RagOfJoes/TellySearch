@@ -60,6 +60,7 @@ class MovieDetailViewController: UIViewController {
         stackView.setCustomSpacing(T.Spacing.Vertical(size: .large), after: castCollectionView)
         stackView.setCustomSpacing(T.Spacing.Vertical(size: .large), after: recommendationsView)
         
+        stackView.isSkeletonable = true
         return stackView
     }()
     
@@ -90,8 +91,10 @@ class MovieDetailViewController: UIViewController {
         
         setupAnchors()
         
+        view.isSkeletonable = true
+        scrollView.isSkeletonable = true
         containerView.isSkeletonable = true
-        containerView.showAnimatedGradientSkeleton()
+        view.showAnimatedSkeleton()
         setupDetailUI()
     }
     
@@ -216,7 +219,7 @@ extension MovieDetailViewController {
     
     private func updateContentSize() {
         let offsetHeight: CGFloat = K.ScrollOffsetHeight
-        let screen = UIScreen.main.bounds
+        let screen = UIApplication.shared.windows[0].bounds
         
         let stackViewY = stackView.frame.maxY + offsetHeight
         if stackViewY > screen.height {
@@ -337,7 +340,7 @@ extension MovieDetailViewController: BackdropDetailDelegate {
             if let safeRecommendations = self.detail?.recommendations?.results {
                 self.setupRecommendationsView(with: safeRecommendations, using: colors)
             }
-            self.containerView.hideSkeleton()
+            self.view.hideSkeleton()
         }
     }
 }

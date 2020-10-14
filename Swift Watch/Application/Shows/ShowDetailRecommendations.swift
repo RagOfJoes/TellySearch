@@ -23,7 +23,6 @@ class ShowDetailRecommendations: GenericCollectionView {
         self.shows = shows
         self.colors = colors
         setupHeader(title: "Recommendations", color: colors.primary)
-        hideSkeleton()
     }
 }
 

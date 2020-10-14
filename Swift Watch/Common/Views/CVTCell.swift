@@ -50,7 +50,7 @@ class CVTCell: UITableViewCell {
         
         isSkeletonable = true
         collectionView.prepareSkeleton { [weak self] (done) in
-            self?.showAnimatedGradientSkeleton()
+            self?.showAnimatedSkeleton()
         }
     }
     

@@ -68,6 +68,11 @@ class EpisodeView: UIViewController {
         containerView.addSubview(overview)
         containerView.addSubview(guestStars)
         
+        view.isSkeletonable = true
+        scrollView.isSkeletonable = true
+        containerView.isSkeletonable = true
+        view.showAnimatedSkeleton()
+        
         setupAnchor()
     }
     

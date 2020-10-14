@@ -66,6 +66,7 @@ class ShowDetailViewController: UIViewController {
         stackView.setCustomSpacing(T.Spacing.Vertical(size: .large), after: castCollectionView)
         stackView.setCustomSpacing(T.Spacing.Vertical(size: .large), after: recommendationsView)
         
+        stackView.isSkeletonable = true
         return stackView
     }()
     
@@ -95,8 +96,10 @@ class ShowDetailViewController: UIViewController {
         
         setupAnchors()
         
+        view.isSkeletonable = true
+        scrollView.isSkeletonable = true
         containerView.isSkeletonable = true
-        containerView.showAnimatedGradientSkeleton()
+        view.showAnimatedSkeleton()
         setupDetailUI()
     }
     
@@ -352,7 +355,7 @@ extension ShowDetailViewController: BackdropDetailDelegate {
             if let recommendations = self.detail?.recommendations?.results {
                 self.setupRecommendationsView(with: recommendations, using: colors)
             }
-            self.containerView.hideSkeleton()
+            self.view.hideSkeleton()
         }
     }
 }

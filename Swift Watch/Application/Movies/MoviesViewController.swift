@@ -48,7 +48,7 @@ class MoviesViewController: UIViewController  {
         tableView.fillSuperview()
         
         view.isSkeletonable = true
-        view.showAnimatedGradientSkeleton()
+        view.showAnimatedSkeleton()
         
         let promises = [
             sections[0].section.fetchSection(with: .popular),

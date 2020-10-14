@@ -158,7 +158,11 @@ class CreditDetailModal: UIViewController {
         containerView.addSubview(personStackView)
         containerView.addSubview(bodyStackView)
         containerView.addSubview(notableWorks)
-        containerView.showAnimatedGradientSkeleton()
+        
+        view.isSkeletonable = true
+        scrollView.isSkeletonable = true
+        containerView.isSkeletonable = true
+        containerView.showAnimatedSkeleton()
         
         setupAnchors()
         fetchDetails()
