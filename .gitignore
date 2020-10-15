@@ -93,3 +93,6 @@ iOSInjectionProject/
 
 Keys.plist
 *.xcscheme
+
+# OSX Generated Files
+.DS_Store
