@@ -420,11 +420,11 @@
 		2FDBB71A56C5243C7F2CE619230D1D62 /* PrepareForSkeletonProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PrepareForSkeletonProtocol.swift; path = Sources/Helpers/PrepareForSkeletonProtocol.swift; sourceTree = "<group>"; };
 		30232DEFE7C32742F3249E8078CC1389 /* FBLPromise+Timeout.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "FBLPromise+Timeout.m"; path = "Sources/FBLPromises/FBLPromise+Timeout.m"; sourceTree = "<group>"; };
 		313B98DCA96085825F13708BA795B5A7 /* Storage+Transform.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Storage+Transform.swift"; path = "Source/Shared/Storage/Storage+Transform.swift"; sourceTree = "<group>"; };
-		3347A1AB6546F0A3977529B8F199DC41 /* FBLPromises.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = FBLPromises.framework; path = PromisesObjC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3347A1AB6546F0A3977529B8F199DC41 /* FBLPromises.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBLPromises.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3487ED226DA9D205A6460FB317017F35 /* SkeletonView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SkeletonView.modulemap; sourceTree = "<group>"; };
 		3626AEE550B46357CA2D9A0C413F0B56 /* Promise+Await.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Promise+Await.swift"; path = "Sources/Promises/Promise+Await.swift"; sourceTree = "<group>"; };
 		37486584B0C3254E7A0D4CB6C407F1BD /* SkeletonAnimationBuilder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SkeletonAnimationBuilder.swift; path = Sources/SkeletonAnimationBuilder.swift; sourceTree = "<group>"; };
-		379E5319BC6B4AE5613DFF7EEEAA6905 /* Promises.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Promises.framework; path = PromisesSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		379E5319BC6B4AE5613DFF7EEEAA6905 /* Promises.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Promises.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		37B40F0D9F4F85E9F7B058D9B51AFAAB /* ImageView+Kingfisher.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "ImageView+Kingfisher.swift"; path = "Sources/Extensions/ImageView+Kingfisher.swift"; sourceTree = "<group>"; };
 		396FD873520339E074460A772C5D831C /* FBLPromise+Recover.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "FBLPromise+Recover.h"; path = "Sources/FBLPromises/include/FBLPromise+Recover.h"; sourceTree = "<group>"; };
 		3A4B515AB657EDD2AAA86625868DF2C8 /* Pods-TellySearch-TellySearchUITests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-TellySearch-TellySearchUITests.modulemap"; sourceTree = "<group>"; };
@@ -435,7 +435,7 @@
 		3F2235E4833BF2C91EEF06E1EF316C33 /* FBLPromise+All.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "FBLPromise+All.h"; path = "Sources/FBLPromises/include/FBLPromise+All.h"; sourceTree = "<group>"; };
 		40D729487A886895EEFD287CFBCBCA7F /* HybridStorage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HybridStorage.swift; path = Source/Shared/Storage/HybridStorage.swift; sourceTree = "<group>"; };
 		41003D30B4D0CAA7875DBBD7EB2DED13 /* Promise+Delay.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Promise+Delay.swift"; path = "Sources/Promises/Promise+Delay.swift"; sourceTree = "<group>"; };
-		416A60D7511044643CFD02A5C1469991 /* Pods_TellySearch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_TellySearch.framework; path = "Pods-TellySearch.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		416A60D7511044643CFD02A5C1469991 /* Pods_TellySearch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TellySearch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		419A7346B7BD89A7F8E36DF4678CF267 /* PromisesSwift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = PromisesSwift.release.xcconfig; sourceTree = "<group>"; };
 		43DCEA6B8F914DA2CD7315E11850D1C3 /* Pods-TellySearch-TellySearchUITests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-TellySearch-TellySearchUITests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		452F0560B80C01BB6D60701330526530 /* AsyncStorage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AsyncStorage.swift; path = Source/Shared/Storage/AsyncStorage.swift; sourceTree = "<group>"; };
@@ -461,7 +461,7 @@
 		5C82C228612FA834A63CBBFBAAF00205 /* Pods-TellySearchTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TellySearchTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCE5EE9F04A5A3B9AD864A5F6478DE9 /* Image.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Image.swift; path = Sources/Image/Image.swift; sourceTree = "<group>"; };
 		5DEFB95D3B3637ADC8EDE61991D7BE75 /* Cache-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Cache-Info.plist"; sourceTree = "<group>"; };
-		5EED80EC89C859783B963CA4AE64F1D6 /* Pods_TellySearchTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_TellySearchTests.framework; path = "Pods-TellySearchTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5EED80EC89C859783B963CA4AE64F1D6 /* Pods_TellySearchTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TellySearchTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FA79CECBEBB8D49538C7DB710A93AB1 /* ImageCache.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageCache.swift; path = Sources/Cache/ImageCache.swift; sourceTree = "<group>"; };
 		613FD4A688F99581B38C3A0A6A82A117 /* SkeletonTableViewProtocols.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SkeletonTableViewProtocols.swift; path = Sources/Collections/TableViews/SkeletonTableViewProtocols.swift; sourceTree = "<group>"; };
 		616A4EBC5F099AA4CF725748B412D8B2 /* RecoverableViewState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecoverableViewState.swift; path = Sources/Recoverable/RecoverableViewState.swift; sourceTree = "<group>"; };
@@ -478,7 +478,7 @@
 		70B828698331936DB56AD8071D23FB11 /* FBLPromise+Delay.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "FBLPromise+Delay.m"; path = "Sources/FBLPromises/FBLPromise+Delay.m"; sourceTree = "<group>"; };
 		720052C35FC68614A845795A1BD46AAB /* CollectionSkeletonProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CollectionSkeletonProtocol.swift; path = Sources/Collections/CollectionSkeletonProtocol.swift; sourceTree = "<group>"; };
 		7365A50E824D3707133BC6DA3205CC48 /* PromisesSwift-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "PromisesSwift-dummy.m"; sourceTree = "<group>"; };
-		736B64357A6C420C3A7062C6D479AC7F /* Cache.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Cache.framework; path = Cache.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		736B64357A6C420C3A7062C6D479AC7F /* Cache.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Cache.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		73B4FBAC6BBE0288A130A34C4F2BC245 /* Pods-TellySearch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TellySearch.debug.xcconfig"; sourceTree = "<group>"; };
 		76C3A08AD0673A3D9219929114BB1BBA /* AssociationPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AssociationPolicy.swift; path = Sources/Helpers/AssociationPolicy.swift; sourceTree = "<group>"; };
 		76E0214B4108DB7F1A140412F665B929 /* Pods-TellySearch.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-TellySearch.modulemap"; sourceTree = "<group>"; };
@@ -521,7 +521,7 @@
 		9B0854422474220BB9443972274E49EC /* Pods-TellySearchTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-TellySearchTests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		9C8CF212EC889152CF1FB097D8D55F97 /* PromisesSwift-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "PromisesSwift-Info.plist"; sourceTree = "<group>"; };
 		9D1CF3A1F70B2E987D77FC92C4BB1B25 /* GenericCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GenericCollectionView.swift; path = Sources/Collections/Generics/GenericCollectionView.swift; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A1E95CD1A7E6BD868770600CC641DD4F /* Pods-TellySearch-TellySearchUITests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TellySearch-TellySearchUITests-dummy.m"; sourceTree = "<group>"; };
 		A20FBB0368C80B4125B74C811BE30902 /* FBLPromise+Any.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "FBLPromise+Any.m"; path = "Sources/FBLPromises/FBLPromise+Any.m"; sourceTree = "<group>"; };
 		A33D9149B9A81EE869A487FF75A5B035 /* ImageDownloader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageDownloader.swift; path = Sources/Networking/ImageDownloader.swift; sourceTree = "<group>"; };
@@ -547,7 +547,7 @@
 		B4349DB26C47ED2BE436C683D690F524 /* ImageProcessor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageProcessor.swift; path = Sources/Image/ImageProcessor.swift; sourceTree = "<group>"; };
 		B48C950690B912605FD81D7DE136B488 /* SkeletonDebug.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SkeletonDebug.swift; path = Sources/Debug/SkeletonDebug.swift; sourceTree = "<group>"; };
 		B643CD58DFF65297C0014C79786104B9 /* Optional+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Optional+Extension.swift"; path = "Source/Shared/Library/Optional+Extension.swift"; sourceTree = "<group>"; };
-		B93B502B9A455E41ADEBBAB9AC68290C /* Pods_TellySearch_TellySearchUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_TellySearch_TellySearchUITests.framework; path = "Pods-TellySearch-TellySearchUITests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B93B502B9A455E41ADEBBAB9AC68290C /* Pods_TellySearch_TellySearchUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TellySearch_TellySearchUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA26676BE7FBA9FFE0C51AD525981B02 /* MemoryStorage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MemoryStorage.swift; path = Source/Shared/Storage/MemoryStorage.swift; sourceTree = "<group>"; };
 		BC248868828E10390B6D662A49AB7521 /* FBLPromiseError.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FBLPromiseError.m; path = Sources/FBLPromises/FBLPromiseError.m; sourceTree = "<group>"; };
 		BC619806CE196959C72B3F457C91613B /* FBLPromise+Retry.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "FBLPromise+Retry.h"; path = "Sources/FBLPromises/include/FBLPromise+Retry.h"; sourceTree = "<group>"; };
@@ -559,7 +559,7 @@
 		C305C53E7C7A6B8647C8456E593572C6 /* Pods-TellySearch-TellySearchUITests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TellySearch-TellySearchUITests-frameworks.sh"; sourceTree = "<group>"; };
 		C3978C5ADC0956363BCCE387DF8CA60D /* SkeletonView-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SkeletonView-Info.plist"; sourceTree = "<group>"; };
 		C3ED40CFF6787BAC516AD410B119AC38 /* FBLPromise+Reduce.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "FBLPromise+Reduce.h"; path = "Sources/FBLPromises/include/FBLPromise+Reduce.h"; sourceTree = "<group>"; };
-		C3F44C782D64D7EB20B61CE3844EBFAD /* Kingfisher.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Kingfisher.framework; path = Kingfisher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3F44C782D64D7EB20B61CE3844EBFAD /* Kingfisher.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Kingfisher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C44DDB7212F650642E872328B4CC30DC /* PromisesSwift-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PromisesSwift-umbrella.h"; sourceTree = "<group>"; };
 		C58D68F1C7F806756E47ED540BD8A921 /* PromisesSwift-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PromisesSwift-prefix.pch"; sourceTree = "<group>"; };
 		C6D25960A4AF2F5AB22403DF712460CD /* Recoverable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Recoverable.swift; path = Sources/Recoverable/Recoverable.swift; sourceTree = "<group>"; };
@@ -573,7 +573,7 @@
 		CB901ACC0FC6B7112BE7AACCF5470510 /* Pods-TellySearchTests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TellySearchTests-Info.plist"; sourceTree = "<group>"; };
 		CBD3784D80EC4C520DADB0BDE24F9E68 /* NSTextAttachment+Kingfisher.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSTextAttachment+Kingfisher.swift"; path = "Sources/Extensions/NSTextAttachment+Kingfisher.swift"; sourceTree = "<group>"; };
 		CCE1974E67625E82592CF0D87F757562 /* UIButton+Kingfisher.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIButton+Kingfisher.swift"; path = "Sources/Extensions/UIButton+Kingfisher.swift"; sourceTree = "<group>"; };
-		CDC8C1E54D1F3A8B5CAC89FFFF6A3F80 /* SkeletonView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SkeletonView.framework; path = SkeletonView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CDC8C1E54D1F3A8B5CAC89FFFF6A3F80 /* SkeletonView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SkeletonView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D13B3210B9A7B731EA214D4E063F4D33 /* CALayer+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "CALayer+Extensions.swift"; path = "Sources/Extensions/CALayer+Extensions.swift"; sourceTree = "<group>"; };
 		D207D64F3167697FFBE4D24115E0FB5C /* Resource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Resource.swift; path = Sources/General/ImageSource/Resource.swift; sourceTree = "<group>"; };
 		D31380F2060B7FA6BE7AC8606FD96477 /* UIView+Frame.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIView+Frame.swift"; path = "Sources/Extensions/UIView+Frame.swift"; sourceTree = "<group>"; };
@@ -747,7 +747,6 @@
 				47006D6057587443AC5C64D1849CEC4C /* UIView+UIApplicationDelegate.swift */,
 				C2BD3C002C68EEA3945210BD4FDC93AF /* Support Files */,
 			);
-			name = SkeletonView;
 			path = SkeletonView;
 			sourceTree = "<group>";
 		};
@@ -870,7 +869,6 @@
 				7B17B5252D3DC8BCC5D752EEF50B9B5E /* FBLPromises.h */,
 				F6FC9BD76C30F3FCF70DFCCAED8E1925 /* Support Files */,
 			);
-			name = PromisesObjC;
 			path = PromisesObjC;
 			sourceTree = "<group>";
 		};
@@ -978,7 +976,6 @@
 				6DFD7C84A08376CB75AA903221A6FF1B /* UIImage+Extensions.swift */,
 				1296650041679016F57B1804C14534A4 /* Support Files */,
 			);
-			name = Cache;
 			path = Cache;
 			sourceTree = "<group>";
 		};
@@ -1006,7 +1003,6 @@
 				6F2AB04F4C546B2B7F6AE31D0C9E9546 /* PromiseError.swift */,
 				6215F5496C517C283B6F86C22B76BFD1 /* Support Files */,
 			);
-			name = PromisesSwift;
 			path = PromisesSwift;
 			sourceTree = "<group>";
 		};
@@ -1031,7 +1027,6 @@
 				D4934558A2A2BD623C514106E19C538C /* Core */,
 				70D3C0F560F850AD16368A71A063ACF2 /* Support Files */,
 			);
-			name = Kingfisher;
 			path = Kingfisher;
 			sourceTree = "<group>";
 		};
@@ -1385,7 +1380,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1200;
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 10.0";
@@ -2022,6 +2017,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -2328,6 +2324,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

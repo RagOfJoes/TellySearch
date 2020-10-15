@@ -44,9 +44,6 @@ class CVTCell: UITableViewCell {
         setupAnchors()
         
         isSkeletonable = true
-        collectionView.prepareSkeleton { [weak self] (done) in
-            self?.showAnimatedSkeleton()
-        }
     }
     
     required init?(coder: NSCoder) {

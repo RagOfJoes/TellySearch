@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SkeletonView
 
 protocol MovieCollectionViewTableViewCellDelegate: class {
     func select(movie: IndexPath)

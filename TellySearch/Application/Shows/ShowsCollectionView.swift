@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SkeletonView
 
 protocol ShowsCollectionViewDelegate: class {
     func select(show: IndexPath)

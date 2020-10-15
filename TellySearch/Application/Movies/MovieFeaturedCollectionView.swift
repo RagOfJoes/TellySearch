@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SkeletonView
 
 class MovieFeaturedCollectionView: CVTCell {
     // MARK: - Internal Properties
