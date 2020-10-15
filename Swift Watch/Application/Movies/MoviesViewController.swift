@@ -15,8 +15,7 @@ class MoviesViewController: UIViewController  {
     var sections: [MovieSectionCell] = [
         MovieSectionCell(section: MovieSection(title: "Popular"), type: .Featured),
         MovieSectionCell(section: MovieSection(title: "In Theatres"), type: .Regular),
-        MovieSectionCell(section: MovieSection(title: "Top Rated"), type: .Regular),
-        MovieSectionCell(section: MovieSection(title: "Upcoming"), type: .Regular),
+        MovieSectionCell(section: MovieSection(title: "Upcoming"), type: .Regular)
     ]
     
     private lazy var tableView: UITableView = {
@@ -53,8 +52,7 @@ class MoviesViewController: UIViewController  {
         let promises = [
             sections[0].section.fetchSection(with: .popular),
             sections[1].section.fetchSection(with: .inTheatres),
-            sections[2].section.fetchSection(with: .topRated),
-            sections[3].section.fetchSection(with: .upcoming)
+            sections[2].section.fetchSection(with: .upcoming)
         ]
         
         all(promises.map {
@@ -77,7 +75,7 @@ class MoviesViewController: UIViewController  {
 // MARK: - UITableViewDelegate
 extension MoviesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return T.Spacing.Vertical(size: .large)
+        return T.Spacing.Vertical(size: .large) * 2
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

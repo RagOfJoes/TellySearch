@@ -16,7 +16,6 @@ class ShowsViewController: UIViewController {
         ShowSectionCell(section: ShowSection(title: "Airing Today"), type: .Featured),
         ShowSectionCell(section: ShowSection(title: "Popular"), type: .Regular),
         ShowSectionCell(section: ShowSection(title: "On The Air"), type: .Regular),
-        ShowSectionCell(section: ShowSection(title: "Top Rated"), type: .Regular),
     ]
     
     private lazy var tableView: UITableView = {
@@ -53,8 +52,7 @@ class ShowsViewController: UIViewController {
         let promises = [
             sections[0].section.fetchSection(with: .onTheAirToday),
             sections[1].section.fetchSection(with: .popular),
-            sections[2].section.fetchSection(with: .onTheAir),
-            sections[3].section.fetchSection(with: .topRated)
+            sections[2].section.fetchSection(with: .onTheAir)
         ]
         
         all(promises.map {
@@ -77,7 +75,7 @@ class ShowsViewController: UIViewController {
 // MARK: - UITableViewDelegate
 extension ShowsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return T.Spacing.Vertical(size: .large)
+        return T.Spacing.Vertical(size: .large) * 2
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
