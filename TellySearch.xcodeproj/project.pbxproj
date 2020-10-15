@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		14AB6C111AC62D9E5D20FDC1 /* Pods_Swift_WatchTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AAC578009122B38568CDC0F /* Pods_Swift_WatchTests.framework */; };
-		700C8988CF22B74F58B5C504 /* Pods_Swift_Watch_Swift_WatchUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C015570C72D1A952B9526EF /* Pods_Swift_Watch_Swift_WatchUITests.framework */; };
-		B7A12A30490BD49537596659 /* Pods_Swift_Watch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28728A972C987AEBD1734497 /* Pods_Swift_Watch.framework */; };
+		3719EAA1AFB039135E305EC8 /* Pods_TellySearch_TellySearchUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EA68E9B4B2D3F878AEC138F /* Pods_TellySearch_TellySearchUITests.framework */; };
+		5FE4E39DB04C4CD3C3DC58BF /* Pods_TellySearchTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD533F652FAEA08683217072 /* Pods_TellySearchTests.framework */; };
+		61722DAFAB8B7798454325CF /* Pods_TellySearch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D168D3AB5E540C4570A568EB /* Pods_TellySearch.framework */; };
 		D602358824DB55F200DFDB02 /* Credits.swift in Sources */ = {isa = PBXBuildFile; fileRef = D602358724DB55F200DFDB02 /* Credits.swift */; };
 		D6040F3224DCB02F0020815B /* Backdrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6040F3124DCB02F0020815B /* Backdrop.swift */; };
 		D6040F3624DDFB920020815B /* CastCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6040F3524DDFB920020815B /* CastCollectionView.swift */; };
@@ -66,6 +66,7 @@
 		D6A4DF4D2523F1EF008495AD /* SeasonsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4DF4C2523F1EF008495AD /* SeasonsViewCell.swift */; };
 		D6A4DF622526409C008495AD /* SeasonsViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4DF612526409C008495AD /* SeasonsViewHeader.swift */; };
 		D6A4DF872527CEBA008495AD /* EpisodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A4DF862527CEBA008495AD /* EpisodeView.swift */; };
+		D6A668A225384CC300DF7A95 /* FetchTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A668A125384CC300DF7A95 /* FetchTypes.swift */; };
 		D6A961D4252E36B40021D6CE /* RegularCell2.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A961D3252E36B40021D6CE /* RegularCell2.swift */; };
 		D6BA607D2502243500998093 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA607C2502243500998093 /* Constants.swift */; };
 		D6BA6087250224E100998093 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = D6BA6086250224E100998093 /* Keys.plist */; };
@@ -90,7 +91,6 @@
 		D6EE65A124CAAE9C0033C9F2 /* movies.pdf in Resources */ = {isa = PBXBuildFile; fileRef = D6EE659F24CAAE9C0033C9F2 /* movies.pdf */; };
 		D6EED056250CA7060029CC87 /* CreatorsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EED055250CA7060029CC87 /* CreatorsCollectionView.swift */; };
 		D6EED058250CA88E0029CC87 /* CreatorsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EED057250CA88E0029CC87 /* CreatorsCollectionViewCell.swift */; };
-		D6EEF10B2502187D00BBC44A /* FetchTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EEF10A2502187D00BBC44A /* FetchTypes.swift */; };
 		D6EF10292518589400F035A7 /* HorizontalCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF10282518589400F035A7 /* HorizontalCollectionView.swift */; };
 		D6EF10342518ABB400F035A7 /* CVTCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF10332518ABB400F035A7 /* CVTCell.swift */; };
 		D6F10540250EEC1C0080D1F6 /* ShowDetailRecommendations.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F1053F250EEC1C0080D1F6 /* ShowDetailRecommendations.swift */; };
@@ -117,11 +117,16 @@
 
 /* Begin PBXFileReference section */
 		186D49410E30686A1FC0AAFA /* Pods-Swift Watch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Swift Watch.release.xcconfig"; path = "Target Support Files/Pods-Swift Watch/Pods-Swift Watch.release.xcconfig"; sourceTree = "<group>"; };
-		1C015570C72D1A952B9526EF /* Pods_Swift_Watch_Swift_WatchUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Swift_Watch_Swift_WatchUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		28728A972C987AEBD1734497 /* Pods_Swift_Watch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Swift_Watch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		32A345F94D379E9B222147F8 /* Pods-Swift WatchTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Swift WatchTests.debug.xcconfig"; path = "Target Support Files/Pods-Swift WatchTests/Pods-Swift WatchTests.debug.xcconfig"; sourceTree = "<group>"; };
-		3AAC578009122B38568CDC0F /* Pods_Swift_WatchTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Swift_WatchTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6EF49FAC9C4B8F7CC32142DE /* Pods-TellySearchTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TellySearchTests.release.xcconfig"; path = "Target Support Files/Pods-TellySearchTests/Pods-TellySearchTests.release.xcconfig"; sourceTree = "<group>"; };
+		735AC37828BB9FDCA146B627 /* Pods-TellySearchTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TellySearchTests.debug.xcconfig"; path = "Target Support Files/Pods-TellySearchTests/Pods-TellySearchTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7B03E3D838391512DCD5FEF0 /* Pods-TellySearch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TellySearch.debug.xcconfig"; path = "Target Support Files/Pods-TellySearch/Pods-TellySearch.debug.xcconfig"; sourceTree = "<group>"; };
+		7EA68E9B4B2D3F878AEC138F /* Pods_TellySearch_TellySearchUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TellySearch_TellySearchUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		976A37BDD3D303B587EE9D7D /* Pods-TellySearch-TellySearchUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TellySearch-TellySearchUITests.release.xcconfig"; path = "Target Support Files/Pods-TellySearch-TellySearchUITests/Pods-TellySearch-TellySearchUITests.release.xcconfig"; sourceTree = "<group>"; };
 		A3EF17058EB55B20963E4D33 /* Pods-Swift Watch-Swift WatchUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Swift Watch-Swift WatchUITests.debug.xcconfig"; path = "Target Support Files/Pods-Swift Watch-Swift WatchUITests/Pods-Swift Watch-Swift WatchUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		AE8E428542E81D7B54D4087D /* Pods-TellySearch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TellySearch.release.xcconfig"; path = "Target Support Files/Pods-TellySearch/Pods-TellySearch.release.xcconfig"; sourceTree = "<group>"; };
+		CD533F652FAEA08683217072 /* Pods_TellySearchTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TellySearchTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D168D3AB5E540C4570A568EB /* Pods_TellySearch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TellySearch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D602358724DB55F200DFDB02 /* Credits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credits.swift; sourceTree = "<group>"; };
 		D6040F3124DCB02F0020815B /* Backdrop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backdrop.swift; sourceTree = "<group>"; };
 		D6040F3524DDFB920020815B /* CastCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastCollectionView.swift; sourceTree = "<group>"; };
@@ -134,17 +139,17 @@
 		D636CC5424CFB6C000361614 /* MovieDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetail.swift; sourceTree = "<group>"; };
 		D6391E0A251E8D0C00F8C01A /* SeasonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsView.swift; sourceTree = "<group>"; };
 		D64241A424F6C1E700D1372D /* Poster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poster.swift; sourceTree = "<group>"; };
-		D6464FC224CA306E00C4497E /* Swift Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swift Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D6464FC224CA306E00C4497E /* TellySearch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TellySearch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6464FC524CA306E00C4497E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D6464FC724CA306E00C4497E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		D6464FC924CA306E00C4497E /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		D6464FCE24CA306F00C4497E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D6464FD124CA306F00C4497E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D6464FD324CA306F00C4497E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D6464FD824CA306F00C4497E /* Swift WatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Swift WatchTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D6464FD824CA306F00C4497E /* TellySearchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TellySearchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6464FDC24CA306F00C4497E /* Swift_WatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Swift_WatchTests.swift; sourceTree = "<group>"; };
 		D6464FDE24CA306F00C4497E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D6464FE324CA306F00C4497E /* Swift WatchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Swift WatchUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D6464FE324CA306F00C4497E /* TellySearchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TellySearchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6464FE724CA306F00C4497E /* Swift_WatchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Swift_WatchUITests.swift; sourceTree = "<group>"; };
 		D6464FE924CA306F00C4497E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D648C05024F8CB1E00733F8B /* InfoStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoStackView.swift; sourceTree = "<group>"; };
@@ -185,6 +190,7 @@
 		D6A4DF4C2523F1EF008495AD /* SeasonsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsViewCell.swift; sourceTree = "<group>"; };
 		D6A4DF612526409C008495AD /* SeasonsViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsViewHeader.swift; sourceTree = "<group>"; };
 		D6A4DF862527CEBA008495AD /* EpisodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeView.swift; sourceTree = "<group>"; };
+		D6A668A125384CC300DF7A95 /* FetchTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchTypes.swift; sourceTree = "<group>"; };
 		D6A961D3252E36B40021D6CE /* RegularCell2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularCell2.swift; sourceTree = "<group>"; };
 		D6BA607C2502243500998093 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		D6BA6086250224E100998093 /* Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
@@ -209,7 +215,6 @@
 		D6EE659F24CAAE9C0033C9F2 /* movies.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = movies.pdf; sourceTree = "<group>"; };
 		D6EED055250CA7060029CC87 /* CreatorsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorsCollectionView.swift; sourceTree = "<group>"; };
 		D6EED057250CA88E0029CC87 /* CreatorsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorsCollectionViewCell.swift; sourceTree = "<group>"; };
-		D6EEF10A2502187D00BBC44A /* FetchTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FetchTypes.swift; path = "Swift Watch/Models/FetchTypes.swift"; sourceTree = SOURCE_ROOT; };
 		D6EF10282518589400F035A7 /* HorizontalCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalCollectionView.swift; sourceTree = "<group>"; };
 		D6EF10332518ABB400F035A7 /* CVTCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVTCell.swift; sourceTree = "<group>"; };
 		D6F1053F250EEC1C0080D1F6 /* ShowDetailRecommendations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowDetailRecommendations.swift; sourceTree = "<group>"; };
@@ -218,6 +223,7 @@
 		D78C273B4AA746082365FFBE /* Pods-Swift Watch-Swift WatchUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Swift Watch-Swift WatchUITests.release.xcconfig"; path = "Target Support Files/Pods-Swift Watch-Swift WatchUITests/Pods-Swift Watch-Swift WatchUITests.release.xcconfig"; sourceTree = "<group>"; };
 		E4F5CFDD9E59CDE943331114 /* Pods-Swift WatchTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Swift WatchTests.release.xcconfig"; path = "Target Support Files/Pods-Swift WatchTests/Pods-Swift WatchTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED1BAA7AF028A06302D085DE /* Pods-Swift Watch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Swift Watch.debug.xcconfig"; path = "Target Support Files/Pods-Swift Watch/Pods-Swift Watch.debug.xcconfig"; sourceTree = "<group>"; };
+		F2A29011EB82EC6779CD44F2 /* Pods-TellySearch-TellySearchUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TellySearch-TellySearchUITests.debug.xcconfig"; path = "Target Support Files/Pods-TellySearch-TellySearchUITests/Pods-TellySearch-TellySearchUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -225,7 +231,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B7A12A30490BD49537596659 /* Pods_Swift_Watch.framework in Frameworks */,
+				61722DAFAB8B7798454325CF /* Pods_TellySearch.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,7 +239,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14AB6C111AC62D9E5D20FDC1 /* Pods_Swift_WatchTests.framework in Frameworks */,
+				5FE4E39DB04C4CD3C3DC58BF /* Pods_TellySearchTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,7 +247,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				700C8988CF22B74F58B5C504 /* Pods_Swift_Watch_Swift_WatchUITests.framework in Frameworks */,
+				3719EAA1AFB039135E305EC8 /* Pods_TellySearch_TellySearchUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,6 +263,12 @@
 				D78C273B4AA746082365FFBE /* Pods-Swift Watch-Swift WatchUITests.release.xcconfig */,
 				32A345F94D379E9B222147F8 /* Pods-Swift WatchTests.debug.xcconfig */,
 				E4F5CFDD9E59CDE943331114 /* Pods-Swift WatchTests.release.xcconfig */,
+				7B03E3D838391512DCD5FEF0 /* Pods-TellySearch.debug.xcconfig */,
+				AE8E428542E81D7B54D4087D /* Pods-TellySearch.release.xcconfig */,
+				F2A29011EB82EC6779CD44F2 /* Pods-TellySearch-TellySearchUITests.debug.xcconfig */,
+				976A37BDD3D303B587EE9D7D /* Pods-TellySearch-TellySearchUITests.release.xcconfig */,
+				735AC37828BB9FDCA146B627 /* Pods-TellySearchTests.debug.xcconfig */,
+				6EF49FAC9C4B8F7CC32142DE /* Pods-TellySearchTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -264,9 +276,9 @@
 		910435966DBE00D2D67516A8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				28728A972C987AEBD1734497 /* Pods_Swift_Watch.framework */,
-				1C015570C72D1A952B9526EF /* Pods_Swift_Watch_Swift_WatchUITests.framework */,
-				3AAC578009122B38568CDC0F /* Pods_Swift_WatchTests.framework */,
+				D168D3AB5E540C4570A568EB /* Pods_TellySearch.framework */,
+				7EA68E9B4B2D3F878AEC138F /* Pods_TellySearch_TellySearchUITests.framework */,
+				CD533F652FAEA08683217072 /* Pods_TellySearchTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -310,9 +322,9 @@
 			isa = PBXGroup;
 			children = (
 				D62B45102519D87700FF31DA /* README.md */,
-				D6464FC424CA306E00C4497E /* Swift Watch */,
-				D6464FDB24CA306F00C4497E /* Swift WatchTests */,
-				D6464FE624CA306F00C4497E /* Swift WatchUITests */,
+				D6464FC424CA306E00C4497E /* TellySearch */,
+				D6464FDB24CA306F00C4497E /* TellySearchTests */,
+				D6464FE624CA306F00C4497E /* TellySearchUITests */,
 				D6464FC324CA306E00C4497E /* Products */,
 				4702BC2BE48CD02C69E9F4BB /* Pods */,
 				910435966DBE00D2D67516A8 /* Frameworks */,
@@ -322,14 +334,14 @@
 		D6464FC324CA306E00C4497E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D6464FC224CA306E00C4497E /* Swift Watch.app */,
-				D6464FD824CA306F00C4497E /* Swift WatchTests.xctest */,
-				D6464FE324CA306F00C4497E /* Swift WatchUITests.xctest */,
+				D6464FC224CA306E00C4497E /* TellySearch.app */,
+				D6464FD824CA306F00C4497E /* TellySearchTests.xctest */,
+				D6464FE324CA306F00C4497E /* TellySearchUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D6464FC424CA306E00C4497E /* Swift Watch */ = {
+		D6464FC424CA306E00C4497E /* TellySearch */ = {
 			isa = PBXGroup;
 			children = (
 				D669600B24CA331B00FF0758 /* Models */,
@@ -341,25 +353,25 @@
 				D669601124CA351000FF0758 /* Common */,
 				D669601024CA34CE00FF0758 /* Assets */,
 			);
-			path = "Swift Watch";
+			path = TellySearch;
 			sourceTree = "<group>";
 		};
-		D6464FDB24CA306F00C4497E /* Swift WatchTests */ = {
+		D6464FDB24CA306F00C4497E /* TellySearchTests */ = {
 			isa = PBXGroup;
 			children = (
 				D6464FDC24CA306F00C4497E /* Swift_WatchTests.swift */,
 				D6464FDE24CA306F00C4497E /* Info.plist */,
 			);
-			path = "Swift WatchTests";
+			path = TellySearchTests;
 			sourceTree = "<group>";
 		};
-		D6464FE624CA306F00C4497E /* Swift WatchUITests */ = {
+		D6464FE624CA306F00C4497E /* TellySearchUITests */ = {
 			isa = PBXGroup;
 			children = (
 				D6464FE724CA306F00C4497E /* Swift_WatchUITests.swift */,
 				D6464FE924CA306F00C4497E /* Info.plist */,
 			);
-			path = "Swift WatchUITests";
+			path = TellySearchUITests;
 			sourceTree = "<group>";
 		};
 		D669600B24CA331B00FF0758 /* Models */ = {
@@ -373,7 +385,7 @@
 				D62B4517251D072B00FF31DA /* Cache.swift */,
 				D6CB0EAA252ADEEE00F46C02 /* Theme.swift */,
 				D6BA607C2502243500998093 /* Constants.swift */,
-				D6EEF10A2502187D00BBC44A /* FetchTypes.swift */,
+				D6A668A125384CC300DF7A95 /* FetchTypes.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -543,9 +555,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D6464FC124CA306E00C4497E /* Swift Watch */ = {
+		D6464FC124CA306E00C4497E /* TellySearch */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D6464FEC24CA306F00C4497E /* Build configuration list for PBXNativeTarget "Swift Watch" */;
+			buildConfigurationList = D6464FEC24CA306F00C4497E /* Build configuration list for PBXNativeTarget "TellySearch" */;
 			buildPhases = (
 				D66FBEEF496DE1B1C3C7C917 /* [CP] Check Pods Manifest.lock */,
 				D6464FBE24CA306E00C4497E /* Sources */,
@@ -557,14 +569,14 @@
 			);
 			dependencies = (
 			);
-			name = "Swift Watch";
+			name = TellySearch;
 			productName = "Swift Watch";
-			productReference = D6464FC224CA306E00C4497E /* Swift Watch.app */;
+			productReference = D6464FC224CA306E00C4497E /* TellySearch.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D6464FD724CA306F00C4497E /* Swift WatchTests */ = {
+		D6464FD724CA306F00C4497E /* TellySearchTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D6464FEF24CA306F00C4497E /* Build configuration list for PBXNativeTarget "Swift WatchTests" */;
+			buildConfigurationList = D6464FEF24CA306F00C4497E /* Build configuration list for PBXNativeTarget "TellySearchTests" */;
 			buildPhases = (
 				A308E0CC75AB2ADC1BDE2685 /* [CP] Check Pods Manifest.lock */,
 				D6464FD424CA306F00C4497E /* Sources */,
@@ -576,14 +588,14 @@
 			dependencies = (
 				D6464FDA24CA306F00C4497E /* PBXTargetDependency */,
 			);
-			name = "Swift WatchTests";
+			name = TellySearchTests;
 			productName = "Swift WatchTests";
-			productReference = D6464FD824CA306F00C4497E /* Swift WatchTests.xctest */;
+			productReference = D6464FD824CA306F00C4497E /* TellySearchTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		D6464FE224CA306F00C4497E /* Swift WatchUITests */ = {
+		D6464FE224CA306F00C4497E /* TellySearchUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D6464FF224CA306F00C4497E /* Build configuration list for PBXNativeTarget "Swift WatchUITests" */;
+			buildConfigurationList = D6464FF224CA306F00C4497E /* Build configuration list for PBXNativeTarget "TellySearchUITests" */;
 			buildPhases = (
 				8F5B248F5DC83316B3A6482D /* [CP] Check Pods Manifest.lock */,
 				D6464FDF24CA306F00C4497E /* Sources */,
@@ -596,9 +608,9 @@
 			dependencies = (
 				D6464FE524CA306F00C4497E /* PBXTargetDependency */,
 			);
-			name = "Swift WatchUITests";
+			name = TellySearchUITests;
 			productName = "Swift WatchUITests";
-			productReference = D6464FE324CA306F00C4497E /* Swift WatchUITests.xctest */;
+			productReference = D6464FE324CA306F00C4497E /* TellySearchUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -624,7 +636,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D6464FBD24CA306E00C4497E /* Build configuration list for PBXProject "Swift Watch" */;
+			buildConfigurationList = D6464FBD24CA306E00C4497E /* Build configuration list for PBXProject "TellySearch" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -637,9 +649,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D6464FC124CA306E00C4497E /* Swift Watch */,
-				D6464FD724CA306F00C4497E /* Swift WatchTests */,
-				D6464FE224CA306F00C4497E /* Swift WatchUITests */,
+				D6464FC124CA306E00C4497E /* TellySearch */,
+				D6464FD724CA306F00C4497E /* TellySearchTests */,
+				D6464FE224CA306F00C4497E /* TellySearchUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -685,15 +697,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Swift Watch/Pods-Swift Watch-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-TellySearch/Pods-TellySearch-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Swift Watch/Pods-Swift Watch-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-TellySearch/Pods-TellySearch-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Swift Watch/Pods-Swift Watch-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TellySearch/Pods-TellySearch-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8F5B248F5DC83316B3A6482D /* [CP] Check Pods Manifest.lock */ = {
@@ -711,7 +723,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Swift Watch-Swift WatchUITests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-TellySearch-TellySearchUITests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -733,7 +745,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Swift WatchTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-TellySearchTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -755,7 +767,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Swift Watch-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-TellySearch-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -768,15 +780,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Swift Watch-Swift WatchUITests/Pods-Swift Watch-Swift WatchUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-TellySearch-TellySearchUITests/Pods-TellySearch-TellySearchUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Swift Watch-Swift WatchUITests/Pods-Swift Watch-Swift WatchUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-TellySearch-TellySearchUITests/Pods-TellySearch-TellySearchUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Swift Watch-Swift WatchUITests/Pods-Swift Watch-Swift WatchUITests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TellySearch-TellySearchUITests/Pods-TellySearch-TellySearchUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -810,7 +822,6 @@
 				D650B98024CB878500DD1E61 /* Date+Additions.swift in Sources */,
 				D6EF10292518589400F035A7 /* HorizontalCollectionView.swift in Sources */,
 				D6C39B0824EBC8770033C11B /* FeaturedCell.swift in Sources */,
-				D6EEF10B2502187D00BBC44A /* FetchTypes.swift in Sources */,
 				D697C9B825383FB80045EE96 /* PersonEndpoint.swift in Sources */,
 				D650B98224CB948800DD1E61 /* Cast.swift in Sources */,
 				D669601724CA36A000FF0758 /* ShowsViewController.swift in Sources */,
@@ -858,6 +869,7 @@
 				D650B97C24CB855300DD1E61 /* Genre.swift in Sources */,
 				D64EB41624E36EA800B608CF /* MovieDetailRecommendations.swift in Sources */,
 				D6C39B0424EB64000033C11B /* UICollectionView+Additions.swift in Sources */,
+				D6A668A225384CC300DF7A95 /* FetchTypes.swift in Sources */,
 				D654B9C324FB82EB005620FD /* UILabel+Additions.swift in Sources */,
 				D6A0548E24E30530009C87B2 /* String+Additions.swift in Sources */,
 			);
@@ -884,12 +896,12 @@
 /* Begin PBXTargetDependency section */
 		D6464FDA24CA306F00C4497E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D6464FC124CA306E00C4497E /* Swift Watch */;
+			target = D6464FC124CA306E00C4497E /* TellySearch */;
 			targetProxy = D6464FD924CA306F00C4497E /* PBXContainerItemProxy */;
 		};
 		D6464FE524CA306F00C4497E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D6464FC124CA306E00C4497E /* Swift Watch */;
+			target = D6464FC124CA306E00C4497E /* TellySearch */;
 			targetProxy = D6464FE424CA306F00C4497E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1024,18 +1036,18 @@
 		};
 		D6464FED24CA306F00C4497E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = ED1BAA7AF028A06302D085DE /* Pods-Swift Watch.debug.xcconfig */;
+			baseConfigurationReference = 7B03E3D838391512DCD5FEF0 /* Pods-TellySearch.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9JVZR3762B;
-				INFOPLIST_FILE = "Swift Watch/Info.plist";
+				INFOPLIST_FILE = TellySearch/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "dev.ragofjoes.Swift-Watch";
+				PRODUCT_BUNDLE_IDENTIFIER = dev.ragofjoes.TellySearch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1044,18 +1056,18 @@
 		};
 		D6464FEE24CA306F00C4497E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 186D49410E30686A1FC0AAFA /* Pods-Swift Watch.release.xcconfig */;
+			baseConfigurationReference = AE8E428542E81D7B54D4087D /* Pods-TellySearch.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9JVZR3762B;
-				INFOPLIST_FILE = "Swift Watch/Info.plist";
+				INFOPLIST_FILE = TellySearch/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "dev.ragofjoes.Swift-Watch";
+				PRODUCT_BUNDLE_IDENTIFIER = dev.ragofjoes.TellySearch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1064,7 +1076,7 @@
 		};
 		D6464FF024CA306F00C4497E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 32A345F94D379E9B222147F8 /* Pods-Swift WatchTests.debug.xcconfig */;
+			baseConfigurationReference = 735AC37828BB9FDCA146B627 /* Pods-TellySearchTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1080,13 +1092,13 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Swift Watch.app/Swift Watch";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TellySearch.app/TellySearch";
 			};
 			name = Debug;
 		};
 		D6464FF124CA306F00C4497E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E4F5CFDD9E59CDE943331114 /* Pods-Swift WatchTests.release.xcconfig */;
+			baseConfigurationReference = 6EF49FAC9C4B8F7CC32142DE /* Pods-TellySearchTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1102,13 +1114,13 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Swift Watch.app/Swift Watch";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TellySearch.app/TellySearch";
 			};
 			name = Release;
 		};
 		D6464FF324CA306F00C4497E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A3EF17058EB55B20963E4D33 /* Pods-Swift Watch-Swift WatchUITests.debug.xcconfig */;
+			baseConfigurationReference = F2A29011EB82EC6779CD44F2 /* Pods-TellySearch-TellySearchUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1128,7 +1140,7 @@
 		};
 		D6464FF424CA306F00C4497E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D78C273B4AA746082365FFBE /* Pods-Swift Watch-Swift WatchUITests.release.xcconfig */;
+			baseConfigurationReference = 976A37BDD3D303B587EE9D7D /* Pods-TellySearch-TellySearchUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1149,7 +1161,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D6464FBD24CA306E00C4497E /* Build configuration list for PBXProject "Swift Watch" */ = {
+		D6464FBD24CA306E00C4497E /* Build configuration list for PBXProject "TellySearch" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D6464FEA24CA306F00C4497E /* Debug */,
@@ -1158,7 +1170,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D6464FEC24CA306F00C4497E /* Build configuration list for PBXNativeTarget "Swift Watch" */ = {
+		D6464FEC24CA306F00C4497E /* Build configuration list for PBXNativeTarget "TellySearch" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D6464FED24CA306F00C4497E /* Debug */,
@@ -1167,7 +1179,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D6464FEF24CA306F00C4497E /* Build configuration list for PBXNativeTarget "Swift WatchTests" */ = {
+		D6464FEF24CA306F00C4497E /* Build configuration list for PBXNativeTarget "TellySearchTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D6464FF024CA306F00C4497E /* Debug */,
@@ -1176,7 +1188,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D6464FF224CA306F00C4497E /* Build configuration list for PBXNativeTarget "Swift WatchUITests" */ = {
+		D6464FF224CA306F00C4497E /* Build configuration list for PBXNativeTarget "TellySearchUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D6464FF324CA306F00C4497E /* Debug */,

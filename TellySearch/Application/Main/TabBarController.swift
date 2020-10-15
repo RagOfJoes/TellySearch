@@ -20,9 +20,18 @@ class TabBarController: UITabBarController {
         super.viewDidLoad()
         
         // Set KingFisher Cache to only store images for a max of 1 day
-        //        KingfisherManager.shared.cache.clearDiskCache()
-        //        KingfisherManager.shared.cache.clearMemoryCache()
-        KingfisherManager.shared.cache.diskStorage.config.expiration = StorageExpiration.days(1)
+        // KingfisherManager.shared.cache.clearCache()
+        // KingfisherManager.shared.cache.diskStorage.config.expiration = StorageExpiration.days(1)
+        
+        // do {
+        //    try C.Movie?.removeAll()
+        //    try C.Person?.removeAll()
+        //    try C.Season?.removeAll()
+        //    try C.Show?.removeAll()
+        //    print("Cleared Cache")
+        // } catch {
+        //    print("Failed to clear cache")
+        // }
         
         setupView()
         

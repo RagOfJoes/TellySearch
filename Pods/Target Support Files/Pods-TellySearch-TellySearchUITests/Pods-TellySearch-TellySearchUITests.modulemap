@@ -1,0 +1,6 @@
+framework module Pods_TellySearch_TellySearchUITests {
+  umbrella header "Pods-TellySearch-TellySearchUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

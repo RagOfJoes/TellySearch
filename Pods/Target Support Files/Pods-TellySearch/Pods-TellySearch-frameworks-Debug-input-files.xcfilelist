@@ -1,4 +1,4 @@
-${PODS_ROOT}/Target Support Files/Pods-Swift Watch/Pods-Swift Watch-frameworks.sh
+${PODS_ROOT}/Target Support Files/Pods-TellySearch/Pods-TellySearch-frameworks.sh
 ${BUILT_PRODUCTS_DIR}/Cache/Cache.framework
 ${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework
 ${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework

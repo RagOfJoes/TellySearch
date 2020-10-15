@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_Swift_Watch_Swift_WatchUITestsVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_Swift_Watch_Swift_WatchUITestsVersionString[];
+FOUNDATION_EXPORT double Pods_TellySearch_TellySearchUITestsVersionNumber;
+FOUNDATION_EXPORT const unsigned char Pods_TellySearch_TellySearchUITestsVersionString[];
 
