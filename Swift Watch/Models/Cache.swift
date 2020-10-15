@@ -14,8 +14,8 @@ struct C {
     private static let CountLimit: UInt = 50
     // The maximum total cost that the cache can hold before it starts evicting objects
     private static let TotalCostLimit: UInt = 0
-    // Expire objects in 6 hours
-    private static let Expiration: Expiry = .date(Date().addingTimeInterval(60 * 60 * 6))
+    // Expire objects in 3 hours
+    private static let Expiration: Expiry = .date(Date().addingTimeInterval(3600 * 3))
     
     static let Show = try? Storage(
         diskConfig: DiskConfig(name: "ShowDetail"),

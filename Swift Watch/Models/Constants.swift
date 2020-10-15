@@ -33,8 +33,8 @@ struct K {
     
     struct URL {
         // Images
-        static let Poster: String = "https://image.tmdb.org/t/p/w200"
-        static let Backdrop: String = "https://image.tmdb.org/t/p/w1280"
+        static let Poster: String = "https://image.tmdb.org/t/p/w500"
+        static let Backdrop: String = "https://image.tmdb.org/t/p/original"
         
         // Data
         static let Show: String = "https://api.themoviedb.org/3/tv"

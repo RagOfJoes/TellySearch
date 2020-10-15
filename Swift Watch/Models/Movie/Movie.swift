@@ -28,8 +28,8 @@ struct Movie: Codable {
     let id: Int
     let title: String
     let overview: String?
-    let releaseDate: String
     let posterPath: String?
+    let releaseDate: String?
     let backdropPath: String?
     
     enum CodingKeys: String, CodingKey {

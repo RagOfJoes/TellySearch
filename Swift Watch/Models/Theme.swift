@@ -16,6 +16,13 @@ struct T {
         case RegularSecondary
     }
     
+    static var isIpad = UIDevice.current.userInterfaceIdiom == .pad
+    static var isFullScreen: Bool {
+        get {
+            return UIApplication.shared.keyWindow?.frame == UIScreen.main.bounds
+        }
+    }
+    
     // MARK: - Typography
     struct Typography {
         // MARK: - Internal Properties
@@ -110,32 +117,51 @@ struct T {
     
     // MARK: - Width
     struct Width {
-        static let Backdrop: CGFloat = UIScreen.main.bounds.width
+        static let Backdrop: CGFloat = UIApplication.shared.windows[0].bounds.width
+        static var Episode: CGFloat {
+            get {
+                return UIApplication.shared.windows[0].bounds.width - 40
+            }
+        }
         static var Poster: CGFloat {
             get {
-                let screen = UIScreen.main.bounds
-                let minWidth = screen.width > 500 ? screen.width / 6.25 : screen.width / 3
-                
-                let numberOfCells: CGFloat = UIScreen.main.bounds.width / minWidth
+                let screen = UIApplication.shared.windows[0].bounds
+                let maxWidth: CGFloat = 170
+                let minWidth = screen.width / 3
+                let numberOfCells: CGFloat = screen.width / minWidth
                 let width: CGFloat = floor((numberOfCells / floor(numberOfCells)) * minWidth)
                 
+                if width > maxWidth {
+                    return maxWidth
+                }
                 return width
             }
         }
         
         // MARK: - Cell
         static func Cell(type: CellType) -> CGFloat {
-            let screen = UIScreen.main.bounds
+            let screen =  UIApplication.shared.windows[0].bounds
             switch type {
             case .Featured:
-                let minWidth = screen.width > 500 ? screen.width / 2 : screen.width / 1.25
+                let maxWidth: CGFloat = 512
+                let minWidth =  screen.width / 1.25
                 let numberOfCells: CGFloat = screen.width / minWidth
                 let width: CGFloat = (numberOfCells / numberOfCells) * minWidth
-                
+                if width > maxWidth {
+                    return maxWidth - 40
+                }
                 // Account for the CollectionView insets
                 return width - 40
             default:
-                return Poster
+                let maxWidth: CGFloat = 170
+                let minWidth = screen.width / 3
+                let numberOfCells: CGFloat = screen.width / minWidth
+                let width: CGFloat = floor((numberOfCells / floor(numberOfCells)) * minWidth)
+                
+                if width > maxWidth {
+                    return maxWidth
+                }
+                return width
             }
         }
     }
@@ -143,10 +169,33 @@ struct T {
     // MARK: - Height
     struct Height {
         static let Backdrop: CGFloat = 400
+        static var Episode: CGFloat {
+            get {
+                return .getHeight(with: T.Width.Episode, using: (16 / 9))
+            }
+        }
         static var Poster: CGFloat {
             get {
                 let ratio: CGFloat = (27 / 40)
                 return .getHeight(with: T.Width.Poster, using: ratio)
+            }
+        }
+        static var Season: CGFloat {
+            get {
+                let ratio: CGFloat = (16 / 9)
+                let constrainedWidth: CGFloat = T.Width.Episode
+                
+                let backdropHeight: CGFloat = .getHeight(with: constrainedWidth, using: ratio)
+                
+                let nameFont: UIFont = T.Typography(variant: .Body, weight: .bold).font
+                let nameHeight: CGFloat = "".height(withConstrainedWidth: constrainedWidth, font: nameFont) * 2
+                
+                let airDateFont: UIFont = T.Typography(variant: .Subtitle).font
+                let airDateHeight: CGFloat = "".height(withConstrainedWidth: constrainedWidth, font: airDateFont)
+                
+                let spacing: CGFloat = T.Spacing.Vertical(size: .small)
+                
+                return backdropHeight + nameHeight + airDateHeight + spacing
             }
         }
         
@@ -165,14 +214,19 @@ struct T {
                 
                 return height + primaryHeight + 5
             case .RegularSecondary:
-                let primaryHeight = placeholder.height(withConstrainedWidth: T.Width.Poster, font: primaryFont) * 2
+                let primaryHeight = placeholder.height(withConstrainedWidth: T.Width.Cell(type: .RegularSecondary), font: primaryFont) * 2
                 let secondaryHeight = placeholder.height(font: secondaryFont) * 2
-                
-                return primaryHeight + secondaryHeight + Poster + 5
-            default:
-                let primaryHeight = placeholder.height(withConstrainedWidth: T.Width.Poster, font: primaryFont) * 2
 
-                return primaryHeight + T.Height.Poster + 5
+                let ratio: CGFloat = (27 / 40)
+                let imageHeight: CGFloat = .getHeight(with: T.Width.Cell(type: type), using: ratio)
+                
+                return primaryHeight + secondaryHeight + imageHeight + 5
+            default:
+                let primaryHeight = placeholder.height(withConstrainedWidth: T.Width.Cell(type: .Regular), font: primaryFont) * 2
+                let ratio: CGFloat = (27 / 40)
+                let imageHeight: CGFloat = .getHeight(with: T.Width.Cell(type: type), using: ratio)
+                
+                return primaryHeight + imageHeight + 5
             }
         }
     }
