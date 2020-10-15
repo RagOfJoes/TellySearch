@@ -8,8 +8,8 @@
 - [x] Add Seasons Cast to Season View
 - [x] Create Episode Detail View
 - [x] Add Theme Model to handle Common UI Properties
-- [ ] Create Network Layer to reduce clutter
-- [ ] Organize Common Views
+- [x] Create Network Layer to reduce clutter
+- [x] Organize Common Views
 - [ ] Design Search View
 - [ ] Create CreditsTableView View
 - [ ] Add "See Cast & Crew" button to CastCollectionView
