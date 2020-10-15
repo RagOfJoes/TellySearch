@@ -1,5 +1,5 @@
 //
-//  GenericCollectionView.swift
+//  HorizontalCollectionView.swift
 //  Swift Watch
 //
 //  Created by Victor Ragojos on 9/20/20.
@@ -9,14 +9,14 @@
 import UIKit
 import SkeletonView
 
-public class GenericCollectionView: UIView {
+public class HorizontalCollectionView: UIView {
     // MARK: - Internal Properties
     private let type: T.CellType!
     private var heightConstraint: NSLayoutConstraint!
     private var collectionViewHeight: NSLayoutConstraint!
     
-    private lazy var header: GenericCollectionViewHeader = {
-        let header = GenericCollectionViewHeader()
+    private lazy var header: CollectionViewHeader = {
+        let header = CollectionViewHeader()
         header.translatesAutoresizingMaskIntoConstraints = false
         header.isSkeletonable = true
         return header
@@ -73,14 +73,14 @@ public class GenericCollectionView: UIView {
 }
 
 // MARK: - Subviews Setup
-extension GenericCollectionView {
+extension HorizontalCollectionView {
     public func setupHeader(title: String, color: UIColor? = UIColor(named: "primaryTextColor")) {
         header.configure(title, color: color)
     }
 }
 
 // MARK: - Constraints
-extension GenericCollectionView {
+extension HorizontalCollectionView {
     private func updateHeightConstraint() {
         guard let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
             return
@@ -130,10 +130,10 @@ extension GenericCollectionView {
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
-extension GenericCollectionView: UICollectionViewDelegateFlowLayout { }
+extension HorizontalCollectionView: UICollectionViewDelegateFlowLayout { }
 
 // MARK: - SkeletonCollectionViewDelegate
-extension GenericCollectionView: SkeletonCollectionViewDataSource {
+extension HorizontalCollectionView: SkeletonCollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 0
     }

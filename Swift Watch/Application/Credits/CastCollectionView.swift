@@ -13,7 +13,7 @@ protocol CastCollectionViewDelegate: class {
     func select(cast: Cast)
 }
 
-class CastCollectionView: GenericCollectionView {
+class CastCollectionView: HorizontalCollectionView {
     var credits: Credits?
     var colors: UIImageColors?
     weak var delegate: CastCollectionViewDelegate?

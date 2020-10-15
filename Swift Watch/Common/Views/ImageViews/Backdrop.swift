@@ -36,7 +36,7 @@ class BackdropDetail: UIView {
         
         return gradientLayer
     }()
-    private let poster: PosterImageView = PosterImageView()
+    private let poster: Poster = Poster()
     private lazy var title: UILabel = {
         let title = UILabel()
         title.numberOfLines = 0

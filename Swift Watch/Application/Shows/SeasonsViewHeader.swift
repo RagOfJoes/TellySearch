@@ -17,8 +17,8 @@ class SeasonsViewHeader: UICollectionReusableView {
         let castView = CastCollectionView(.RegularSecondary)
         return castView
     }()
-    private lazy var episodesLabel: GenericCollectionViewHeader = {
-        let episodesLabel = GenericCollectionViewHeader()
+    private lazy var episodesLabel: CollectionViewHeader = {
+        let episodesLabel = CollectionViewHeader()
         episodesLabel.translatesAutoresizingMaskIntoConstraints = false
         episodesLabel.isSkeletonable = true
         return episodesLabel

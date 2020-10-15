@@ -1,5 +1,5 @@
 //
-//  PosterImageView.swift
+//  Poster.swift
 //  Swift Watch
 //
 //  Created by Victor Ragojos on 8/26/20.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PosterImageView: UIImageView {
+class Poster: UIImageView {
     // MARK: - Internal Properties
     private var widthConstraint: NSLayoutConstraint!
     private var heightConstraint: NSLayoutConstraint!

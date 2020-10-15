@@ -13,7 +13,7 @@ protocol ShowDetailSeasonsDelegate: class {
     func select(season: Season)
 }
 
-class ShowDetailSeasons: GenericCollectionView {
+class ShowDetailSeasons: HorizontalCollectionView {
     var seasons: [Season]?
     var colors: UIImageColors?
     

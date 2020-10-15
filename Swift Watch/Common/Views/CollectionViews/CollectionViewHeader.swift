@@ -1,5 +1,5 @@
 //
-//  GenericCollectionViewHeader.swift
+//  CollectionViewHeader.swift
 //  Swift Watch
 //
 //  Created by Victor Ragojos on 9/21/20.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GenericCollectionViewHeader: UIView {
+class CollectionViewHeader: UIView {
     private lazy var title: UILabel = {
         let title = UILabel()
         title.font = T.Typography(variant: .Title).font

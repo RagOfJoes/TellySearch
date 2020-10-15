@@ -13,7 +13,7 @@ protocol CreditDetailNotableWorksDelegate: class {
     func select(media: Media)
 }
 
-class CreditDetailNotableWorks: GenericCollectionView {
+class CreditDetailNotableWorks: HorizontalCollectionView {
     var media: [Media]?
     let colors: UIImageColors
     weak var delegate: CreditDetailNotableWorksDelegate?

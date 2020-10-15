@@ -13,7 +13,7 @@ protocol ShowDetailRecommendationsDelegate: class {
     func select(show: Show)
 }
 
-class ShowDetailRecommendations: GenericCollectionView {
+class ShowDetailRecommendations: HorizontalCollectionView {
     var shows: [Show]?
     var colors: UIImageColors?
     

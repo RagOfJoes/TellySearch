@@ -12,7 +12,7 @@ protocol MovieDetailRecommendationsDelegate: class {
     func select(movie: Movie)
 }
 
-class MovieDetailRecommendations: GenericCollectionView {
+class MovieDetailRecommendations: HorizontalCollectionView {
     var movies: [Movie]?
     var colors: UIImageColors?
     weak var delegate: MovieDetailRecommendationsDelegate?

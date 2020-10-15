@@ -36,12 +36,12 @@ class CreditDetailModal: UIViewController {
     
     private var scrollView: UIScrollView
     private var containerView: UIView
-    private lazy var poster: PosterImageView = {
-        let poster: PosterImageView
+    private lazy var poster: Poster = {
+        let poster: Poster
         if type == .Cast {
-            poster = PosterImageView(with: cast?.profilePath)
+            poster = Poster(with: cast?.profilePath)
         } else {
-            poster = PosterImageView(with: crew?.profilePath)
+            poster = Poster(with: crew?.profilePath)
         }
         return poster
     }()

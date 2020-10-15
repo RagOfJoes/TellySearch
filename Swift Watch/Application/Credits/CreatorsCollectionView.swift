@@ -20,8 +20,8 @@ class CreatorsCollectionView: UIView {
     private var heightConstraint: NSLayoutConstraint!
     weak var delegate: CreatorsCollectionVIewDelegate?
     
-    private lazy var header: GenericCollectionViewHeader = {
-        let header = GenericCollectionViewHeader()
+    private lazy var header: CollectionViewHeader = {
+        let header = CollectionViewHeader()
         header.translatesAutoresizingMaskIntoConstraints = false
         
         header.isSkeletonable = true
