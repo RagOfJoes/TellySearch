@@ -5,6 +5,12 @@
 - [x] Create Cache Model to track all Cache instances
 - [x] Create Cast and Crew View for CreditModal
 - [x] Create Seasons View
-- [ ] Create Episode Detail View
+- [x] Add Seasons Cast to Season View
+- [x] Create Episode Detail View
+- [x] Add Theme Model to handle Common UI Properties
+- [ ] Create Network Layer to reduce clutter
+- [ ] Organize Common Views
+- [ ] Design Search View
 - [ ] Create CreditsTableView View
+- [ ] Add "See Cast & Crew" button to CastCollectionView
 - [ ] Implement Image and Video Viewer to display Trailers, Clips, etc.
