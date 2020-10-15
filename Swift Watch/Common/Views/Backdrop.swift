@@ -17,6 +17,8 @@ protocol BackdropDetailDelegate: AnyObject {
 
 class BackdropDetail: UIView {
     weak var delegate: BackdropDetailDelegate?
+    private var posterWidthConstraint: NSLayoutConstraint!
+    private var posterHeightConstraint: NSLayoutConstraint!
     
     // MARK: - UI Declarations
     private lazy var backdrop: UIImageView = {
@@ -34,24 +36,7 @@ class BackdropDetail: UIView {
         
         return gradientLayer
     }()
-    
-    private lazy var poster: UIImageView = {
-        let poster = UIImageView()
-        poster.clipsToBounds = true
-        poster.layer.cornerRadius = 5
-        poster.contentMode = .scaleAspectFill
-        poster.translatesAutoresizingMaskIntoConstraints = false
-        
-        let posterConstraints: [NSLayoutConstraint] = [
-            poster.widthAnchor.constraint(equalToConstant: 100),
-            poster.heightAnchor.constraint(equalToConstant: 150)
-        ]
-        NSLayoutConstraint.activate(posterConstraints)
-        
-        poster.isSkeletonable = true
-        return poster
-    }()
-    
+    private let poster: PosterImageView = PosterImageView()
     private lazy var title: UILabel = {
         let title = UILabel()
         title.numberOfLines = 0
@@ -136,9 +121,9 @@ class BackdropDetail: UIView {
         }
         
         let placeholder = UIImage(named: "placeholderPoster")
-        // Set Poster
-        UIImageView.setImage(urlString: posterURL, imageView: poster, placeholder: placeholder)
-        
+        if posterURL != nil {
+            poster.configure(with: posterURL!)
+        }
         // Sets Backdrop
         UIImageView.setImageWithPromise(urlString: backdropURL, imageView: backdrop, placeholder: placeholder).then { (colors) in
             DispatchQueue.main.async {

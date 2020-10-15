@@ -243,7 +243,7 @@ extension MovieDetailViewController {
             let title = self?.movie.title
             let releaseDate = self?.movie.releaseDate
             
-            let posterURL = self?.movie.posterPath != nil ? K.URL.Poster + (self?.movie.posterPath!)! : nil
+            let posterURL = self?.movie.posterPath
             let backdropURL = self?.movie.backdropPath != nil ? K.URL.Backdrop + (self?.movie.backdropPath!)! : nil
             
             // Return Void Promise to allow Recommendations to setup UI

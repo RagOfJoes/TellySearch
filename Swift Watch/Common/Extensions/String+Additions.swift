@@ -9,7 +9,7 @@
 import UIKit
 
 extension String {
-    func height(withConstrainedWidth width: CGFloat = UIScreen.main.bounds.width, font: UIFont) -> CGFloat {
+    func height(withConstrainedWidth width: CGFloat = UIApplication.shared.windows[0].bounds.width, font: UIFont) -> CGFloat {
         let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
         let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font], context: nil)
         

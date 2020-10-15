@@ -29,7 +29,7 @@ class CreatorsCollectionView: UIView {
     }()
     
     private lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
+        let layout = CollectionViewLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: T.Spacing.Horizontal(), bottom: 0, right: T.Spacing.Horizontal())
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -43,6 +43,7 @@ class CreatorsCollectionView: UIView {
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.contentInsetAdjustmentBehavior = .never
         
         collectionView.isSkeletonable = true        
         return collectionView
@@ -84,8 +85,6 @@ class CreatorsCollectionView: UIView {
                 heightConstraint.constant = heightConstant * numOfRows
             }
         }
-        
-        hideSkeleton()
     }
     
     required init?(coder: NSCoder) {
@@ -135,7 +134,7 @@ extension CreatorsCollectionView: UICollectionViewDelegate, UICollectionViewDele
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width / 2 - 40, height: heightConstant)
+        return CGSize(width: (collectionView.frame.width / 2) - T.Spacing.Horizontal() * 2, height: heightConstant)
     }
 }
 

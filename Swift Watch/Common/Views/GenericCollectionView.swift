@@ -12,6 +12,8 @@ import SkeletonView
 public class GenericCollectionView: UIView {
     // MARK: - Internal Properties
     private let type: T.CellType!
+    private var heightConstraint: NSLayoutConstraint!
+    private var collectionViewHeight: NSLayoutConstraint!
     
     private lazy var header: GenericCollectionViewHeader = {
         let header = GenericCollectionViewHeader()
@@ -31,8 +33,13 @@ public class GenericCollectionView: UIView {
         } else if type == .RegularSecondary {
             collectionView.register(RegularCell2.self, forCellWithReuseIdentifier: RegularCell2.reuseIdentifier)
         } else {
-            collectionView.register(RegularCell.self, forCellWithReuseIdentifier: RegularCell.reuseIdentifier)
+            collectionView.register(RegularCell.self, forCellWithReuseIdentifier: RegularCell.reuseIdentifier)            
         }
+        
+        guard let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
+            return collectionView
+        }
+        flowLayout.itemSize = CGSize(width: T.Width.Cell(type: type), height: floor(T.Height.Cell(type: type)))
         
         return collectionView
     }()
@@ -50,13 +57,14 @@ public class GenericCollectionView: UIView {
         
         setupAnchors()
         isSkeletonable = true
-        collectionView.prepareSkeleton { (done) in
-            self.showAnimatedGradientSkeleton()
-        }
     }
     
-    public func setupHeader(title: String, color: UIColor? = UIColor(named: "primaryTextColor")) {
-        header.configure(title, color: color)
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateHeightConstraint()
+        // Update immediately after setting
+        // new itemSize
+        collectionView.layoutIfNeeded()
     }
     
     required init?(coder: NSCoder) {
@@ -64,11 +72,35 @@ public class GenericCollectionView: UIView {
     }
 }
 
+// MARK: - Subviews Setup
+extension GenericCollectionView {
+    public func setupHeader(title: String, color: UIColor? = UIColor(named: "primaryTextColor")) {
+        header.configure(title, color: color)
+    }
+}
+
 // MARK: - Constraints
 extension GenericCollectionView {
+    private func updateHeightConstraint() {
+        guard let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
+            return
+        }
+        let oldHeight = heightConstraint.constant
+        let newHeight = T.Height.Cell(type: type)
+        if floor(oldHeight) != floor(newHeight) {
+            let heightConstant: CGFloat = type == .Featured ? -100 : 35
+            
+            heightConstraint.constant = newHeight + heightConstant
+            collectionViewHeight.constant = ceil(newHeight)
+            flowLayout.itemSize = CGSize(width: T.Width.Cell(type: type), height: floor(newHeight))
+        }
+    }
+    
     private func setupAnchors() {
         let heightConstant: CGFloat = type == .Featured ? -100 : 35
-        let heightConstraint: NSLayoutConstraint = heightAnchor.constraint(equalToConstant: T.Height.Cell(type: type) + heightConstant)
+        let heightAnchorConstant: CGFloat = T.Height.Cell(type: type)
+        heightConstraint = heightAnchor.constraint(equalToConstant: heightAnchorConstant + heightConstant)
+        collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: heightAnchorConstant)
         NSLayoutConstraint.activate([
             heightConstraint,
             
@@ -80,7 +112,6 @@ extension GenericCollectionView {
         
         var collectionViewLeading: NSLayoutConstraint!
         var collectionViewTrailing: NSLayoutConstraint!
-        let collectionViewHeight: NSLayoutConstraint = collectionView.heightAnchor.constraint(equalToConstant: T.Height.Cell(type: type))
         if #available(iOS 11, *) {
             collectionViewLeading = collectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor)
             collectionViewTrailing = collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
@@ -99,16 +130,7 @@ extension GenericCollectionView {
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
-extension GenericCollectionView: UICollectionViewDelegateFlowLayout {
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var width: CGFloat = T.Width.Cell(type: .Regular)
-        
-        if type == .Featured {
-            width = T.Width.Cell(type: .Featured)
-        }
-        return CGSize(width: width, height: collectionView.frame.height)
-    }
-}
+extension GenericCollectionView: UICollectionViewDelegateFlowLayout { }
 
 // MARK: - SkeletonCollectionViewDelegate
 extension GenericCollectionView: SkeletonCollectionViewDataSource {

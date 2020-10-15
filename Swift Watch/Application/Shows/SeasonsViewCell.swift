@@ -12,10 +12,6 @@ import SkeletonView
 
 class SeasonsViewCell: UICollectionViewCell {
     // MARK: - Internal Properties
-    static let height: CGFloat = SeasonsViewCell.backdropHeight + ("".height(withConstrainedWidth: SeasonsViewCell.backdropWidth, font: T.Typography(variant: .Body, weight: .bold).font) * 2) + "".height(withConstrainedWidth: SeasonsViewCell.backdropWidth, font: T.Typography(variant: .Subtitle).font) + T.Spacing.Vertical(size: .small)
-    static let backdropWidth: CGFloat = UIScreen.main.bounds.width - 40
-    static let backdropHeight: CGFloat = .getHeight(with: SeasonsViewCell.backdropWidth, using: (16 / 9))
-    
     private lazy var backdrop: UIImageView = {
         let backdrop = UIImageView()
         backdrop.clipsToBounds = true
@@ -50,7 +46,7 @@ class SeasonsViewCell: UICollectionViewCell {
     
     // MARK: - Life Cycle
     override init(frame: CGRect) {
-        super.init(frame: frame)
+        super.init(frame: .zero)
         
         backgroundColor = .clear
         contentView.backgroundColor = .clear
@@ -59,8 +55,8 @@ class SeasonsViewCell: UICollectionViewCell {
         contentView.addSubview(name)
         contentView.addSubview(airDate)
                 
-        setupAnchors()
         isSkeletonable = true
+        setupAnchors()
     }
     
     override var isHighlighted: Bool {
@@ -76,26 +72,38 @@ class SeasonsViewCell: UICollectionViewCell {
 
 // MARK: - View setup
 extension SeasonsViewCell {
+    private func getLabelHeight() -> CGFloat {
+        let placeholder = ""
+        let airDateFont = T.Typography(variant: .Subtitle).font
+        let airDateHeight: CGFloat = placeholder.height(withConstrainedWidth: T.Width.Episode, font: airDateFont)
+        
+        let nameFont = T.Typography(variant: .Body, weight: .bold).font
+        let nameHeight: CGFloat = placeholder.height(withConstrainedWidth: T.Width.Episode, font: nameFont) * 2
+        
+        return airDateHeight + nameHeight
+    }
+    
     private func setupAnchors() {
+        let labelHeight = getLabelHeight()
         let backdropConstraints: [NSLayoutConstraint] = [
-            backdrop.topAnchor.constraint(equalTo: topAnchor),
-            backdrop.heightAnchor.constraint(equalToConstant: SeasonsViewCell.backdropHeight),
-            backdrop.leadingAnchor.constraint(equalTo: leadingAnchor, constant: T.Spacing.Horizontal()),
-            backdrop.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -T.Spacing.Horizontal())
+            backdrop.topAnchor.constraint(equalTo: contentView.topAnchor),
+            backdrop.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -labelHeight),
+            backdrop.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: T.Spacing.Horizontal()),
+            backdrop.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(backdropConstraints)
         
         let nameConstraints: [NSLayoutConstraint] = [
-            name.leadingAnchor.constraint(equalTo: leadingAnchor, constant: T.Spacing.Horizontal()),
-            name.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -T.Spacing.Horizontal()),
+            name.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: T.Spacing.Horizontal()),
+            name.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -T.Spacing.Horizontal()),
             name.topAnchor.constraint(equalTo: backdrop.bottomAnchor, constant: T.Spacing.Vertical(size: .small)),
         ]
         NSLayoutConstraint.activate(nameConstraints)
         
         let airDateConstraints: [NSLayoutConstraint] = [
             airDate.topAnchor.constraint(equalTo: name.bottomAnchor),
-            airDate.leadingAnchor.constraint(equalTo: leadingAnchor, constant: T.Spacing.Horizontal()),
-            airDate.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -T.Spacing.Horizontal())
+            airDate.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: T.Spacing.Horizontal()),
+            airDate.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(airDateConstraints)
     }

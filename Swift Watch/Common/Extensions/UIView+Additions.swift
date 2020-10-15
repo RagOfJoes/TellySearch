@@ -22,7 +22,7 @@ extension UIView {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         
-        let screen = UIScreen.main.bounds
+        let screen = UIApplication.shared.windows[0].bounds
         
         scrollView.contentOffset = CGPoint(x: 0, y: 0)
         scrollView.contentSize = CGSize(width: screen.width, height: screen.height)

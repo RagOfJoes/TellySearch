@@ -14,6 +14,7 @@ class EpisodeView: UIViewController {
     // MARK: - Internal Properties
     private let episode: Episode
     private let colors: UIImageColors
+    private var backdropHeightConstraint: NSLayoutConstraint!
     
     private var scrollView = UIScrollView()
     private var containerView = UIView()
@@ -74,15 +75,20 @@ class EpisodeView: UIViewController {
         view.showAnimatedSkeleton()
         
         setupAnchor()
+        configureSubviews()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         DispatchQueue.main.async {
-            self.configureSubviews()
             self.updateContentSize()
         }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        backdropHeightConstraint.constant = T.Height.Episode
     }
     
     required init?(coder: NSCoder) {
@@ -126,9 +132,10 @@ extension EpisodeView {
         ]
         NSLayoutConstraint.activate(containerViewConstraints)
         
+        backdropHeightConstraint = backdrop.heightAnchor.constraint(equalToConstant: T.Height.Episode)
         let backdropConstraints: [NSLayoutConstraint] = [
+            backdropHeightConstraint,
             backdrop.topAnchor.constraint(equalTo: containerView.topAnchor),
-            backdrop.heightAnchor.constraint(equalToConstant: SeasonsViewCell.backdropHeight),
             backdrop.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
             backdrop.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
@@ -214,5 +221,7 @@ extension EpisodeView {
         } else {
             guestStars.removeFromSuperview()
         }
+        
+        view.hideSkeleton()
     }
 }

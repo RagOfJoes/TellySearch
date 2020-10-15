@@ -28,6 +28,7 @@ class CreditDetailModal: UIViewController {
     private let cast: Cast?
     private let crew: Crew?
     private let type: CreditDetailType
+    private var personStackHeightConstraint: NSLayoutConstraint!
     
     private let colors: UIImageColors
     private var personDetail: PersonDetail?
@@ -36,19 +37,17 @@ class CreditDetailModal: UIViewController {
     private var scrollView: UIScrollView
     private var containerView: UIView
     private lazy var poster: PosterImageView = {
-        var poster: PosterImageView
+        let poster: PosterImageView
         if type == .Cast {
             poster = PosterImageView(with: cast?.profilePath)
         } else {
             poster = PosterImageView(with: crew?.profilePath)
         }
-        poster.isSkeletonable = true
         return poster
     }()
-    
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         label.textColor = colors.primary
         label.font = T.Typography(variant: .HeadingOne).font
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -62,37 +61,18 @@ class CreditDetailModal: UIViewController {
         label.isSkeletonable = true
         return label
     }()
-    
     private lazy var genderLabels: InfoStackView = {
         return InfoStackView(using: colors)
     }()
-    private lazy var bornLabels: InfoStackView = {
+    private lazy var lifetimeLabel: InfoStackView = {
         return InfoStackView(using: colors)
     }()
-    private lazy var diedLabels: InfoStackView = {
-        return InfoStackView(using: colors)
-    }()
-    private lazy var birthplaceStack: InfoStackView = {
-        return InfoStackView(using: colors)
-    }()
-    
     private lazy var personalStackViews: UIStackView = {
-        let personalStackViews = UIStackView(arrangedSubviews: [nameLabel, genderLabels, bornLabels, diedLabels])
+        let personalStackViews = UIStackView(arrangedSubviews: [nameLabel, genderLabels, lifetimeLabel])
         personalStackViews.axis = .vertical
-        
+        personalStackViews.translatesAutoresizingMaskIntoConstraints = false
         personalStackViews.isSkeletonable = true
         return personalStackViews
-    }()
-    
-    private lazy var personStackView: UIStackView = {
-        let personStackView = UIStackView(arrangedSubviews: [poster, personalStackViews])
-        personStackView.alignment = .bottom
-        personStackView.translatesAutoresizingMaskIntoConstraints = false
-        personStackView.setCustomSpacing(T.Spacing.Vertical(size: .small), after: poster)
-        
-        personStackView.isSkeletonable = true
-        personStackView.showAnimatedGradientSkeleton()
-        return personStackView
     }()
     
     private lazy var knownForStack: InfoStackView = {
@@ -110,7 +90,6 @@ class CreditDetailModal: UIViewController {
         bodyStackView.translatesAutoresizingMaskIntoConstraints = false
         
         bodyStackView.isSkeletonable = true
-        bodyStackView.showAnimatedGradientSkeleton()
         return bodyStackView
     }()
     
@@ -155,7 +134,8 @@ class CreditDetailModal: UIViewController {
         
         view.addSubview(scrollView)
         scrollView.addSubview(containerView)
-        containerView.addSubview(personStackView)
+        containerView.addSubview(poster)
+        containerView.addSubview(personalStackViews)
         containerView.addSubview(bodyStackView)
         containerView.addSubview(notableWorks)
         
@@ -213,18 +193,23 @@ extension CreditDetailModal {
         ]
         NSLayoutConstraint.activate(containerViewConstraints)
         
-        let hStackConstraints: [NSLayoutConstraint] = [
-            personStackView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            personStackView.heightAnchor.constraint(equalToConstant: T.Height.Poster),
-            personStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
-            personStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal()),
+        let posterConstraints: [NSLayoutConstraint] = [
+            poster.topAnchor.constraint(equalTo: containerView.topAnchor),
+            poster.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal())
         ]
-        NSLayoutConstraint.activate(hStackConstraints)
+        NSLayoutConstraint.activate(posterConstraints)
+        
+        let personalConstraints: [NSLayoutConstraint] = [
+            personalStackViews.bottomAnchor.constraint(equalTo: poster.bottomAnchor),
+            personalStackViews.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal()),
+            personalStackViews.leadingAnchor.constraint(equalTo: poster.trailingAnchor, constant: T.Spacing.Horizontal(size: .small)),
+        ]
+        NSLayoutConstraint.activate(personalConstraints)
         
         let bodyStackConstraints: [NSLayoutConstraint] = [
+            bodyStackView.topAnchor.constraint(equalTo: poster.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
             bodyStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
-            bodyStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal()),
-            bodyStackView.topAnchor.constraint(equalTo: personStackView.bottomAnchor, constant: T.Spacing.Vertical(size: .large))
+            bodyStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(bodyStackConstraints)
         
@@ -272,21 +257,16 @@ extension CreditDetailModal {
 
 // MARK: - SubViews Setup
 extension CreditDetailModal {
-    private func setupPersonalLabels(title: String, value: String?, parentView: UIStackView?, view: InfoStackView?, previousView: UIView?) {
+    private func setupPersonalLabels(title: String, value: String, customSpacing: CGFloat = T.Spacing.Vertical(), parentView: UIStackView?, view: InfoStackView?, previousView: UIView?) {
         guard let safeParent = parentView else { return }
         guard let safeView = view else { return }
-        guard let safeValue = value else {
-            safeParent.removeArrangedSubview(safeView)
-            safeView.removeFromSuperview()
-            return
-        }
         
         DispatchQueue.main.async {
-            safeView.setup(title: title, value: safeValue, colors: self.colors)
+            safeView.setup(title: title, value: value, colors: self.colors)
         }
         
         guard let safePreviousView = previousView else { return }
-        safeParent.setCustomSpacing(T.Spacing.Vertical(size: .large), after: safePreviousView)
+        safeParent.setCustomSpacing(customSpacing, after: safePreviousView)
     }
 }
 
@@ -304,10 +284,8 @@ extension CreditDetailModal {
             })
         } else {
             setupPersonalLabels(title: "Gender", value: "-", parentView: personalStackViews, view: genderLabels, previousView: nameLabel)
-            setupPersonalLabels(title: "Born", value: "-", parentView: personalStackViews, view: bornLabels, previousView: genderLabels)
-            setupPersonalLabels(title: "Died", value: "-", parentView: personalStackViews, view: diedLabels, previousView: bornLabels)
-            setupPersonalLabels(title: "Place Of Birth", value: "-", parentView: personalStackViews, view: birthplaceStack, previousView: (diedLabels.isDescendant(of: personalStackViews)) ? diedLabels : bornLabels)
-            setupPersonalLabels(title: "Known For", value: "-", parentView: bodyStackView, view: knownForStack, previousView: birthplaceStack)
+            setupPersonalLabels(title: "Born", value: "-", parentView: personalStackViews, view: lifetimeLabel, previousView: genderLabels)
+            setupPersonalLabels(title: "Known For", value: "-", parentView: bodyStackView, view: knownForStack, previousView: lifetimeLabel)
             setupPersonalLabels(title: "About", value: "-", parentView: bodyStackView, view: biographyStack, previousView: knownForStack)
             
             notableWorks.removeFromSuperview()
@@ -317,12 +295,12 @@ extension CreditDetailModal {
         personDetailData.then { [weak self] (data) in
             self?.personDetail = data
             
+            let lifetimeTitle = data.died == nil ? "Born" : "Born - Died"
+            let lifetimeValue = data.died == nil ? data.born ?? "-" : "\(data.born ?? "-") - \(data.died ?? "-")"
             self?.setupPersonalLabels(title: "Gender", value: data.genderStr, parentView: self?.personalStackViews, view: self?.genderLabels, previousView: self?.nameLabel)
-            self?.setupPersonalLabels(title: "Born", value: data.born, parentView: self?.personalStackViews, view: self?.bornLabels, previousView: self?.genderLabels)
-            self?.setupPersonalLabels(title: "Died", value: data.died, parentView: self?.personalStackViews, view: self?.diedLabels, previousView: self?.bornLabels)
-            self?.setupPersonalLabels(title: "Place Of Birth", value: data.birthPlace, parentView: self?.personalStackViews, view: self?.birthplaceStack, previousView: (self?.diedLabels.isDescendant(of: self!.personalStackViews))! ? self?.diedLabels : self?.bornLabels)
-            self?.setupPersonalLabels(title: "Known For", value: data.knownFor, parentView: self?.bodyStackView, view: self?.knownForStack, previousView: self?.birthplaceStack)
-            self?.setupPersonalLabels(title: "About", value: data.biography.count <= 0 ? "-" : data.biography, parentView: self?.bodyStackView, view: self?.biographyStack, previousView: self?.knownForStack)
+            self?.setupPersonalLabels(title: lifetimeTitle, value: lifetimeValue, parentView: self?.personalStackViews, view: self?.lifetimeLabel, previousView: self?.genderLabels)
+            self?.setupPersonalLabels(title: "Known For", value: data.knownFor, parentView: self?.bodyStackView, view: self?.knownForStack, previousView: self?.lifetimeLabel)
+            self?.setupPersonalLabels(title: "About", value: data.biography.count <= 0 ? "-" : data.biography, customSpacing: T.Spacing.Vertical(size: .large), parentView: self?.bodyStackView, view: self?.biographyStack, previousView: self?.knownForStack)
             
             if let notableWorks = data.notableWorks, notableWorks.count > 0 {
                 DispatchQueue.main.async {
@@ -333,7 +311,7 @@ extension CreditDetailModal {
             }
             
             DispatchQueue.main.async {
-                self?.containerView.hideSkeleton()
+                self?.view.hideSkeleton()
             }
         }
     }
@@ -357,7 +335,7 @@ extension CreditDetailModal: CreditDetailNotableWorksDelegate {
             let show = Show(id: media.id, name: media.name!, overview: media.overview, posterPath: media.posterPath, firstAirDate: media.firstAirDate!, backdropPath: media.backdropPath)
             detailVC = ShowDetailViewController(with: show)
         } else {
-            let movie = Movie(id: media.id, title: media.title!, overview: media.overview, releaseDate: media.releaseDate ?? "", posterPath: media.posterPath, backdropPath: media.backdropPath)
+            let movie = Movie(id: media.id, title: media.title!, overview: media.overview, posterPath: media.posterPath, releaseDate: media.releaseDate ?? "", backdropPath: media.backdropPath)
             detailVC = MovieDetailViewController(with: movie)
         }
         

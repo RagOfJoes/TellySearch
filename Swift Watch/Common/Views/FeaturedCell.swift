@@ -34,7 +34,6 @@ class FeaturedCell: UICollectionViewCell {
         title.textColor = UIColor(named: "primaryTextColor")
         title.translatesAutoresizingMaskIntoConstraints = false
         title.font = T.Typography(variant: .Body, weight: .bold).font
-
         
         return title
     }()
@@ -50,13 +49,11 @@ class FeaturedCell: UICollectionViewCell {
         let placeholder = "Lorem"
         let primaryFont = T.Typography(variant: .Body, weight: .bold).font
         let primaryHeight = placeholder.height(font: primaryFont) * 2
-        
-        let imageHeight: CGFloat = T.Height.Cell(type: .Featured) - (primaryHeight + T.Spacing.Vertical(size: .small))
         let stackViewConstraints: [NSLayoutConstraint] = [
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: imageHeight),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -(primaryHeight + T.Spacing.Vertical(size: .small))),
             
             title.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
             title.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),

@@ -223,7 +223,7 @@ extension ShowDetailViewController {
     
     private func updateContentSize() {
         let offsetHeight:CGFloat = K.ScrollOffsetHeight
-        let screen = UIScreen.main.bounds
+        let screen = UIApplication.shared.windows[0].bounds
         
         let stackViewY = stackView.frame.maxY + offsetHeight
         if stackViewY > screen.height {
@@ -246,7 +246,7 @@ extension ShowDetailViewController {
             
             let title = self?.show.name
             let releaseDate = self?.show.firstAirDate
-            let posterURL = self?.show.posterPath != nil ? K.URL.Poster + ((self?.show.posterPath!)!) : nil
+            let posterURL = self?.show.posterPath
             let backdropURL = self?.show.backdropPath != nil ? K.URL.Backdrop + (self!.show.backdropPath!) : nil
             
             // Return Void Promise to allow Recommendations to setup UI
@@ -389,7 +389,7 @@ extension ShowDetailViewController: ShowDetailSeasonsDelegate {
         let seasonModal = SeasonsView(tvId: show.id, season: season, colors: safeColors)
         seasonModal.creditModalDelegate = self
         let navController = UINavigationController(rootViewController: seasonModal)
-        present(navController, animated: true)
+        navigationController?.present(navController, animated: true)
     }
 }
 

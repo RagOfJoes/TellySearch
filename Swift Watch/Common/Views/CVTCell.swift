@@ -9,11 +9,6 @@
 import UIKit
 import SkeletonView
 
-enum CVTCellType {
-    case Regular
-    case Featured
-}
-
 class CVTCell: UITableViewCell {
     // MARK: - Internal Properties
     static var reuseIdentifier: String {
@@ -77,7 +72,7 @@ extension CVTCell {
             collectionViewLeading,
             collectionViewTrailing,
             collectionView.topAnchor.constraint(equalTo: topAnchor),
-            collectionView.heightAnchor.constraint(equalToConstant: T.Height.Cell(type: type))
+            collectionView.heightAnchor.constraint(equalTo: heightAnchor)
         ]
         NSLayoutConstraint.activate(collectionViewConstraints)
     }
