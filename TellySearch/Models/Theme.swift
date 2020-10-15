@@ -144,7 +144,7 @@ struct T {
             switch type {
             case .Featured:
                 let maxWidth: CGFloat = 512
-                let minWidth =  screen.width / 1.25
+                let minWidth =  screen.width / 1.1
                 let numberOfCells: CGFloat = screen.width / minWidth
                 let width: CGFloat = (numberOfCells / numberOfCells) * minWidth
                 if width > maxWidth {

@@ -42,7 +42,7 @@ class FloatingTabBarView: UIView {
         // Setup StackView
         addSubview(stackView)
         setupStackView(with: items)
-        
+        setupShadow()
         UIView.animate(withDuration: 0.2) {
             self.updateUI(selectedIndex: 0)
         }
@@ -51,7 +51,7 @@ class FloatingTabBarView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         layer.cornerRadius = cornerRadius
-        setupShadow()
+        updateShadow()
     }
     
     func hideTabBar(_ hide: Bool) {
@@ -116,14 +116,30 @@ extension FloatingTabBarView {
         if #available(iOS 12, *), traitCollection.userInterfaceStyle == .dark {
             
         } else {
-            layer.shadowOpacity = 0.18
+            layer.contents = center
+            layer.shadowRadius = 1.0
+            layer.shadowOpacity = 0.12
             layer.masksToBounds = false
             layer.shouldRasterize = true
-            layer.shadowRadius = cornerRadius
+            layer.cornerRadius = cornerRadius
             layer.shadowColor = UIColor.black.cgColor
             layer.rasterizationScale = UIScreen.main.scale
+            layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+            layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius).cgPath
+        }
+       
+    }
+    
+    private func updateShadow() {
+        if #available(iOS 12, *), traitCollection.userInterfaceStyle == .dark {
+            
+        } else {
+            layer.shadowRadius = 5.0
+            layer.shadowOpacity = 0.12
+            layer.masksToBounds = false
+            layer.shadowColor = UIColor.black.cgColor
             layer.shadowOffset = CGSize(width: 0, height: 0)
-            layer.shadowPath = UIBezierPath(rect: bounds).cgPath
+            layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius).cgPath
         }
     }
     
