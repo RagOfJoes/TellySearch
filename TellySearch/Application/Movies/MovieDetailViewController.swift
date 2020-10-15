@@ -1,6 +1,6 @@
 //
 //  MovieDetailViewController.swift
-//  Swift Watch
+//  TellySearch
 //
 //  Created by Victor Ragojos on 7/30/20.
 //  Copyright © 2020 Victor Ragojos. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  Swift_WatchUITests.swift
-//  Swift WatchUITests
+//  TellySearchUITests
 //
 //  Created by Victor Ragojos on 7/23/20.
 //  Copyright © 2020 Victor Ragojos. All rights reserved.

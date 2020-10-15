@@ -1,6 +1,6 @@
 //
 //  Array+Additions.swift
-//  Swift Watch
+//  TellySearch
 //
 //  Created by Victor Ragojos on 9/8/20.
 //  Copyright © 2020 Victor Ragojos. All rights reserved.

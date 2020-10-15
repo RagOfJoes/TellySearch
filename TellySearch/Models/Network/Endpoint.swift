@@ -1,6 +1,6 @@
 //
 //  Endpoint.swift
-//  Swift Watch
+//  TellySearch
 //
 //  Created by Victor Ragojos on 10/14/20.
 //  Copyright © 2020 Victor Ragojos. All rights reserved.
