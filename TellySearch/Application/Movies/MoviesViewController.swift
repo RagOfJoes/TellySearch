@@ -13,9 +13,10 @@ import SkeletonView
 class MoviesViewController: UIViewController  {
     var movies: [[Movie]?] = []
     let sections: [MovieSectionCell] = [
-        MovieSectionCell(section: MovieSection(title: "Popular"), type: .Featured),
-        MovieSectionCell(section: MovieSection(title: "In Theatres"), type: .Regular),
-        MovieSectionCell(section: MovieSection(title: "Upcoming"), type: .Regular)
+        MovieSectionCell(type: .Featured, section: MovieSection(title: "Popular"), request: NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .popular))),
+        MovieSectionCell(type: .Regular, section: MovieSection(title: "In Theatres"), request: NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .inTheatres))),
+        MovieSectionCell(type: .Regular, section: MovieSection(title: "Upcoming"), request: NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .upcoming))),
+        MovieSectionCell(type: .Regular, section: MovieSection(title: "Trending"), request: NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .trending)))
     ]
     
     private lazy var tableView: UITableView = {
@@ -49,11 +50,7 @@ class MoviesViewController: UIViewController  {
         view.isSkeletonable = true
         view.showAnimatedSkeleton()
         
-        let section1: Promise<MovieSection> = NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .popular))
-        let section2: Promise<MovieSection> = NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .inTheatres))
-        let section3: Promise<MovieSection> = NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .upcoming))
-        let promises = [section1, section2, section3]
-        
+        let promises: [Promise<MovieSection>] = sections.map { $0.request }
         all(promises).then { [weak self] (results) in
             // Loop through all the results
             // and append to movies array
@@ -89,7 +86,11 @@ extension MoviesViewController: UITableViewDelegate {
 // MARK: - UITableViewDataSource
 extension MoviesViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sections.count
+        if movies.count == sections.count {
+            return sections.count
+        }
+        
+        return 0
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -104,7 +105,7 @@ extension MoviesViewController: UITableViewDataSource {
                 return UITableViewCell()
             }
             
-            if movies.count > indexPath.section, let data = movies[indexPath.section] {
+            if let data = movies[indexPath.section] {
                 cell.delegate = self
                 
                 let section = indexPath.section
@@ -116,7 +117,7 @@ extension MoviesViewController: UITableViewDataSource {
                 return UITableViewCell()
             }
             
-            if movies.count > indexPath.section, let data = movies[indexPath.section] {
+            if let data = movies[indexPath.section] {
                 cell.delegate = self
                 
                 let section = indexPath.section

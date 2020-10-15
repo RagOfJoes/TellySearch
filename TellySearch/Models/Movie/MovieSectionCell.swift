@@ -6,9 +6,11 @@
 //  Copyright © 2020 Victor Ragojos. All rights reserved.
 //
 
+import Promises
 import Foundation
 
 struct MovieSectionCell {
-    let section: MovieSection
     let type: T.CellType
+    let section: MovieSection
+    let request: Promise<MovieSection>
 }

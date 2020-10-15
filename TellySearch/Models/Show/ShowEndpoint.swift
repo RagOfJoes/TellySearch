@@ -33,7 +33,11 @@ enum ShowEndpoint: Endpoint {
         case .getShowDetail(let id):
             return "\(basePath)/\(id)"
         case .getOverview(let type):
-            return "\(basePath)/\(type.rawValue)"
+            if type == .trending {
+                return "/3/trending/tv/week"
+            } else {
+                return "\(basePath)/\(type.rawValue)"
+            }
         case .getSeasonDetail(let tvId, let seasonNumber):
             return "\(basePath)/\(tvId)/season/\(seasonNumber)"
         }

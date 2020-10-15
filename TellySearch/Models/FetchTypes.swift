@@ -10,6 +10,7 @@ import Foundation
 
 enum FetchTypes: String {
     case popular = "popular"
+    case trending = "trending"
     case upcoming = "upcoming"
     case topRated = "top_rated"
     case inTheatres = "now_playing"

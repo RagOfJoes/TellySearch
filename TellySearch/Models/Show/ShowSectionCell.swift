@@ -6,9 +6,11 @@
 //  Copyright © 2020 Victor Ragojos. All rights reserved.
 //
 
+import Promises
 import Foundation
 
 struct ShowSectionCell {
-    let section: ShowSection
     let type: T.CellType
+    let section: ShowSection
+    let request: Promise<ShowSection>
 }

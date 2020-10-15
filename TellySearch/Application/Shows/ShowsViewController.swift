@@ -13,9 +13,10 @@ import SkeletonView
 class ShowsViewController: UIViewController {
     var shows: [[Show]?] = []
     var sections: [ShowSectionCell] = [
-        ShowSectionCell(section: ShowSection(title: "Airing Today"), type: .Featured),
-        ShowSectionCell(section: ShowSection(title: "Popular"), type: .Regular),
-        ShowSectionCell(section: ShowSection(title: "On The Air"), type: .Regular),
+        ShowSectionCell(type: .Featured, section: ShowSection(title: "Airing Today"), request: NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .onTheAirToday))),
+        ShowSectionCell(type: .Regular, section: ShowSection(title: "Popular"), request: NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .popular))),
+        ShowSectionCell(type: .Regular, section: ShowSection(title: "On The Air"), request: NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .onTheAir))),
+        ShowSectionCell(type: .Regular, section: ShowSection(title: "Trending"), request: NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .trending)))
     ]
     
     private lazy var tableView: UITableView = {
@@ -49,15 +50,7 @@ class ShowsViewController: UIViewController {
         view.isSkeletonable = true
         view.showAnimatedSkeleton()
         
-        let section1: Promise<ShowSection> = NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .onTheAirToday))
-        let section2: Promise<ShowSection> = NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .popular))
-        let section3: Promise<ShowSection> = NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .onTheAir))
-        let promises = [
-            section1,
-            section2,
-            section3
-        ]
-        
+        let promises: [Promise<ShowSection>] = sections.map { $0.request }
         all(promises).then { [weak self] (results) in
             // Loop through all the results
             // and append to shows array
@@ -93,7 +86,11 @@ extension ShowsViewController: UITableViewDelegate {
 // MARK: - UITableViewDataSource
 extension ShowsViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sections.count
+        if shows.count == sections.count {
+            return sections.count
+        }
+        
+        return 0
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -106,7 +103,7 @@ extension ShowsViewController: UITableViewDataSource {
         if cellType == .Featured {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ShowsFeaturedCollectionView.reuseIdentifier, for: indexPath) as? ShowsFeaturedCollectionView else { return UITableViewCell() }
             
-            if shows.count > indexPath.section, let data = shows[indexPath.section] {
+            if let data = shows[indexPath.section] {
                 cell.delegate = self
                 
                 let section = indexPath.section
@@ -116,7 +113,7 @@ extension ShowsViewController: UITableViewDataSource {
         } else {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ShowsCollectionView.reuseIdentifier, for: indexPath) as? ShowsCollectionView else { return UITableViewCell() }
             
-            if shows.count > indexPath.section, let data = shows[indexPath.section] {
+            if let data = shows[indexPath.section] {
                 cell.delegate = self
                 
                 let section = indexPath.section

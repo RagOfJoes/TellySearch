@@ -32,7 +32,11 @@ enum MovieEndpoint: Endpoint {
         case .getDetail(let id):
             return "\(basePath)/\(id)"
         case .getOverview(let type):
-            return "\(basePath)/\(type.rawValue)"
+            if type == .trending {
+                return "/3/trending/movie/week"
+            } else {
+                return "\(basePath)/\(type.rawValue)"
+            }
         }
     }
     
