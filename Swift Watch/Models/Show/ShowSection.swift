@@ -19,55 +19,8 @@ struct ShowSection: Codable {
         self.results = results
     }
     
-    func fetchSection(with type: FetchTypes) -> Promise<Data> {
-        return Promise<Data>(on: .global(qos: .userInitiated)) { (fullfill, reject) in
-            if let url = URL(string: "\(K.URL.Show)/\(type.rawValue)\(K.CommonQuery)") {
-                let session = URLSession(configuration: .default)
-                
-                session.dataTask(with: url, completionHandler: { (data, response, error) in
-                    if let e = error {
-                        reject(e)
-                        return
-                    }
-                    
-                    guard let safeData = data else {
-                        reject(ShowFetchError(description: "An Error has occured fetching Show Section Data"))
-                        return
-                    }
-                    
-                    fullfill(safeData)
-                }).resume()
-            } else {
-                reject(ShowFetchError(description: "An Invalid URL was provided"))
-            }
-        }
-    }
-    
     enum CodingKeys: String, CodingKey {
         case title
         case results
-    }
-}
-
-
-// MARK: - Helper Functions
-extension ShowSection {
-    static func decodeShowSection(data: Data) -> Promise<[Show]> {
-        return Promise<[Show]>(on: .global(qos: .userInitiated), { (fullfill, reject) in
-            do {
-                let decoder = JSONDecoder()
-                let decodedShowSection = try decoder.decode(ShowSection.self, from: data)
-                
-                guard let results = decodedShowSection.results else {
-                    reject(ShowFetchError(description: "An Error has occured parsing fetched Show Data"))
-                    return
-                }
-                
-                fullfill(results)
-                return
-            } catch {
-                reject(error)
-            }
-        })
     }
 }

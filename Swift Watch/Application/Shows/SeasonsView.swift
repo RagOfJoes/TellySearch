@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Promises
 import SkeletonView
 
 class SeasonsView: UICollectionViewController {
@@ -86,9 +87,8 @@ extension SeasonsView {
 // MARK: - Data Fetches
 extension SeasonsView {
     private func fetchDetails() {
-        season.fetchDetail(tvId: tvId).then { (data) in
-            return SeasonDetail.decodeSeasonData(data: data)
-        }.then { [weak self] (detail) in
+        let request: Promise<SeasonDetail> = NetworkManager.request(endpoint: ShowEndpoint.getSeasonDetail(tvId: tvId, seasonNumber: season.seasonNumber), cache: C.Season, cacheKey: season.cacheKey)
+        request.then { [weak self] (detail) in
             self?.detail = detail
             self?.view.hideSkeleton()
         }

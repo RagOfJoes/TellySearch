@@ -36,19 +36,3 @@ struct MovieDetail: Codable {
         case rateAvg = "vote_average"
     }
 }
-
-extension MovieDetail {
-    static func decodeMovieData(data: Data) -> Promise<MovieDetail> {
-        return Promise<MovieDetail>(on: .promises, { (fullfill, reject) in
-            do {
-                let decoder = JSONDecoder()
-                let decodedMovieDetail = try decoder.decode(MovieDetail.self, from: data)
-                
-                fullfill(decodedMovieDetail)
-                return
-            } catch {
-                reject(MovieFetchError(description: "An Error has occured decoding Movie Detail Data"))
-            }
-        })
-    }
-}

@@ -233,23 +233,21 @@ extension MovieDetailViewController {
 // MARK: - SubViews Setup
 extension MovieDetailViewController {
     private func setupDetailUI() {
-        movie.fetchDetail().then({ data -> Promise<MovieDetail> in
-            return MovieDetail.decodeMovieData(data: data)
-        }).then ({ [weak self] detail in
+        let request: Promise<MovieDetail> = NetworkManager.request(endpoint: MovieEndpoint.getDetail(id: movie.id), cache: C.Movie, cacheKey: movie.cacheKey)
+        request.then { [weak self] (detail) in
             let backdropText = self?.setupBackdropText(with: detail)
-            
+
             let (genres, runtime) = backdropText ?? ("-", "-")
-            
+
             let title = self?.movie.title
             let releaseDate = self?.movie.releaseDate
-            
+
             let posterURL = self?.movie.posterPath
             let backdropURL = self?.movie.backdropPath != nil ? K.URL.Backdrop + (self?.movie.backdropPath!)! : nil
-            
-            // Return Void Promise to allow Recommendations to setup UI
+
             self?.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate)
             self?.detail = detail
-        })
+        }
     }
     
     private func setupRecommendationsView(with movies: [Movie], using colors: UIImageColors) {

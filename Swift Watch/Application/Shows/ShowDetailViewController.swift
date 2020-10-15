@@ -237,22 +237,21 @@ extension ShowDetailViewController {
 // MARK: - SubViews Setup
 extension ShowDetailViewController {
     private func setupDetailUI() {
-        show.fetchDetail().then({ data -> Promise<ShowDetail> in
-            return ShowDetail.decodeShowData(data: data)
-        }).then({ [weak self] detail in
+        let request: Promise<ShowDetail> = NetworkManager.request(endpoint: ShowEndpoint.getShowDetail(id: show.id), cache: C.Show, cacheKey: show.cacheKey)
+        request.then { [weak self] (detail) in
             let backdropText = self?.setupBackdropText(with: detail)
-            
+
             let (genres, runtime) = backdropText ?? ("-", "-")
-            
+
             let title = self?.show.name
             let releaseDate = self?.show.firstAirDate
             let posterURL = self?.show.posterPath
             let backdropURL = self?.show.backdropPath != nil ? K.URL.Backdrop + (self!.show.backdropPath!) : nil
-            
+
             // Return Void Promise to allow Recommendations to setup UI
             self?.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate)
             self?.detail = detail
-        })
+        }
     }
     
     private func setupCastCollectionView(with credits: Credits, using colors: UIImageColors) {

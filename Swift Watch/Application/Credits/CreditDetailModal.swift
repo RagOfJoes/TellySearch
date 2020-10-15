@@ -273,15 +273,11 @@ extension CreditDetailModal {
 // MARK: - Data Fetchers
 extension CreditDetailModal {
     private func fetchDetails() {
-        var personDetailData: Promise<PersonDetail>
+        let personDetailData: Promise<PersonDetail>
         if cast != nil && type == .Cast {
-            personDetailData = cast!.fetchDetail().then({ data -> Promise<PersonDetail> in
-                return PersonDetail.decodePersonDetail(data: data)
-            })
+            personDetailData = NetworkManager.request(endpoint: PersonEndpoint.getPersonDetail(id: cast!.id), cache: C.Person, cacheKey: cast!.cacheKey)
         } else if crew != nil && type == .Crew {
-            personDetailData = crew!.fetchDetail().then({ data -> Promise<PersonDetail> in
-                return PersonDetail.decodePersonDetail(data: data)
-            })
+            personDetailData = NetworkManager.request(endpoint: PersonEndpoint.getPersonDetail(id: crew!.id), cache: C.Person, cacheKey: crew!.cacheKey)
         } else {
             setupPersonalLabels(title: "Gender", value: "-", parentView: personalStackViews, view: genderLabels, previousView: nameLabel)
             setupPersonalLabels(title: "Born", value: "-", parentView: personalStackViews, view: lifetimeLabel, previousView: genderLabels)
@@ -313,6 +309,8 @@ extension CreditDetailModal {
             DispatchQueue.main.async {
                 self?.view.hideSkeleton()
             }
+        }.catch { (e) in
+            print(e)
         }
     }
 }

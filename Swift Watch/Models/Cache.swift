@@ -23,7 +23,7 @@ struct C {
             expiry: C.Expiration,
             countLimit: C.CountLimit,
             totalCostLimit: C.TotalCostLimit
-        ), transformer: TransformerFactory.forCodable(ofType: Data.self)
+        ), transformer: TransformerFactory.forCodable(ofType: ShowDetail.self)
     )
     
     static let Season = try? Storage(
@@ -32,7 +32,7 @@ struct C {
             expiry: C.Expiration,
             countLimit: C.CountLimit,
             totalCostLimit: C.TotalCostLimit
-        ), transformer: TransformerFactory.forCodable(ofType: Data.self)
+        ), transformer: TransformerFactory.forCodable(ofType: SeasonDetail.self)
     )
     
     static let Movie = try? Storage(
@@ -41,7 +41,7 @@ struct C {
             expiry: C.Expiration,
             countLimit: C.CountLimit,
             totalCostLimit: C.TotalCostLimit
-        ), transformer: TransformerFactory.forCodable(ofType: Data.self)
+        ), transformer: TransformerFactory.forCodable(ofType: MovieDetail.self)
     )
     
     static let Person = try? Storage(
@@ -50,6 +50,6 @@ struct C {
             expiry: C.Expiration,
             countLimit: C.CountLimit,
             totalCostLimit: C.TotalCostLimit
-        ), transformer: TransformerFactory.forCodable(ofType: Data.self)
+        ), transformer: TransformerFactory.forCodable(ofType: PersonDetail.self)
     )
 }

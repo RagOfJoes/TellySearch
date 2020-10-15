@@ -49,21 +49,20 @@ class ShowsViewController: UIViewController {
         view.isSkeletonable = true
         view.showAnimatedSkeleton()
         
+        let section1: Promise<ShowSection> = NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .onTheAirToday))
+        let section2: Promise<ShowSection> = NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .popular))
+        let section3: Promise<ShowSection> = NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .onTheAir))
         let promises = [
-            sections[0].section.fetchSection(with: .onTheAirToday),
-            sections[1].section.fetchSection(with: .popular),
-            sections[2].section.fetchSection(with: .onTheAir)
+            section1,
+            section2,
+            section3
         ]
         
-        all(promises.map {
-            return $0.then({ (data) -> Promise<[Show]> in
-                return ShowSection.decodeShowSection(data: data)
-            })
-        }).then { [weak self] (results) in
+        all(promises).then { [weak self] (results) in
             // Loop through all the results
             // and append to shows array
             for result in results {
-                self?.shows.append(result)
+                self?.shows.append(result.results)
             }
             
             self?.view.hideSkeleton()

@@ -12,7 +12,7 @@ import SkeletonView
 
 class MoviesViewController: UIViewController  {
     var movies: [[Movie]?] = []
-    var sections: [MovieSectionCell] = [
+    let sections: [MovieSectionCell] = [
         MovieSectionCell(section: MovieSection(title: "Popular"), type: .Featured),
         MovieSectionCell(section: MovieSection(title: "In Theatres"), type: .Regular),
         MovieSectionCell(section: MovieSection(title: "Upcoming"), type: .Regular)
@@ -49,21 +49,16 @@ class MoviesViewController: UIViewController  {
         view.isSkeletonable = true
         view.showAnimatedSkeleton()
         
-        let promises = [
-            sections[0].section.fetchSection(with: .popular),
-            sections[1].section.fetchSection(with: .inTheatres),
-            sections[2].section.fetchSection(with: .upcoming)
-        ]
+        let section1: Promise<MovieSection> = NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .popular))
+        let section2: Promise<MovieSection> = NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .inTheatres))
+        let section3: Promise<MovieSection> = NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .upcoming))
+        let promises = [section1, section2, section3]
         
-        all(promises.map {
-            return $0.then({ (data) -> Promise<[Movie]> in
-                return MovieSection.decodeMovieSection(data: data)
-            })
-        }).then { [weak self] (results) in
+        all(promises).then { [weak self] (results) in
             // Loop through all the results
             // and append to movies array
             for result in results {
-                self?.movies.append(result)
+                self?.movies.append(result.results)
             }
             
             self?.view.hideSkeleton()

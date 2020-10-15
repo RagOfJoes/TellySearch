@@ -18,19 +18,3 @@ struct SeasonDetail: Codable {
         case episodes
     }
 }
-
-extension SeasonDetail {
-    static func decodeSeasonData(data: Data) -> Promise<SeasonDetail> {
-        return Promise<SeasonDetail>(on: .promises, { (fullfill, reject) in
-            do {
-                let decoder = JSONDecoder()
-                let decodedShowDeatail = try decoder.decode(SeasonDetail.self, from: data)
-                
-                fullfill(decodedShowDeatail)
-                return
-            } catch {
-                reject(ShowFetchError(description: "An Error has occured decoding Season Detail Data"))
-            }
-        })
-    }
-}

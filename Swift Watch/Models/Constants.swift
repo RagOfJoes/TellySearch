@@ -10,6 +10,7 @@ import UIKit
 
 struct K {
     static let ScrollOffsetHeight: CGFloat = 45
+    
     static let CommonQuery: String = "?api_key=\(K.TmdbApiKey)&region=\(K.User.country)&language=\(K.User.language)"
     static let TmdbApiKey: String = {
         if let path = Bundle.main.path(forResource: "Keys", ofType: "plist") {
@@ -32,6 +33,9 @@ struct K {
     }
     
     struct URL {
+        static let Base: String = "api.themoviedb.org"
+        
+        static let Images: String = "image.tmdb.org"
         // Images
         static let Poster: String = "https://image.tmdb.org/t/p/w500"
         static let Backdrop: String = "https://image.tmdb.org/t/p/original"
