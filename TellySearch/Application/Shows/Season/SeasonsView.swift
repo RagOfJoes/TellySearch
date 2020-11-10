@@ -17,7 +17,7 @@ class SeasonsView: UICollectionViewController {
     private let colors: UIImageColors
     private var detail: SeasonDetail? = nil
     
-    weak var creditModalDelegate: CreditDetailModalDelegate?
+    weak var creditVCDelegate: CreditDetailDelegate?
     
     // MARK: - Life Cycle
     init(tvId: Int, season: Season, colors: UIImageColors) {
@@ -150,7 +150,7 @@ extension SeasonsView: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let width: CGFloat = collectionView.frame.width - 40
+        let width: CGFloat = collectionView.frame.width - (T.Spacing.Horizontal() * 2)
         
         var overviewLabel: String = "-"
         let marginBottom: CGFloat = T.Spacing.Vertical(size: .large) * 3
@@ -171,7 +171,7 @@ extension SeasonsView: UICollectionViewDelegateFlowLayout {
         if let detail = detail, let credits = detail.credits, let cast = credits.cast, cast.count <= 0 {
             height -= castViewHeight + marginBottom - (episodesHeight - T.Spacing.Vertical(size: .small))
         }
-        return CGSize(width: collectionView.frame.width, height: height)
+        return CGSize(width: width, height: height)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
@@ -221,9 +221,9 @@ extension SeasonsView: SkeletonCollectionViewDataSource {
 // MARK: - CastCollectionViewDelegate
 extension SeasonsView: CastCollectionViewDelegate {
     func select(cast: Cast) {
-        let creditModal = CreditDetailModal(with: cast, using: colors)
-        creditModal.delegate = creditModalDelegate
-        navigationController?.pushViewController(creditModal, animated: true)
+        let creditVC = CreditDetailViewController(with: cast, using: colors)
+        creditVC.delegate = creditVCDelegate
+        navigationController?.pushViewController(creditVC, animated: true)
     }
 }
 

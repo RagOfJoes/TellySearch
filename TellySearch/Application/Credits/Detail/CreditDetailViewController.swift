@@ -1,5 +1,5 @@
 //
-//  CreditDetailModal.swift
+//  CreditDetailViewController.swift
 //  TellySearch
 //
 //  Created by Victor Ragojos on 8/12/20.
@@ -15,11 +15,11 @@ enum CreditDetailType {
     case Crew
 }
 
-protocol CreditDetailModalDelegate: class {
+protocol CreditDetailDelegate: class {
     func shouldPush(VC: UIViewController)
 }
 
-class CreditDetailModal: UIViewController {
+class CreditDetailViewController: UIViewController {
     // MARK: - Internal Properties
     override var prefersStatusBarHidden: Bool {
         return true
@@ -32,7 +32,7 @@ class CreditDetailModal: UIViewController {
     
     private let colors: UIImageColors
     private var personDetail: PersonDetail?
-    weak var delegate: CreditDetailModalDelegate?
+    weak var delegate: CreditDetailDelegate?
     
     private var scrollView: UIScrollView
     private var containerView: UIView
@@ -161,7 +161,7 @@ class CreditDetailModal: UIViewController {
 }
 
 // MARK: - View Setup
-extension CreditDetailModal {
+extension CreditDetailViewController {
     @objc func onBackButton() {
         dismiss(animated: true)
     }
@@ -256,7 +256,7 @@ extension CreditDetailModal {
 }
 
 // MARK: - SubViews Setup
-extension CreditDetailModal {
+extension CreditDetailViewController {
     private func setupPersonalLabels(title: String, value: String, customSpacing: CGFloat = T.Spacing.Vertical(), parentView: UIStackView?, view: InfoStackView?, previousView: UIView?) {
         guard let safeParent = parentView else { return }
         guard let safeView = view else { return }
@@ -271,7 +271,7 @@ extension CreditDetailModal {
 }
 
 // MARK: - Data Fetchers
-extension CreditDetailModal {
+extension CreditDetailViewController {
     private func fetchDetails() {
         let personDetailData: Promise<PersonDetail>
         if cast != nil && type == .Cast {
@@ -316,7 +316,7 @@ extension CreditDetailModal {
 }
 
 // MARK: - InfoStackViewDelegate
-extension CreditDetailModal: InfoStackViewDelegate {
+extension CreditDetailViewController: InfoStackViewDelegate {
     func didReadMore() {
         DispatchQueue.main.async {
             self.updateContentSize()
@@ -325,7 +325,7 @@ extension CreditDetailModal: InfoStackViewDelegate {
 }
 
 // MARK: - CreditDetailNotableWorksDelegate
-extension CreditDetailModal: CreditDetailNotableWorksDelegate {
+extension CreditDetailViewController: CreditDetailNotableWorksDelegate {
     func select(media: Media) {
         guard let type = media.mediaType else { return }
         var detailVC: UIViewController

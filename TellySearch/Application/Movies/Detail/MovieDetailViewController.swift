@@ -1,22 +1,23 @@
 //
-//  ShowDetailViewController.swift
+//  MovieDetailViewController.swift
 //  TellySearch
 //
-//  Created by Victor Ragojos on 9/6/20.
+//  Created by Victor Ragojos on 7/30/20.
 //  Copyright © 2020 Victor Ragojos. All rights reserved.
 //
 
 import UIKit
 import Promises
+import SkeletonView
 
-class ShowDetailViewController: UIViewController {
+class MovieDetailViewController: UIViewController {
     // MARK: - Internal Properties
     override var prefersStatusBarHidden: Bool {
         return true
     }
     
-    private let show: Show
-    private var detail: ShowDetail?
+    private let movie: Movie
+    private var detail: MovieDetail?
     private var colors: UIImageColors?
     
     private var containerView: UIView
@@ -27,22 +28,16 @@ class ShowDetailViewController: UIViewController {
         return backdropDetail
     }()
     
-    private lazy var createdBy: CreatorsCollectionView = {
-        let createdBy = CreatorsCollectionView()
-        createdBy.delegate = self
+    private lazy var directedBy: CreatorsCollectionView = {
+        let directedBy = CreatorsCollectionView()
+        directedBy.delegate = self
         
-        return createdBy
+        return directedBy
     }()
     
     private lazy var overviewStack: InfoStackView = {
         let overviewStack = InfoStackView()
         return overviewStack
-    }()
-    
-    private lazy var seasonsView: ShowDetailSeasons = {
-        let seasonsView = ShowDetailSeasons(.RegularSecondary)
-        seasonsView.delegate = self
-        return seasonsView
     }()
     
     private lazy var castCollectionView: CastCollectionView = {
@@ -51,18 +46,17 @@ class ShowDetailViewController: UIViewController {
         return castCollectionView
     }()
     
-    private lazy var recommendationsView: ShowDetailRecommendations = {
-        let recommendationsView = ShowDetailRecommendations(.Regular)
+    private lazy var recommendationsView: MovieDetailRecommendations = {
+        let recommendationsView = MovieDetailRecommendations(.Regular)
         recommendationsView.delegate = self
         return recommendationsView
     }()
     
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [seasonsView, castCollectionView, recommendationsView])
+        let stackView = UIStackView(arrangedSubviews: [castCollectionView, recommendationsView])
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        stackView.setCustomSpacing(T.Spacing.Vertical(size: .large), after: seasonsView)
         stackView.setCustomSpacing(T.Spacing.Vertical(size: .large), after: castCollectionView)
         stackView.setCustomSpacing(T.Spacing.Vertical(size: .large), after: recommendationsView)
         
@@ -70,9 +64,9 @@ class ShowDetailViewController: UIViewController {
         return stackView
     }()
     
-    // MARK: - Lifecycle
-    init(with show: Show) {
-        self.show = show
+    // MARK: - LifeCycle
+    init(with movie: Movie) {
+        self.movie = movie
         
         let (sV, cV) = UIView.createScrollView()
         scrollView = sV
@@ -83,6 +77,7 @@ class ShowDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         let backBarButton = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
         navigationItem.backBarButtonItem = backBarButton
         
@@ -90,7 +85,7 @@ class ShowDetailViewController: UIViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(containerView)
         containerView.addSubview(backdropDetail)
-        containerView.addSubview(createdBy)
+        containerView.addSubview(directedBy)
         containerView.addSubview(overviewStack)
         containerView.addSubview(stackView)
         
@@ -144,7 +139,7 @@ class ShowDetailViewController: UIViewController {
 }
 
 // MARK: - View Setup
-extension ShowDetailViewController {
+extension MovieDetailViewController {
     private func setupUIColors(with colors: UIImageColors) {
         view.backgroundColor = colors.background
         navigationController?.navigationBar.tintColor = colors.primary
@@ -162,6 +157,7 @@ extension ShowDetailViewController {
                 self.navigationController?.navigationBar.prefersLargeTitles = true
             }
         }
+        
         guard let tbc = tabBarController as? TabBarController else { return }
         tbc.hideTabBar(hide: disappearing)
     }
@@ -190,16 +186,16 @@ extension ShowDetailViewController {
         ]
         NSLayoutConstraint.activate(backdropDetailConstraints)
         
-        let createdByConstraints: [NSLayoutConstraint] = [
-            createdBy.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            createdBy.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            createdBy.topAnchor.constraint(equalTo: backdropDetail.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
+        let directedByConstraints: [NSLayoutConstraint] = [
+            directedBy.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            directedBy.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            directedBy.topAnchor.constraint(equalTo: backdropDetail.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
         ]
-        NSLayoutConstraint.activate(createdByConstraints)
+        NSLayoutConstraint.activate(directedByConstraints)
         
         let overviewStackConstraints: [NSLayoutConstraint] = [
             overviewStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
-            overviewStack.topAnchor.constraint(equalTo: createdBy.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
+            overviewStack.topAnchor.constraint(equalTo: directedBy.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
             overviewStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(overviewStackConstraints)
@@ -222,7 +218,7 @@ extension ShowDetailViewController {
     }
     
     private func updateContentSize() {
-        let offsetHeight:CGFloat = K.ScrollOffsetHeight
+        let offsetHeight: CGFloat = K.ScrollOffsetHeight
         let screen = UIApplication.shared.windows[0].bounds
         
         let stackViewY = stackView.frame.maxY + offsetHeight
@@ -235,23 +231,32 @@ extension ShowDetailViewController {
 }
 
 // MARK: - SubViews Setup
-extension ShowDetailViewController {
+extension MovieDetailViewController {
     private func setupDetailUI() {
-        let request: Promise<ShowDetail> = NetworkManager.request(endpoint: ShowEndpoint.getShowDetail(id: show.id), cache: C.Show, cacheKey: show.cacheKey)
+        let request: Promise<MovieDetail> = NetworkManager.request(endpoint: MovieEndpoint.getDetail(id: movie.id), cache: C.Movie, cacheKey: movie.cacheKey)
         request.then { [weak self] (detail) in
             let backdropText = self?.setupBackdropText(with: detail)
 
             let (genres, runtime) = backdropText ?? ("-", "-")
 
-            let title = self?.show.name
-            let releaseDate = self?.show.firstAirDate
-            let posterURL = self?.show.posterPath
-            let backdropURL = self?.show.backdropPath != nil ? K.URL.Backdrop + (self!.show.backdropPath!) : nil
+            let title = self?.movie.title
+            let releaseDate = self?.movie.releaseDate
 
-            // Return Void Promise to allow Recommendations to setup UI
+            let posterURL = self?.movie.posterPath
+            let backdropURL = self?.movie.backdropPath != nil ? K.URL.Backdrop + (self?.movie.backdropPath!)! : nil
+
             self?.backdropDetail.configure(backdropURL: backdropURL, posterURL: posterURL, title: title, genres: genres, runtime: runtime, releaseDate: releaseDate)
             self?.detail = detail
         }
+    }
+    
+    private func setupRecommendationsView(with movies: [Movie], using colors: UIImageColors) {
+        if movies.count <= 0 {
+            stackView.removeArrangedSubview(recommendationsView)
+            recommendationsView.removeFromSuperview()
+            return
+        }
+        recommendationsView.configure(with: movies, colors: colors)
     }
     
     private func setupCastCollectionView(with credits: Credits, using colors: UIImageColors) {
@@ -261,7 +266,7 @@ extension ShowDetailViewController {
                 
                 self.setupUIColors(with: colors)
             }
-            self.overviewStack.setup(title: "Overview", value: self.show.overview, colors: colors)
+            self.overviewStack.setup(title: "Overview", value: self.movie.overview ?? "-", colors: colors)
         }
         
         if credits.cast == nil {
@@ -275,28 +280,10 @@ extension ShowDetailViewController {
                 return
             }
         }
-        castCollectionView.configure(with: credits, title: "Series Cast", colors: colors)
+        castCollectionView.configure(with: credits, title: "Top Billed Cast", colors: colors)
     }
     
-    private func setupSeasonsView(with seasons: [Season], using colors: UIImageColors) {
-        if seasons.count <= 0 {
-            stackView.removeArrangedSubview(seasonsView)
-            seasonsView.removeFromSuperview()
-            return
-        }
-        seasonsView.configure(with: seasons.reversed(), colors: colors)
-    }
-    
-    private func setupRecommendationsView(with shows: [Show], using colors: UIImageColors) {
-        if shows.count <= 0 {
-            stackView.removeArrangedSubview(recommendationsView)
-            recommendationsView.removeFromSuperview()
-            return
-        }
-        recommendationsView.configure(with: shows, colors: colors)
-    }
-    
-    private func setupBackdropText(with detail: ShowDetail) -> (String?, String?) {
+    private func setupBackdropText(with detail: MovieDetail) -> (String?, String?) {
         var genresStr: String?
         var runtimeStr: String?
         if let safeGenres = detail.genres {
@@ -307,7 +294,7 @@ extension ShowDetailViewController {
             genresStr = genresArr.joined(separator: ", ")
         }
         
-        if detail.episodeRunTime.count > 0, let safeRuntime = detail.episodeRunTime[0] {
+        if let safeRuntime = detail.runtime {
             if safeRuntime > 0 {
                 let (hours, minutes) = safeRuntime.minutesToHoursMinutes(minutes: safeRuntime)
                 
@@ -333,26 +320,23 @@ extension ShowDetailViewController {
     }
 }
 
-extension ShowDetailViewController: BackdropDetailDelegate {
+// MARK: - BackdropDetailDelegate
+extension MovieDetailViewController: BackdropDetailDelegate {
     func didSetupUI(colors: UIImageColors) {
         DispatchQueue.main.async {
-            if let seasons = self.detail?.seasons {
-                self.setupSeasonsView(with: seasons, using: colors)
-            }
-            
-            if let credits = self.detail?.credits {
-                self.setupCastCollectionView(with: credits, using: colors)
-            }
-            
-            if let safeCreatedBy = self.detail?.createdBy, safeCreatedBy.count > 0 {
-                self.createdBy.configure(with: safeCreatedBy, colors: colors, and: "Created By")
+            if let safeDirectors = self.detail?.directors, safeDirectors.count > 0 {
+                self.directedBy.configure(with: safeDirectors, colors: colors, and: "Directed By")
             } else {
-                self.createdBy.removeFromSuperview()
+                self.directedBy.removeFromSuperview()
                 self.overviewStack.topAnchor.constraint(equalTo: self.backdropDetail.bottomAnchor, constant: T.Spacing.Vertical(size: .large)).isActive = true
             }
             
-            if let recommendations = self.detail?.recommendations?.results {
-                self.setupRecommendationsView(with: recommendations, using: colors)
+            // Setup CollectionViews
+            if let safeCredits = self.detail?.credits {
+                self.setupCastCollectionView(with: safeCredits, using: colors)
+            }
+            if let safeRecommendations = self.detail?.recommendations?.results {
+                self.setupRecommendationsView(with: safeRecommendations, using: colors)
             }
             self.view.hideSkeleton()
         }
@@ -360,48 +344,37 @@ extension ShowDetailViewController: BackdropDetailDelegate {
 }
 
 // MARK: - CreatorsCollectionViewDelegate
-extension ShowDetailViewController: CreatorsCollectionVIewDelegate {
+extension MovieDetailViewController: CreatorsCollectionVIewDelegate {
     func select(crew: Crew) {
         guard let safeColors = colors else { return }
-        let creditModal = CreditDetailModal(with: crew, using: safeColors)
-        creditModal.delegate = self
-        let navController = UINavigationController(rootViewController: creditModal)
+        let creditVC = CreditDetailViewController(with: crew, using: safeColors)
+        creditVC.delegate = self
+        let navController = UINavigationController(rootViewController: creditVC)
         present(navController, animated: true)
     }
 }
 
 // MARK: - CastCollectionViewDelegate
-extension ShowDetailViewController: CastCollectionViewDelegate {
+extension MovieDetailViewController: CastCollectionViewDelegate {
     func select(cast: Cast) {
         guard let safeColors = colors else { return }
-        let creditModal = CreditDetailModal(with: cast, using: safeColors)
-        creditModal.delegate = self
-        let navController = UINavigationController(rootViewController: creditModal)
+        let creditVC = CreditDetailViewController(with: cast, using: safeColors)
+        creditVC.delegate = self
+        let navController = UINavigationController(rootViewController: creditVC)
         present(navController, animated: true)
     }
 }
 
-// MARK: - ShowDetailSeasonsDelegate
-extension ShowDetailViewController: ShowDetailSeasonsDelegate {
-    func select(season: Season) {
-        guard let safeColors = colors else { return }
-        let seasonModal = SeasonsView(tvId: show.id, season: season, colors: safeColors)
-        seasonModal.creditModalDelegate = self
-        let navController = UINavigationController(rootViewController: seasonModal)
-        navigationController?.present(navController, animated: true)
-    }
-}
-
-// MARK: - ShowDetailRecommendationsDelegate
-extension ShowDetailViewController: ShowDetailRecommendationsDelegate {
-    func select(show: Show) {
-        let detailVC = ShowDetailViewController(with: show)
+// MARK: - MovieDetailRecommendationsDelegate
+extension MovieDetailViewController: MovieDetailRecommendationsDelegate {
+    func select(movie: Movie) {
+        let detailVC = MovieDetailViewController(with: movie)
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 
-// MARK: - CreditDetailModalDelegate
-extension ShowDetailViewController: CreditDetailModalDelegate {
+// MARK: - CreditDetailDelegate
+extension MovieDetailViewController: CreditDetailDelegate {
     func shouldPush(VC: UIViewController) {
         navigationController?.pushViewController(VC, animated: true)
     }

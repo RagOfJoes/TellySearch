@@ -50,6 +50,7 @@ class SeasonsViewCell: UICollectionViewCell {
         
         backgroundColor = .clear
         contentView.backgroundColor = .clear
+        contentView.translatesAutoresizingMaskIntoConstraints = false
         
         contentView.addSubview(backdrop)
         contentView.addSubview(name)
@@ -84,6 +85,14 @@ extension SeasonsViewCell {
     }
     
     private func setupAnchors() {
+        let contentViewConstraints: [NSLayoutConstraint] = [
+            contentView.topAnchor.constraint(equalTo: topAnchor),
+            contentView.heightAnchor.constraint(equalTo: heightAnchor),
+            contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ]
+        NSLayoutConstraint.activate(contentViewConstraints)
+        
         let labelHeight = getLabelHeight()
         let backdropConstraints: [NSLayoutConstraint] = [
             backdrop.topAnchor.constraint(equalTo: contentView.topAnchor),
