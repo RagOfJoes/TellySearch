@@ -21,7 +21,6 @@ public extension UITextView {
         set { multilineSpacing = min(newValue, 10) }
     }
 
-    @IBInspectable
     var skeletonPaddingInsets: UIEdgeInsets {
         get { return paddingInsets }
         set { paddingInsets = newValue }
@@ -30,8 +29,12 @@ public extension UITextView {
 
 extension UITextView: ContainsMultilineText {
 	var multilineTextFont: UIFont? {
-		return font
-	}
+        font
+    }
+    
+    var numLines: Int {
+        -1
+    }
 	
     var lastLineFillingPercent: Int {
         get {

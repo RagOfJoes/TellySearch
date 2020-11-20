@@ -1,6 +1,7 @@
 ${PODS_ROOT}/Target Support Files/Pods-TellySearch-TellySearchUITests/Pods-TellySearch-TellySearchUITests-frameworks.sh
 ${BUILT_PRODUCTS_DIR}/Cache/Cache.framework
 ${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework
+${BUILT_PRODUCTS_DIR}/OctreePalette/OctreePalette.framework
 ${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework
 ${BUILT_PRODUCTS_DIR}/PromisesSwift/Promises.framework
 ${BUILT_PRODUCTS_DIR}/SkeletonView/SkeletonView.framework

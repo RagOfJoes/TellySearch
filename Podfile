@@ -10,6 +10,7 @@ target 'TellySearch' do
   pod 'Kingfisher'
   pod 'SkeletonView'
   pod 'PromisesSwift'
+  pod 'OctreePalette'
 
   target 'TellySearchTests' do
     inherit! :search_paths
