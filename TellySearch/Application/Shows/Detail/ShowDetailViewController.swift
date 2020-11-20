@@ -8,6 +8,7 @@
 
 import UIKit
 import Promises
+import OctreePalette
 
 class ShowDetailViewController: UIViewController {
     // MARK: - Internal Properties
@@ -17,7 +18,7 @@ class ShowDetailViewController: UIViewController {
     
     private let show: Show
     private var detail: ShowDetail?
-    private var colors: UIImageColors?
+    private var colors: ColorTheme?
     
     private var containerView: UIView
     private var scrollView: UIScrollView
@@ -117,7 +118,7 @@ class ShowDetailViewController: UIViewController {
         if let safeColors = colors {
             DispatchQueue.main.async { [weak self] in
                 UIView.animate(withDuration: 0.25) { [weak self] in
-                    self?.navigationController?.navigationBar.tintColor = safeColors.primary
+                    self?.navigationController?.navigationBar.tintColor = safeColors.primary.uiColor
                 }
             }
         }
@@ -145,9 +146,9 @@ class ShowDetailViewController: UIViewController {
 
 // MARK: - View Setup
 extension ShowDetailViewController {
-    private func setupUIColors(with colors: UIImageColors) {
-        view.backgroundColor = colors.background
-        navigationController?.navigationBar.tintColor = colors.primary
+    private func setupUIColors(with colors: ColorTheme) {
+        view.backgroundColor = colors.background.uiColor
+        navigationController?.navigationBar.tintColor = colors.primary.uiColor
     }
     
     func setupNav(by disappearing: Bool) {
@@ -254,7 +255,7 @@ extension ShowDetailViewController {
         }
     }
     
-    private func setupCastCollectionView(with credits: Credits, using colors: UIImageColors) {
+    private func setupCastCollectionView(with credits: Credits, using colors: ColorTheme) {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.27) {
                 self.colors = colors
@@ -278,7 +279,7 @@ extension ShowDetailViewController {
         castCollectionView.configure(with: credits, title: "Series Cast", colors: colors)
     }
     
-    private func setupSeasonsView(with seasons: [Season], using colors: UIImageColors) {
+    private func setupSeasonsView(with seasons: [Season], using colors: ColorTheme) {
         if seasons.count <= 0 {
             stackView.removeArrangedSubview(seasonsView)
             seasonsView.removeFromSuperview()
@@ -287,7 +288,7 @@ extension ShowDetailViewController {
         seasonsView.configure(with: seasons.reversed(), colors: colors)
     }
     
-    private func setupRecommendationsView(with shows: [Show], using colors: UIImageColors) {
+    private func setupRecommendationsView(with shows: [Show], using colors: ColorTheme) {
         if shows.count <= 0 {
             stackView.removeArrangedSubview(recommendationsView)
             recommendationsView.removeFromSuperview()
@@ -334,7 +335,7 @@ extension ShowDetailViewController {
 }
 
 extension ShowDetailViewController: BackdropDetailDelegate {
-    func didSetupUI(colors: UIImageColors) {
+    func didSetupUI(colors: ColorTheme) {
         DispatchQueue.main.async {
             if let seasons = self.detail?.seasons {
                 self.setupSeasonsView(with: seasons, using: colors)
@@ -388,7 +389,7 @@ extension ShowDetailViewController: ShowDetailSeasonsDelegate {
         let seasonModal = SeasonsView(tvId: show.id, season: season, colors: safeColors)
         seasonModal.creditVCDelegate = self
         let navController = UINavigationController(rootViewController: seasonModal)
-        navigationController?.present(navController, animated: true)
+        tabBarController?.present(navController, animated: true)
     }
 }
 

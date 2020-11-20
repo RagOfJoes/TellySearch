@@ -9,6 +9,7 @@
 import UIKit
 import Promises
 import SkeletonView
+import OctreePalette
 
 class MovieDetailViewController: UIViewController {
     // MARK: - Internal Properties
@@ -17,8 +18,8 @@ class MovieDetailViewController: UIViewController {
     }
     
     private let movie: Movie
+    private var colors: ColorTheme?
     private var detail: MovieDetail?
-    private var colors: UIImageColors?
     
     private var containerView: UIView
     private var scrollView: UIScrollView
@@ -112,7 +113,7 @@ class MovieDetailViewController: UIViewController {
         if let safeColors = colors {
             DispatchQueue.main.async { [weak self] in
                 UIView.animate(withDuration: 0.25) { [weak self] in
-                    self?.navigationController?.navigationBar.tintColor = safeColors.primary
+                    self?.navigationController?.navigationBar.tintColor = safeColors.primary.uiColor
                 }
             }
         }
@@ -140,9 +141,9 @@ class MovieDetailViewController: UIViewController {
 
 // MARK: - View Setup
 extension MovieDetailViewController {
-    private func setupUIColors(with colors: UIImageColors) {
-        view.backgroundColor = colors.background
-        navigationController?.navigationBar.tintColor = colors.primary
+    private func setupUIColors(with colors: ColorTheme) {
+        view.backgroundColor = colors.background.uiColor
+        navigationController?.navigationBar.tintColor = colors.primary.uiColor
     }
     
     func setupNav(by disappearing: Bool) {
@@ -250,7 +251,7 @@ extension MovieDetailViewController {
         }
     }
     
-    private func setupRecommendationsView(with movies: [Movie], using colors: UIImageColors) {
+    private func setupRecommendationsView(with movies: [Movie], using colors: ColorTheme) {
         if movies.count <= 0 {
             stackView.removeArrangedSubview(recommendationsView)
             recommendationsView.removeFromSuperview()
@@ -259,7 +260,7 @@ extension MovieDetailViewController {
         recommendationsView.configure(with: movies, colors: colors)
     }
     
-    private func setupCastCollectionView(with credits: Credits, using colors: UIImageColors) {
+    private func setupCastCollectionView(with credits: Credits, using colors: ColorTheme) {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.27) {
                 self.colors = colors
@@ -322,7 +323,7 @@ extension MovieDetailViewController {
 
 // MARK: - BackdropDetailDelegate
 extension MovieDetailViewController: BackdropDetailDelegate {
-    func didSetupUI(colors: UIImageColors) {
+    func didSetupUI(colors: ColorTheme) {
         DispatchQueue.main.async {
             if let safeDirectors = self.detail?.directors, safeDirectors.count > 0 {
                 self.directedBy.configure(with: safeDirectors, colors: colors, and: "Directed By")
@@ -350,7 +351,7 @@ extension MovieDetailViewController: CreatorsCollectionVIewDelegate {
         let creditVC = CreditDetailViewController(with: crew, using: safeColors)
         creditVC.delegate = self
         let navController = UINavigationController(rootViewController: creditVC)
-        present(navController, animated: true)
+        tabBarController?.present(navController, animated: true)
     }
 }
 
@@ -361,7 +362,7 @@ extension MovieDetailViewController: CastCollectionViewDelegate {
         let creditVC = CreditDetailViewController(with: cast, using: safeColors)
         creditVC.delegate = self
         let navController = UINavigationController(rootViewController: creditVC)
-        present(navController, animated: true)
+        tabBarController?.present(navController, animated: true)
     }
 }
 

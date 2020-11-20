@@ -9,6 +9,7 @@
 import UIKit
 import Promises
 import Kingfisher
+import OctreePalette
 
 enum CreditDetailType {
     case Cast
@@ -30,7 +31,7 @@ class CreditDetailViewController: UIViewController {
     private let type: CreditDetailType
     private var personStackHeightConstraint: NSLayoutConstraint!
     
-    private let colors: UIImageColors
+    private let colors: ColorTheme
     private var personDetail: PersonDetail?
     weak var delegate: CreditDetailDelegate?
     
@@ -48,7 +49,7 @@ class CreditDetailViewController: UIViewController {
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
-        label.textColor = colors.primary
+        label.textColor = colors.primary.uiColor
         label.font = T.Typography(variant: .HeadingOne).font
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -100,7 +101,7 @@ class CreditDetailViewController: UIViewController {
     }()
     
     // MARK: - Life Cycle
-    init(with cast: Cast, using colors: UIImageColors) {
+    init(with cast: Cast, using colors: ColorTheme) {
         crew = nil
         type = .Cast
         self.cast = cast
@@ -113,7 +114,7 @@ class CreditDetailViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    init(with crew: Crew, using colors: UIImageColors) {
+    init(with crew: Crew, using colors: ColorTheme) {
         cast = nil
         type = .Crew
         self.crew = crew
@@ -130,7 +131,7 @@ class CreditDetailViewController: UIViewController {
         super.viewDidLoad()
         
         setupNav()
-        view.backgroundColor = colors.background
+        view.backgroundColor = colors.background.uiColor
         
         view.addSubview(scrollView)
         scrollView.addSubview(containerView)
@@ -169,9 +170,9 @@ extension CreditDetailViewController {
     private func setupNav() {
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.setBackgroundImage(UIImage.from(color: colors.background), for: .default)
+        navigationController?.navigationBar.setBackgroundImage(UIImage.from(color: colors.background.uiColor), for: .default)
         
-        navigationController?.navigationBar.tintColor = colors.primary
+        navigationController?.navigationBar.tintColor = colors.primary.uiColor
         let backBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(onBackButton))
         navigationItem.rightBarButtonItem = backBarButton
     }

@@ -8,6 +8,7 @@
 
 import UIKit
 import SkeletonView
+import OctreePalette
 
 protocol ShowDetailRecommendationsDelegate: class {
     func select(show: Show)
@@ -15,14 +16,14 @@ protocol ShowDetailRecommendationsDelegate: class {
 
 class ShowDetailRecommendations: HorizontalCollectionView {
     var shows: [Show]?
-    var colors: UIImageColors?
+    var colors: ColorTheme?
     
     weak var delegate: ShowDetailRecommendationsDelegate?
 
-    func configure(with shows: [Show], colors: UIImageColors) {
+    func configure(with shows: [Show], colors: ColorTheme) {
         self.shows = shows
         self.colors = colors
-        setupHeader(title: "Recommendations", color: colors.primary)
+        setupHeader(title: "Recommendations", color: colors.primary.uiColor)
     }
 }
 

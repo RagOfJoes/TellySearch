@@ -9,6 +9,7 @@
 import UIKit
 import Promises
 import Kingfisher
+import OctreePalette
 
 extension UIImageView {
     public func kfSetImage(with url: URL?, using placeholder: UIImage?, options: KingfisherOptionsInfo? = [.scaleFactor(UIScreen.main.scale), .transition(.fade(1)), .cacheOriginalImage], completionHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)? = nil) -> Void {
@@ -32,7 +33,7 @@ extension UIImageView {
         }
     }
     
-    /// Sets Image then returns Promise that contains UIImageColors
+    /// Sets Image then returns Promise that contains ColorTheme
     /// - parameter urlString: Image's String URL
     /// - parameter imageView: ImageView to set retrieved Image to
     /// - parameter placeholder: Placeholder Image if no Image was returned from URL
@@ -50,20 +51,21 @@ extension UIImageView {
         imageView.kfSetImage(with: url, using: placeholder, options: options)
     }
     
-    /// Sets Image then returns Promise that contains UIImageColors
+    /// Sets Image then returns Promise that contains ColorTheme
     /// - parameter urlString: Image's String URL
     /// - parameter imageView: ImageView to set retrieved Image to
     /// - parameter placeholder: Placeholder Image if no Image was returned from URL
-    public static func setImageWithPromise(urlString: String?, imageView: UIImageView, placeholder: UIImage?) -> Promise<UIImageColors> {
-        let promise = Promise<UIImageColors>.pending()
+    public static func setImageWithPromise(urlString: String?, imageView: UIImageView, placeholder: UIImage?) -> Promise<ColorTheme> {
+        let tolerance: Int = 50
+        let type: ColorThemeType = .smallText
+        let promise = Promise<ColorTheme>.pending()
         
         guard let safeUrlString = urlString else {
             imageView.image = placeholder
             
             if let safeImage = imageView.image {
-                safeImage.getColors() { colors in
-                    guard let safeColors = colors else { return }
-                    promise.fulfill(safeColors)
+                safeImage.getColorTheme(tolerance: tolerance, type: type) { colors in
+                    promise.fulfill(colors)
                 }
             }
             
@@ -82,9 +84,8 @@ extension UIImageView {
             switch result {
             case .success:
                 if let safeImage = imageView.image {
-                    safeImage.getColors() { colors in
-                        guard let safeColors = colors else { return }
-                        promise.fulfill(safeColors)
+                    safeImage.getColorTheme(tolerance: tolerance, type: type) { colors in
+                        promise.fulfill(colors)
                     }
                 }
                 break

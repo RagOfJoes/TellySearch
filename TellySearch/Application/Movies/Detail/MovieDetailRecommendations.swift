@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import OctreePalette
 
 protocol MovieDetailRecommendationsDelegate: class {
     func select(movie: Movie)
@@ -14,13 +15,13 @@ protocol MovieDetailRecommendationsDelegate: class {
 
 class MovieDetailRecommendations: HorizontalCollectionView {
     var movies: [Movie]?
-    var colors: UIImageColors?
+    var colors: ColorTheme?
     weak var delegate: MovieDetailRecommendationsDelegate?
 
-    func configure(with movies: [Movie], colors: UIImageColors) {
+    func configure(with movies: [Movie], colors: ColorTheme) {
         self.movies = movies
         self.colors = colors
-        setupHeader(title: "Recommendations", color: self.colors?.primary)
+        setupHeader(title: "Recommendations", color: colors.primary.uiColor)
     }
 }
 

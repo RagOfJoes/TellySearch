@@ -9,9 +9,10 @@
 import UIKit
 import Kingfisher
 import SkeletonView
+import OctreePalette
 
 protocol ConfigurableRegularCell: ReusableCell {
-    func configure(primary: String, image: String?, colors: UIImageColors?)
+    func configure(primary: String, image: String?, colors: ColorTheme?)
 }
 
 class RegularCell: UICollectionViewCell {
@@ -85,7 +86,7 @@ extension RegularCell {
 }
 
 extension RegularCell: ConfigurableRegularCell {
-    func configure(primary: String, image: String? = nil, colors: UIImageColors? = nil) {
+    func configure(primary: String, image: String? = nil, colors: ColorTheme? = nil) {
         DispatchQueue.main.async {
             self.primaryLabel.text = primary
         }
@@ -107,7 +108,7 @@ extension RegularCell: ConfigurableRegularCell {
         setupColors(colors: safeColors)
     }
     
-    private func setupColors(colors: UIImageColors) {
-        primaryLabel.textColor = colors.primary
+    private func setupColors(colors: ColorTheme) {
+        primaryLabel.textColor = colors.primary.uiColor
     }
 }

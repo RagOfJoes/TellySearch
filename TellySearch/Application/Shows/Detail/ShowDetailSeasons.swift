@@ -8,6 +8,7 @@
 
 import UIKit
 import SkeletonView
+import OctreePalette
 
 protocol ShowDetailSeasonsDelegate: class {
     func select(season: Season)
@@ -15,14 +16,14 @@ protocol ShowDetailSeasonsDelegate: class {
 
 class ShowDetailSeasons: HorizontalCollectionView {
     var seasons: [Season]?
-    var colors: UIImageColors?
+    var colors: ColorTheme?
     
     weak var delegate: ShowDetailSeasonsDelegate?
     
-    func configure(with seasons: [Season], colors: UIImageColors) {
+    func configure(with seasons: [Season], colors: ColorTheme) {
         self.colors = colors
         self.seasons = seasons
-        setupHeader(title: "Seasons", color: self.colors?.primary)
+        setupHeader(title: "Seasons", color: colors.primary.uiColor)
     }
 }
 

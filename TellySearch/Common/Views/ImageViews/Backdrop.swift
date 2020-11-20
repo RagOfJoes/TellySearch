@@ -10,9 +10,10 @@ import UIKit
 import Promises
 import Kingfisher
 import SkeletonView
+import OctreePalette
 
 protocol BackdropDetailDelegate: AnyObject {
-    func didSetupUI(colors: UIImageColors)
+    func didSetupUI(colors: ColorTheme)
 }
 
 class BackdropDetail: UIView {
@@ -111,7 +112,7 @@ class BackdropDetail: UIView {
     }
     
     // MARK: - Configure
-    func configure(backdropURL: String? = nil, posterURL: String? = nil, title: String?, genres: String?, runtime: String?, releaseDate: String?, completionHandler: ((_ colors: UIImageColors) -> Void)? = nil) {
+    func configure(backdropURL: String? = nil, posterURL: String? = nil, title: String?, genres: String?, runtime: String?, releaseDate: String?, completionHandler: ((_ colors: ColorTheme) -> Void)? = nil) {
         if runtime != nil {
             setupRuntimeView()
         }
@@ -164,13 +165,13 @@ extension BackdropDetail {
         }
     }
     
-    private func setupColor(colors: UIImageColors) {
-        title.textColor = colors.primary
-        genres.textColor = colors.secondary
-        runtime.textColor = colors.secondary
-        releaseDate.textColor = colors.secondary
+    private func setupColor(colors: ColorTheme) {
+        title.textColor = colors.primary.uiColor
+        genres.textColor = colors.secondary.uiColor
+        runtime.textColor = colors.secondary.uiColor
+        releaseDate.textColor = colors.secondary.uiColor
         
-        gradientLayer.colors = [UIColor.clear.cgColor, colors.background.cgColor]
+        gradientLayer.colors = [UIColor.clear.cgColor, colors.background.uiColor.cgColor]
     }
     
     private func setupAnchors() {

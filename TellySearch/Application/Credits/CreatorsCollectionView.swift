@@ -8,6 +8,7 @@
 
 import UIKit
 import SkeletonView
+import OctreePalette
 
 protocol CreatorsCollectionVIewDelegate: class {
     func select(crew: Crew)
@@ -16,7 +17,7 @@ protocol CreatorsCollectionVIewDelegate: class {
 class CreatorsCollectionView: UIView {
     // MARK: - Internal Properties
     private var crews: [Crew]?
-    private var colors: UIImageColors?
+    private var colors: ColorTheme?
     private var heightConstraint: NSLayoutConstraint!
     weak var delegate: CreatorsCollectionVIewDelegate?
     
@@ -70,11 +71,11 @@ class CreatorsCollectionView: UIView {
         setupAnchors()
     }
     
-    func configure(with crews: [Crew], colors: UIImageColors, and title: String = "Created By") {
+    func configure(with crews: [Crew], colors: ColorTheme, and title: String = "Created By") {
         self.crews = crews
         self.colors = colors
         
-        header.configure(title, color: colors.primary)
+        header.configure(title, color: colors.primary.uiColor)
         
         if crews.count > 2 {
             let numOfRows: CGFloat = (CGFloat(crews.count) / 2).rounded(.toNearestOrEven)
@@ -152,7 +153,7 @@ extension CreatorsCollectionView: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreatorsCollectionViewCell.reuseIdentifier, for: indexPath) as! CreatorsCollectionViewCell
         
         if let crew = crews?[indexPath.row], let safeColors = colors {
-            cell.configure(primary: crew.name, secondary: crew.job , color: safeColors.secondary)
+            cell.configure(primary: crew.name, secondary: crew.job , color: safeColors.secondary.uiColor)
         }
         
         return cell

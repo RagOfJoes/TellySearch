@@ -9,18 +9,19 @@
 import UIKit
 import Promises
 import SkeletonView
+import OctreePalette
 
 class SeasonsView: UICollectionViewController {
     // MARK: - Internal Properties
     private let tvId: Int
     private let season: Season
-    private let colors: UIImageColors
+    private let colors: ColorTheme
     private var detail: SeasonDetail? = nil
     
     weak var creditVCDelegate: CreditDetailDelegate?
     
     // MARK: - Life Cycle
-    init(tvId: Int, season: Season, colors: UIImageColors) {
+    init(tvId: Int, season: Season, colors: ColorTheme) {
         self.tvId = tvId
         self.season = season
         self.colors = colors
@@ -37,7 +38,7 @@ class SeasonsView: UICollectionViewController {
         super.viewDidLoad()
         // Setup View
         setupNav()
-        view.backgroundColor = colors.background
+        view.backgroundColor = colors.background.uiColor
         
         // Setup CollectionView
         setupCollectionView()
@@ -62,13 +63,13 @@ extension SeasonsView {
     private func setupNav() {        
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.setBackgroundImage(UIImage.from(color: colors.background), for: .default)
+        navigationController?.navigationBar.setBackgroundImage(UIImage.from(color: colors.background.uiColor), for: .default)
         
-        navigationController?.navigationBar.tintColor = colors.primary
+        navigationController?.navigationBar.tintColor = colors.primary.uiColor
         let backBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(onBackButton))
         navigationItem.title = season.name
         navigationItem.rightBarButtonItem = backBarButton
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: colors.primary!]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: colors.primary.uiColor]
     }
     
     private func setupCollectionView() {

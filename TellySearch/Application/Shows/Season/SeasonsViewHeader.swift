@@ -8,6 +8,7 @@
 
 import UIKit
 import SkeletonView
+import OctreePalette
 
 class SeasonsViewHeader: UICollectionReusableView {
     // MARK: - Internal Properties
@@ -50,7 +51,7 @@ extension SeasonsViewHeader {
 
 // MARK: - Subview Setup
 extension SeasonsViewHeader {
-    func configure(airDate: String?, overview: String?, episodes: Int?, credits: Credits?, colors: UIImageColors) {
+    func configure(airDate: String?, overview: String?, colors: ColorTheme) {
         self.airDate.setup(title: "Air Date", value: airDate ?? "-", colors: colors)
         self.overview.setup(title: "Overview", value: overview ?? "-", colors: colors)
         

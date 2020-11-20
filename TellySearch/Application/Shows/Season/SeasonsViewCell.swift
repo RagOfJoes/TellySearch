@@ -9,6 +9,7 @@
 import UIKit
 import Kingfisher
 import SkeletonView
+import OctreePalette
 
 class SeasonsViewCell: UICollectionViewCell {
     // MARK: - Internal Properties
@@ -120,7 +121,7 @@ extension SeasonsViewCell {
 
 // MARK: - Subviews setup
 extension SeasonsViewCell {
-    func configure(url: String? = nil, name: String, airDate: String? = "-", colors: UIImageColors? = nil) {
+    func configure(url: String? = nil, name: String, airDate: String? = "-", colors: ColorTheme? = nil) {
         let placeholder = UIImage(named: "placeholderBackdrop")
         
         if let urlString = url {
@@ -154,9 +155,9 @@ extension SeasonsViewCell {
         }
     }
     
-    private func setupColors(colors: UIImageColors) {
-        name.textColor = colors.primary
-        airDate.textColor = colors.secondary
+    private func setupColors(colors: ColorTheme) {
+        name.textColor = colors.primary.uiColor
+        airDate.textColor = colors.secondary.uiColor
     }
 }
 

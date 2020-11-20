@@ -9,16 +9,15 @@
 import UIKit
 import Kingfisher
 import SkeletonView
+import OctreePalette
 
 class EpisodeView: UIViewController {
     // MARK: - Internal Properties
     private let episode: Episode
-    private let colors: UIImageColors
+    private let colors: ColorTheme
     private var backdropHeightConstraint: NSLayoutConstraint!
-    
     private var scrollView = UIScrollView()
     private var containerView = UIView()
-    
     private lazy var backdrop: UIImageView = {
         let backdrop = UIImageView()
         backdrop.clipsToBounds = true
@@ -30,24 +29,24 @@ class EpisodeView: UIViewController {
         backdrop.skeletonCornerRadius = 5
         return backdrop
     }()
-    
     private lazy var airDate: InfoStackView = {
         let airDate = InfoStackView(using: colors)
         return airDate
     }()
-    
     private lazy var overview: InfoStackView = {
         let overview = InfoStackView(using: colors)
         return overview
     }()
-    
     private lazy var guestStars: CastCollectionView = {
         let guestStars = CastCollectionView(.RegularSecondary)
+        guestStars.delegate = guestStarsDelegate
         return guestStars
     }()
     
+    weak var guestStarsDelegate: CastCollectionViewDelegate?
+    
     // MARK: - Life Cycle
-    init(episode: Episode, colors: UIImageColors) {
+    init(episode: Episode, colors: ColorTheme) {
         self.colors = colors
         self.episode = episode
         
@@ -60,7 +59,7 @@ class EpisodeView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNav()
-        view.backgroundColor = colors.background
+        view.backgroundColor = colors.background.uiColor
         
         view.addSubview(scrollView)
         scrollView.addSubview(containerView)
@@ -105,10 +104,10 @@ extension EpisodeView {
     private func setupNav() {
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.setBackgroundImage(UIImage.from(color: colors.background), for: .default)
+        navigationController?.navigationBar.setBackgroundImage(UIImage.from(color: colors.background.uiColor), for: .default)
         
-        navigationController?.navigationBar.tintColor = colors.primary
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: colors.primary!]
+        navigationController?.navigationBar.tintColor = colors.primary.uiColor
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: colors.primary.uiColor]
 
         let backBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(onBackButton))
         navigationItem.title = episode.name
@@ -166,10 +165,6 @@ extension EpisodeView {
 
 // MARK: - Subviews Setup
 extension EpisodeView {
-    func setCastViewDelegate(_ delegate: CastCollectionViewDelegate) {
-        guestStars.delegate = delegate
-    }
-    
     private func updateContentSize() {
         let viewFrame = view.frame
         let offsetHeight: CGFloat = K.ScrollOffsetHeight

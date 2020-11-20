@@ -8,6 +8,7 @@
 
 import UIKit
 import SkeletonView
+import OctreePalette
 
 protocol InfoStackViewDelegate: class {
     func didReadMore()
@@ -52,7 +53,7 @@ class InfoStackView: UIStackView {
         return valueLabel
     }()
     
-    init(using colors: UIImageColors? = nil, hasReadMore: Bool = false, fontSize: (CGFloat, CGFloat) = (T.Typography.Sizes[.Title] ?? 18, T.Typography.Sizes[.Body] ?? 14), fontWeight: (UIFont.Weight, UIFont.Weight) = (T.Typography.Weights[.Title] ?? .bold, T.Typography.Weights[.Body] ?? .medium)) {
+    init(using colors: ColorTheme? = nil, hasReadMore: Bool = false, fontSize: (CGFloat, CGFloat) = (T.Typography.Sizes[.Title] ?? 18, T.Typography.Sizes[.Body] ?? 14), fontWeight: (UIFont.Weight, UIFont.Weight) = (T.Typography.Weights[.Title] ?? .bold, T.Typography.Weights[.Body] ?? .medium)) {
         super.init(frame: .zero)
         axis = .vertical
         translatesAutoresizingMaskIntoConstraints = false
@@ -70,7 +71,7 @@ class InfoStackView: UIStackView {
         setupColors(colors: safeColors)
     }
     
-    func setup(title: String, value: String, colors: UIImageColors? = nil) {
+    func setup(title: String, value: String, colors: ColorTheme? = nil) {
         let valueText = value.trimmingCharacters(in: .whitespacesAndNewlines)
         
         DispatchQueue.main.async { [weak self] in
@@ -119,11 +120,11 @@ extension InfoStackView {
 
 // MARK: - Private Setup Functions
 extension InfoStackView {
-    private func setupColors(colors: UIImageColors) {
-        readMore.setTitleColor(colors.detail, for: .normal)
-        readMore.setTitleColor(colors.detail, for: .selected)
-        titleLabel.textColor = colors.primary
-        valueLabel.textColor = colors.secondary
+    private func setupColors(colors: ColorTheme) {
+        readMore.setTitleColor(colors.tertiary.uiColor, for: .normal)
+        readMore.setTitleColor(colors.tertiary.uiColor, for: .selected)
+        titleLabel.textColor = colors.primary.uiColor
+        valueLabel.textColor = colors.secondary.uiColor
     }
     
     private func setupFonts(fontSize: (CGFloat, CGFloat), weight: (UIFont.Weight, UIFont.Weight)) {

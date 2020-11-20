@@ -8,6 +8,7 @@
 
 import UIKit
 import SkeletonView
+import OctreePalette
 
 protocol CreditDetailNotableWorksDelegate: class {
     func select(media: Media)
@@ -15,17 +16,17 @@ protocol CreditDetailNotableWorksDelegate: class {
 
 class CreditDetailNotableWorks: HorizontalCollectionView {
     var media: [Media]?
-    let colors: UIImageColors
+    let colors: ColorTheme
     weak var delegate: CreditDetailNotableWorksDelegate?
     
-    init(colors: UIImageColors) {
+    init(colors: ColorTheme) {
         self.colors = colors
         super.init(.RegularSecondary)
     }
     
     func configure(with media: [Media]) {
         self.media = media
-        setupHeader(title: "Notable Works", color: colors.primary)        
+        setupHeader(title: "Notable Works", color: colors.primary.uiColor)
     }
     
     required init?(coder: NSCoder) {

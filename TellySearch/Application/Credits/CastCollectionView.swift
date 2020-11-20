@@ -8,6 +8,7 @@
 
 import UIKit
 import SkeletonView
+import OctreePalette
 
 protocol CastCollectionViewDelegate: class {
     func select(cast: Cast)
@@ -15,13 +16,13 @@ protocol CastCollectionViewDelegate: class {
 
 class CastCollectionView: HorizontalCollectionView {
     var credits: Credits?
-    var colors: UIImageColors?
+    var colors: ColorTheme?
     weak var delegate: CastCollectionViewDelegate?
     
-    func configure(with credits: Credits, title: String, colors: UIImageColors) {
+    func configure(with credits: Credits, title: String, colors: ColorTheme) {
         self.colors = colors
         self.credits = credits
-        setupHeader(title: title, color: colors.primary)
+        setupHeader(title: title, color: colors.primary.uiColor)
     }
 }
 
