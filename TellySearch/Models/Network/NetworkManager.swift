@@ -13,7 +13,7 @@ import Foundation
 struct NetworkManagerError: LocalizedError {
     private var description: String
     
-    var title: String?
+    var title: String
     var failureReason: String? { return description }
     var errorDescription: String? { return description }
     
@@ -24,7 +24,7 @@ struct NetworkManagerError: LocalizedError {
 }
 
 class NetworkManager {
-    class func request<T: Codable>(endpoint: Endpoint, cache: Storage<T>? = nil, cacheKey: String? = nil) -> Promise<T> {
+    class func request<T: Codable>(endpoint: Endpoint, cache: Storage<String, T>? = nil, cacheKey: String? = nil) -> Promise<T> {
         return Promise<T> { (fulfill, reject) in
             // 1
             // Check cache
