@@ -105,7 +105,6 @@ extension HorizontalCollectionView {
             heightConstraint,
             
             header.topAnchor.constraint(equalTo: topAnchor),
-            header.heightAnchor.constraint(equalToConstant: 30),
             header.leadingAnchor.constraint(equalTo: leadingAnchor, constant: T.Spacing.Horizontal()),
             header.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -T.Spacing.Horizontal()),
         ])

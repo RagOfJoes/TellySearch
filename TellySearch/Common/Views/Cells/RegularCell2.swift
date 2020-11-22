@@ -51,7 +51,6 @@ class RegularCell2: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: .zero)
         clipsToBounds = true
-        translatesAutoresizingMaskIntoConstraints = false
         
         contentView.addSubview(imageView)
         contentView.addSubview(primaryLabel)
