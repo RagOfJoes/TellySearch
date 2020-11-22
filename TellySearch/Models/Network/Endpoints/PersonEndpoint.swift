@@ -43,7 +43,6 @@ enum PersonEndpoint: Endpoint {
     var parameters: [URLQueryItem] {
         var params: [URLQueryItem] = [
             URLQueryItem(name: "api_key", value: K.TmdbApiKey),
-            URLQueryItem(name: "region", value: K.User.country),
             URLQueryItem(name: "language", value: K.User.language)
         ]
         switch self {

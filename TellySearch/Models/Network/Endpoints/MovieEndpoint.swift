@@ -34,6 +34,8 @@ enum MovieEndpoint: Endpoint {
         case .getOverview(let type):
             if type == .trending {
                 return "/3/trending/movie/week"
+            } else if type == .popular || type == .topRated || type == .recentlyReleased {
+                return "/3/discover/movie"
             } else {
                 return "\(basePath)/\(type.rawValue)"
             }
@@ -50,11 +52,34 @@ enum MovieEndpoint: Endpoint {
     var parameters: [URLQueryItem] {
         var params: [URLQueryItem] = [
             URLQueryItem(name: "api_key", value: K.TmdbApiKey),
-            URLQueryItem(name: "region", value: K.User.country),
             URLQueryItem(name: "language", value: K.User.language)
         ]
         switch self {
-        case .getOverview:
+        case .getOverview(let type):
+            if type == .upcoming {
+                params.append(URLQueryItem(name: "region", value: K.User.country))
+            } else if type == .popular {
+                params.append(URLQueryItem(name: "vote_count.gte", value: "300"))
+                params.append(URLQueryItem(name: "vote_average.lte", value: "10"))
+                params.append(URLQueryItem(name: "sort_by", value: "popularity.desc"))
+            } else if type == .topRated {
+                params.append(URLQueryItem(name: "vote_count.gte", value: "300"))
+                params.append(URLQueryItem(name: "sort_by", value: "vote_average.desc"))
+            } else if type == .recentlyReleased {
+                let date = Date()
+                let calendar = Calendar.current
+                let year = calendar.component(.year, from: date)
+                let month = calendar.component(.month, from: date)
+                let day = calendar.component(.day, from: date)
+                let monthString = month > 10 ? "\(month)" : "0\(month)"
+                let dayString = day > 10 ? "\(day)" : "0\(day)"
+                let dateString = "\(year)-\(monthString)-\(dayString)"
+                params.append(URLQueryItem(name: "vote_count.gte", value: "300"))
+                params.append(URLQueryItem(name: "primary_release_date.lte", value: dateString))
+                
+                params.append(URLQueryItem(name: "region", value: K.User.country))
+                params.append(URLQueryItem(name: "sort_by", value: "primary_release_date.desc"))
+            }
             break
         case .getDetail:
             params.append(URLQueryItem(name: "append_to_response", value: "credits,recommendations"))

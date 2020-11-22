@@ -10,7 +10,7 @@ import Foundation
 
 struct Episode: Codable {
     let number: Int
-    let name: String
+    let name: String?
     let crew: [Crew]?
     let airDate: String?
     let overview: String?

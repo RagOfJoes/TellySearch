@@ -62,16 +62,30 @@ struct PersonDetail: Codable {
         var arr: [Media] = []
         var sortByVoteCount: [Media]
         if knownFor == "Acting" {
+            // 1. Remove duplicates
             let uniqueArray = combinedCredits.cast.unique(on: \Media.id)
-            sortByVoteCount = uniqueArray.sorted {
+            
+            // 2. Filter atleast to make sure they have atleast
+            // 300 votes
+            let filtered = uniqueArray.filter {
+                return $0.voteCount > 300
+            }
+            
+            // 3. Sort
+            sortByVoteCount = filtered.sorted {
                 return $0.voteCount > $1.voteCount
             }
         } else {
+            // 1. Remove duplicates
             let uniqueArray = combinedCredits.crew.unique(on: \Media.id)
+            
+            // 2. Filter to make sure it's a department that they're known for
+            // and that it atleast has 300 votes
             let knownForArray = uniqueArray.filter {
-                return $0.department == self.knownFor
+                return $0.department == self.knownFor && $0.voteCount > 300
             }
             
+            // 3. Sort
             sortByVoteCount = knownForArray.sorted {
                 return $0.voteCount > $1.voteCount
             }
