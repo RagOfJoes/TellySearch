@@ -15,8 +15,9 @@ class MoviesViewController: UIViewController  {
     let sections: [MovieSectionCell] = [
         MovieSectionCell(type: .Featured, section: MovieSection(title: "Popular"), request: NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .popular))),
         MovieSectionCell(type: .Regular, section: MovieSection(title: "In Theatres"), request: NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .inTheatres))),
+        MovieSectionCell(type: .Regular, section: MovieSection(title: "Recently Released (\(K.User.country))"), request: NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .recentlyReleased))),
+        MovieSectionCell(type: .Regular, section: MovieSection(title: "Top Rated"), request: NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .topRated))),
         MovieSectionCell(type: .Regular, section: MovieSection(title: "Upcoming"), request: NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .upcoming))),
-        MovieSectionCell(type: .Regular, section: MovieSection(title: "Trending"), request: NetworkManager.request(endpoint: MovieEndpoint.getOverview(type: .trending)))
     ]
     
     private lazy var tableView: UITableView = {
@@ -29,8 +30,13 @@ class MoviesViewController: UIViewController  {
         tableView.delaysContentTouches = false
         tableView.showsVerticalScrollIndicator = false
         
-        tableView.register(MovieCollectionView.self, forCellReuseIdentifier: MovieCollectionView.reuseIdentifier)
-        tableView.register(MovieFeaturedCollectionView.self, forCellReuseIdentifier: MovieFeaturedCollectionView.reuseIdentifier)
+        for (index, cell) in sections.enumerated() {
+            if cell.type == .Featured {
+                tableView.register(MovieFeaturedCollectionView.self, forCellReuseIdentifier: "\(MovieFeaturedCollectionView.reuseIdentifier):\(index)")
+            } else {
+                tableView.register(MovieCollectionView.self, forCellReuseIdentifier: "\(MovieCollectionView.reuseIdentifier):\(index)")
+            }
+        }
         
         tableView.isSkeletonable = true
         
@@ -100,8 +106,10 @@ extension MoviesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellType = sections[indexPath.section].type
         
+        let identifier: String
         if cellType == .Featured {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieFeaturedCollectionView.reuseIdentifier, for: indexPath) as? MovieFeaturedCollectionView else {
+            identifier = "\(MovieFeaturedCollectionView.reuseIdentifier):\(indexPath.section)"
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? MovieFeaturedCollectionView else {
                 return UITableViewCell()
             }
             
@@ -113,7 +121,8 @@ extension MoviesViewController: UITableViewDataSource {
             }
             return cell
         } else {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieCollectionView.reuseIdentifier, for: indexPath) as? MovieCollectionView else {
+            identifier = "\(MovieCollectionView.reuseIdentifier):\(indexPath.section)"
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? MovieCollectionView else {
                 return UITableViewCell()
             }
             

@@ -14,9 +14,9 @@ class ShowsViewController: UIViewController {
     var shows: [[Show]?] = []
     var sections: [ShowSectionCell] = [
         ShowSectionCell(type: .Featured, section: ShowSection(title: "Airing Today"), request: NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .onTheAirToday))),
+        ShowSectionCell(type: .Regular, section: ShowSection(title: "Trending Today"), request: NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .trending))),
         ShowSectionCell(type: .Regular, section: ShowSection(title: "Popular"), request: NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .popular))),
-        ShowSectionCell(type: .Regular, section: ShowSection(title: "On The Air"), request: NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .onTheAir))),
-        ShowSectionCell(type: .Regular, section: ShowSection(title: "Trending"), request: NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .trending)))
+        ShowSectionCell(type: .Regular, section: ShowSection(title: "On The Air"), request: NetworkManager.request(endpoint: ShowEndpoint.getOverview(type: .onTheAir)))
     ]
     
     private lazy var tableView: UITableView = {
@@ -29,8 +29,13 @@ class ShowsViewController: UIViewController {
         tableView.delaysContentTouches = false
         tableView.showsVerticalScrollIndicator = false
         
-        tableView.register(ShowsCollectionView.self, forCellReuseIdentifier: ShowsCollectionView.reuseIdentifier)
-        tableView.register(ShowsFeaturedCollectionView.self, forCellReuseIdentifier: ShowsFeaturedCollectionView.reuseIdentifier)
+        for (index, cell) in sections.enumerated() {
+            if cell.type == .Featured {
+                tableView.register(ShowsFeaturedCollectionView.self, forCellReuseIdentifier: "\(ShowsFeaturedCollectionView.reuseIdentifier):\(index)")
+            } else {
+                tableView.register(ShowsCollectionView.self, forCellReuseIdentifier: "\(ShowsCollectionView.reuseIdentifier):\(index)")
+            }
+        }
         
         tableView.isSkeletonable = true
         
@@ -100,8 +105,10 @@ extension ShowsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellType = sections[indexPath.section].type
         
+        let identifier: String
         if cellType == .Featured {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: ShowsFeaturedCollectionView.reuseIdentifier, for: indexPath) as? ShowsFeaturedCollectionView else { return UITableViewCell() }
+            identifier = "\(ShowsFeaturedCollectionView.reuseIdentifier):\(indexPath.section)"
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? ShowsFeaturedCollectionView else { return UITableViewCell() }
             
             if let data = shows[indexPath.section] {
                 cell.delegate = self
@@ -111,7 +118,8 @@ extension ShowsViewController: UITableViewDataSource {
             }
             return cell
         } else {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: ShowsCollectionView.reuseIdentifier, for: indexPath) as? ShowsCollectionView else { return UITableViewCell() }
+            identifier = "\(ShowsCollectionView.reuseIdentifier):\(indexPath.section)"
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? ShowsCollectionView else { return UITableViewCell() }
             
             if let data = shows[indexPath.section] {
                 cell.delegate = self
