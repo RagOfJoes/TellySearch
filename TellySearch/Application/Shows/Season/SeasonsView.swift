@@ -30,7 +30,7 @@ class SeasonsView: UICollectionViewController {
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = T.Spacing.Vertical(size: .large)
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-
+        
         super.init(collectionViewLayout: layout)
     }
     
@@ -78,8 +78,13 @@ extension SeasonsView {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.register(SeasonsViewCell.self, forCellWithReuseIdentifier: SeasonsViewCell.reuseIdentifier)
+        collectionView.register(SeasonsViewCastCell.self, forCellWithReuseIdentifier: SeasonsViewCastCell.reuseIdentifier)
         collectionView.register(SeasonsViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SeasonsViewHeader.reuseIdentifier)
-        collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "SeasonViewFooter")
+        collectionView.register(SeasonsViewCastHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SeasonsViewCastHeader.reuseIdentifier)
+        
+        // Empty Headers
+        collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "SeasonsViewNoopHeader")
+        collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "SeasonsViewNoopFooter")
         
         collectionView.isSkeletonable = true
     }
@@ -91,7 +96,12 @@ extension SeasonsView {
         let request: Promise<SeasonDetail> = NetworkManager.request(endpoint: ShowEndpoint.getSeasonDetail(tvId: tvId, seasonNumber: season.seasonNumber), cache: C.Season, cacheKey: season.cacheKey)
         request.then { [weak self] (detail) in
             self?.detail = detail
-            self?.view.hideSkeleton()
+            
+            DispatchQueue.main.async {
+                self?.view.hideSkeleton()
+            }
+        }.catch { e in
+            print(e)
         }
     }
 }
@@ -99,46 +109,45 @@ extension SeasonsView {
 // MARK: - UICollectionViewDelegate
 extension SeasonsView {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let episode = detail?.episodes?[indexPath.item] else { return }
-        let episodeVC = EpisodeView(episode: episode, colors: colors)
-        episodeVC.setCastViewDelegate(self)
-        navigationController?.pushViewController(episodeVC, animated: true)
+        let section = indexPath.section
+        if section == 1 {
+            guard let episode = detail?.episodes?[indexPath.item] else { return }
+            let episodeVC = EpisodeView(episode: episode, colors: colors)
+            episodeVC.guestStarsDelegate = self
+            navigationController?.pushViewController(episodeVC, animated: true)
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let section = indexPath.section
         if kind == UICollectionView.elementKindSectionHeader {
-            guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SeasonsViewHeader.reuseIdentifier, for: indexPath) as? SeasonsViewHeader else {
-                return UICollectionReusableView()
-            }
-            
-            var overview = "-"
-            var airDate = season.airDate?.formatDate(format: "YYYY-MM-dd", formatter: { (month, day, year) -> String in
-                return "\(month) \(day), \(year)"
-            }) ?? "-"
-            
-            if let safeOverview = season.overview {
-                if safeOverview.count > 0 {
-                    overview = safeOverview
+            if section == 0 {
+                guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SeasonsViewHeader.reuseIdentifier, for: indexPath) as? SeasonsViewHeader else {
+                    return UICollectionReusableView()
                 }
-            }
-            
-            if let episodes = detail?.episodes, episodes.count > 1 {
-                if let startDate = episodes[0].airDate, let endDate = episodes[episodes.count - 1].airDate {
-                    let formatStartDate = startDate.formatDate(format: "YYYY-MM-dd", formatter: { (month, day, year) -> String in
-                        return "\(month) \(day), \(year)"
-                    }) ?? "-"
-                    let formatEndDate = endDate.formatDate(format: "YYYY-MM-dd", formatter: { (month, day, year) -> String in
-                        return "\(month) \(day), \(year)"
-                    }) ?? "-"
-                    
-                    airDate = "\(formatStartDate) - \(formatEndDate)"
+                
+                var overview = "-"
+                 let airDate = season.airDate?.formatDate(format: "YYYY-MM-dd", formatter: { (month, day, year) -> String in
+                    return "\(month) \(day), \(year)"
+                }) ?? "-"
+                
+                if let safeOverview = season.overview {
+                    if safeOverview.count > 0 {
+                        overview = safeOverview
+                    }
                 }
+                
+                headerView.configure(airDate: airDate, overview: overview, colors: colors)
+                return headerView
+            } else {
+                guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SeasonsViewCastHeader.reuseIdentifier, for: indexPath) as? SeasonsViewCastHeader else {
+                    return UICollectionReusableView()
+                }
+                headerView.configure(count: detail?.episodes?.count, colors: colors)
+                return headerView
             }
-            headerView.setCastViewDelegate(self)
-            headerView.configure(airDate: airDate, overview: overview, episodes: detail?.episodes?.count, credits: detail?.credits, colors: colors)
-            return headerView
         } else {
-            return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "SeasonViewFooter", for: indexPath)
+            return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "SeasonsViewNoopFooter", for: indexPath)
         }
     }
 }
@@ -146,33 +155,43 @@ extension SeasonsView {
 // MARK: - UICollectionViewDelegateFlowLayout
 extension SeasonsView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let height: CGFloat = floor(T.Height.Season)
+        let section = indexPath.section
+        let height: CGFloat
+        
+        if section == 0 {
+            height = floor(T.Height.Cell(type: .RegularSecondary))
+        } else {
+            height = floor(T.Height.Season)
+        }
         return CGSize(width: collectionView.frame.width, height: height)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         let width: CGFloat = collectionView.frame.width - (T.Spacing.Horizontal() * 2)
-        
-        var overviewLabel: String = "-"
-        let marginBottom: CGFloat = T.Spacing.Vertical(size: .large) * 3
-                
-        let titleHeight = "".height(withConstrainedWidth: width, font: T.Typography(variant: .Title).font)
-        if detail != nil, let overview = season.overview {
-            if overview.count > 0 {
-                overviewLabel = overview
+        if section == 0 {
+            var overviewLabel: String = "-"
+            let marginBottom: CGFloat = T.Spacing.Vertical(size: .large) * 2
+            
+            let titleHeight = "".height(withConstrainedWidth: width, font: T.Typography(variant: .Title).font)
+            if detail != nil, let overview = season.overview {
+                if overview.count > 0 {
+                    overviewLabel = overview
+                }
             }
+            let titlesHeight = titleHeight * 2
+            let airDateHeight = "".height(withConstrainedWidth: width, font: T.Typography(variant: .Body).font)
+            let overviewHeight = overviewLabel.height(withConstrainedWidth: width, font: T.Typography(variant: .Body).font) + T.Spacing.Vertical(size: .small)
+            
+            var height = marginBottom + titlesHeight + airDateHeight + overviewHeight
+            if let detail = detail, let credits = detail.credits, let cast = credits.cast, cast.count <= 0 {
+                height -= marginBottom - T.Spacing.Vertical(size: .small)
+            }
+            return CGSize(width: width, height: height)
+        } else {
+            let titleHeight: CGFloat = 30
+            let height: CGFloat = titleHeight + T.Spacing.Vertical(size: .small)
+            return CGSize(width: width, height: height)
         }
-        let titlesHeight = titleHeight * 4
-        let castViewHeight = T.Height.Cell(type: .RegularSecondary)
-        let episodesHeight: CGFloat = 30 + (T.Spacing.Vertical(size: .small) * 2)
-        let airDateHeight = "".height(withConstrainedWidth: width, font: T.Typography(variant: .Body).font)
-        let overviewHeight = overviewLabel.height(withConstrainedWidth: width, font: T.Typography(variant: .Body).font) + T.Spacing.Vertical(size: .small)
-        
-        var height = episodesHeight + marginBottom + titlesHeight + airDateHeight + overviewHeight + castViewHeight
-        if let detail = detail, let credits = detail.credits, let cast = credits.cast, cast.count <= 0 {
-            height -= castViewHeight + marginBottom - (episodesHeight - T.Spacing.Vertical(size: .small))
-        }
-        return CGSize(width: width, height: height)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
@@ -182,40 +201,86 @@ extension SeasonsView: UICollectionViewDelegateFlowLayout {
 
 // MARK: - SkeletonCollectionViewDataSource
 extension SeasonsView: SkeletonCollectionViewDataSource {
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let episodes = detail?.episodes {
-            return episodes.count
+        if section == 0 {
+            return 1
+        } else {
+            if let episodes = detail?.episodes {
+                return episodes.count
+            }
         }
         
         return 0
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SeasonsViewCell.reuseIdentifier, for: indexPath) as? SeasonsViewCell else {
-            return UICollectionViewCell()
-        }
+        let section = indexPath.section
         
-        if let episodes = detail?.episodes {
-            let episode = episodes[indexPath.item]
-            let name = "\(indexPath.item + 1). \(episode.name)"
-            let url = episode.backdrop != nil ? K.URL.Backdrop + episode.backdrop! : nil
+        if section == 0 {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SeasonsViewCastCell.reuseIdentifier, for: indexPath) as? SeasonsViewCastCell else {
+                return UICollectionViewCell()
+            }
             
-            cell.configure(url: url, name: name, airDate: episode.airDate, colors: colors)
+            if let credits = detail?.credits {
+                cell.castViewDelegate = self
+                cell.configure(credits: credits, colors: colors)
+            }
+            
+            return cell
+        } else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SeasonsViewCell.reuseIdentifier, for: indexPath) as? SeasonsViewCell else {
+                return UICollectionViewCell()
+            }
+            
+            if let episodes = detail?.episodes {
+                let episode = episodes[indexPath.item]
+                let name = "\(indexPath.item + 1). \(episode.name ?? "-")"
+                let url = episode.backdrop != nil ? K.URL.Backdrop + episode.backdrop! : nil
+                
+                cell.configure(url: url, name: name, airDate: episode.airDate, colors: colors)
+            }
+            
+            return cell
         }
-        
-        return cell
     }
     
-    func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func numSections(in collectionSkeletonView: UICollectionView) -> Int {
         return 2
     }
     
+    func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if section == 0 {
+            return 1
+        } else {
+            return 2
+        }
+    }
+    
     func collectionSkeletonView(_ skeletonView: UICollectionView, supplementaryViewIdentifierOfKind: String, at indexPath: IndexPath) -> ReusableCellIdentifier? {
-        return SeasonsViewHeader.reuseIdentifier
+        let section = indexPath.section
+        if supplementaryViewIdentifierOfKind == UICollectionView.elementKindSectionHeader {
+            if section == 0 {
+                return SeasonsViewHeader.reuseIdentifier
+            } else {
+                return "SeasonsViewNoopHeader"
+            }
+        } else {
+            return "SeasonsViewNoopFooter"
+        }
     }
     
     func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
-        return SeasonsViewCell.reuseIdentifier
+        let section = indexPath.section
+        
+        if section == 0 {
+            return SeasonsViewCastCell.reuseIdentifier
+        } else {
+            return SeasonsViewCell.reuseIdentifier
+        }
     }
 }
 
