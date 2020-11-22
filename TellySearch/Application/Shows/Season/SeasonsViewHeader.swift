@@ -68,15 +68,15 @@ extension SeasonsViewHeader {
     private func setupAnchors() {
         let airDateConstraints: [NSLayoutConstraint] = [
             airDate.topAnchor.constraint(equalTo: topAnchor),
-            airDate.leadingAnchor.constraint(equalTo: leadingAnchor, constant: T.Spacing.Horizontal()),
-            airDate.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -T.Spacing.Horizontal())
+            airDate.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: T.Spacing.Horizontal()),
+            airDate.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(airDateConstraints)
         
         let overviewConstraints: [NSLayoutConstraint] = [
-            overview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: T.Spacing.Horizontal()),
-            overview.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -T.Spacing.Horizontal()),
-            overview.topAnchor.constraint(equalTo: airDate.bottomAnchor, constant: T.Spacing.Vertical(size: .large))
+            overview.topAnchor.constraint(equalTo: airDate.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
+            overview.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: T.Spacing.Horizontal()),
+            overview.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(overviewConstraints)
         

@@ -192,16 +192,16 @@ extension ShowDetailViewController {
         NSLayoutConstraint.activate(backdropDetailConstraints)
         
         let createdByConstraints: [NSLayoutConstraint] = [
-            createdBy.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            createdBy.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            createdBy.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor),
+            createdBy.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor),
             createdBy.topAnchor.constraint(equalTo: backdropDetail.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
         ]
         NSLayoutConstraint.activate(createdByConstraints)
         
         let overviewStackConstraints: [NSLayoutConstraint] = [
-            overviewStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
+            overviewStack.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor, constant: T.Spacing.Horizontal()),
             overviewStack.topAnchor.constraint(equalTo: createdBy.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
-            overviewStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal())
+            overviewStack.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(overviewStackConstraints)
         

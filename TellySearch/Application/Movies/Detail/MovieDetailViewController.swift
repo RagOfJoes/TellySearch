@@ -188,16 +188,16 @@ extension MovieDetailViewController {
         NSLayoutConstraint.activate(backdropDetailConstraints)
         
         let directedByConstraints: [NSLayoutConstraint] = [
-            directedBy.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            directedBy.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            directedBy.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor),
+            directedBy.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor),
             directedBy.topAnchor.constraint(equalTo: backdropDetail.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
         ]
         NSLayoutConstraint.activate(directedByConstraints)
         
         let overviewStackConstraints: [NSLayoutConstraint] = [
-            overviewStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
             overviewStack.topAnchor.constraint(equalTo: directedBy.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
-            overviewStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal())
+            overviewStack.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor, constant: T.Spacing.Horizontal()),
+            overviewStack.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(overviewStackConstraints)
         
@@ -242,7 +242,6 @@ extension MovieDetailViewController {
 
             let title = self?.movie.title
             let releaseDate = self?.movie.releaseDate
-
             let posterURL = self?.movie.posterPath
             let backdropURL = self?.movie.backdropPath != nil ? K.URL.Backdrop + (self?.movie.backdropPath!)! : nil
 

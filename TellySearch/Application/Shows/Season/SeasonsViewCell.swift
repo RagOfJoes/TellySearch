@@ -51,7 +51,6 @@ class SeasonsViewCell: UICollectionViewCell {
         
         backgroundColor = .clear
         contentView.backgroundColor = .clear
-        contentView.translatesAutoresizingMaskIntoConstraints = false
         
         contentView.addSubview(backdrop)
         contentView.addSubview(name)
@@ -63,7 +62,7 @@ class SeasonsViewCell: UICollectionViewCell {
     
     override var isHighlighted: Bool {
         didSet {
-            return shrink(down: isHighlighted)            
+            shrink(down: isHighlighted)
         }
     }
     
@@ -86,34 +85,26 @@ extension SeasonsViewCell {
     }
     
     private func setupAnchors() {
-        let contentViewConstraints: [NSLayoutConstraint] = [
-            contentView.topAnchor.constraint(equalTo: topAnchor),
-            contentView.heightAnchor.constraint(equalTo: heightAnchor),
-            contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: trailingAnchor)
-        ]
-        NSLayoutConstraint.activate(contentViewConstraints)
-        
         let labelHeight = getLabelHeight()
         let backdropConstraints: [NSLayoutConstraint] = [
             backdrop.topAnchor.constraint(equalTo: contentView.topAnchor),
             backdrop.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -labelHeight),
-            backdrop.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: T.Spacing.Horizontal()),
-            backdrop.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -T.Spacing.Horizontal())
+            backdrop.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: T.Spacing.Horizontal()),
+            backdrop.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(backdropConstraints)
         
         let nameConstraints: [NSLayoutConstraint] = [
-            name.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: T.Spacing.Horizontal()),
-            name.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -T.Spacing.Horizontal()),
             name.topAnchor.constraint(equalTo: backdrop.bottomAnchor, constant: T.Spacing.Vertical(size: .small)),
+            name.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: T.Spacing.Horizontal()),
+            name.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(nameConstraints)
         
         let airDateConstraints: [NSLayoutConstraint] = [
             airDate.topAnchor.constraint(equalTo: name.bottomAnchor),
-            airDate.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: T.Spacing.Horizontal()),
-            airDate.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -T.Spacing.Horizontal())
+            airDate.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: T.Spacing.Horizontal()),
+            airDate.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(airDateConstraints)
     }
@@ -137,6 +128,7 @@ extension SeasonsViewCell {
         }
         
         self.name.text = name
+        
         setupAirDate(date: airDate)
         
         guard let safeColors = colors else { return }

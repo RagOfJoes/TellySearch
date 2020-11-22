@@ -135,28 +135,28 @@ extension EpisodeView {
         let backdropConstraints: [NSLayoutConstraint] = [
             backdropHeightConstraint,
             backdrop.topAnchor.constraint(equalTo: containerView.topAnchor),
-            backdrop.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
-            backdrop.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal())
+            backdrop.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor, constant: T.Spacing.Horizontal()),
+            backdrop.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(backdropConstraints)
         
         let airDateConstraints: [NSLayoutConstraint] = [
             airDate.topAnchor.constraint(equalTo: backdrop.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
-            airDate.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
-            airDate.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal())
+            airDate.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor, constant: T.Spacing.Horizontal()),
+            airDate.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(airDateConstraints)
         
         let overviewConstraints: [NSLayoutConstraint] = [
             overview.topAnchor.constraint(equalTo: airDate.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
-            overview.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
-            overview.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal())
+            overview.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor, constant: T.Spacing.Horizontal()),
+            overview.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(overviewConstraints)
         
         let guestStarsConstraints: [NSLayoutConstraint] = [
-            guestStars.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            guestStars.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            guestStars.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor),
+            guestStars.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor),
             guestStars.topAnchor.constraint(equalTo: overview.bottomAnchor, constant: T.Spacing.Vertical(size: .large))
         ]
         NSLayoutConstraint.activate(guestStarsConstraints)

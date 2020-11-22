@@ -196,21 +196,21 @@ extension CreditDetailViewController {
         
         let posterConstraints: [NSLayoutConstraint] = [
             poster.topAnchor.constraint(equalTo: containerView.topAnchor),
-            poster.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal())
+            poster.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor, constant: T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(posterConstraints)
         
         let personalConstraints: [NSLayoutConstraint] = [
             personalStackViews.bottomAnchor.constraint(equalTo: poster.bottomAnchor),
-            personalStackViews.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal()),
-            personalStackViews.leadingAnchor.constraint(equalTo: poster.trailingAnchor, constant: T.Spacing.Horizontal(size: .small)),
+            personalStackViews.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor, constant: -T.Spacing.Horizontal()),
+            personalStackViews.leadingAnchor.constraint(equalTo: poster.safeAreaLayoutGuide.trailingAnchor, constant: T.Spacing.Horizontal(size: .small))
         ]
         NSLayoutConstraint.activate(personalConstraints)
         
         let bodyStackConstraints: [NSLayoutConstraint] = [
             bodyStackView.topAnchor.constraint(equalTo: poster.bottomAnchor, constant: T.Spacing.Vertical(size: .large)),
-            bodyStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: T.Spacing.Horizontal()),
-            bodyStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -T.Spacing.Horizontal())
+            bodyStackView.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor, constant: T.Spacing.Horizontal()),
+            bodyStackView.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor, constant: -T.Spacing.Horizontal())
         ]
         NSLayoutConstraint.activate(bodyStackConstraints)
         

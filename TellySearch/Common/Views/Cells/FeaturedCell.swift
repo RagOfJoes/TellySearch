@@ -41,7 +41,6 @@ class FeaturedCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: .zero)
         clipsToBounds = true
-        translatesAutoresizingMaskIntoConstraints = false
         
         contentView.addSubview(title)
         contentView.addSubview(imageView)
@@ -50,10 +49,10 @@ class FeaturedCell: UICollectionViewCell {
         let primaryFont = T.Typography(variant: .Body, weight: .bold).font
         let primaryHeight = placeholder.height(font: primaryFont) * 2
         let stackViewConstraints: [NSLayoutConstraint] = [
-            imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -(primaryHeight + T.Spacing.Vertical(size: .small))),
+            imageView.topAnchor.constraint(equalTo: topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            imageView.heightAnchor.constraint(equalTo: heightAnchor, constant: -(primaryHeight + T.Spacing.Vertical(size: .small))),
             
             title.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
             title.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
