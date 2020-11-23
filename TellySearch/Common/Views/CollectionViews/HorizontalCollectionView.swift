@@ -109,19 +109,10 @@ extension HorizontalCollectionView {
             header.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -T.Spacing.Horizontal()),
         ])
         
-        var collectionViewLeading: NSLayoutConstraint!
-        var collectionViewTrailing: NSLayoutConstraint!
-        if #available(iOS 11, *) {
-            collectionViewLeading = collectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor)
-            collectionViewTrailing = collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
-        } else {
-            collectionViewLeading = collectionView.leadingAnchor.constraint(equalTo: leadingAnchor)
-            collectionViewTrailing = collectionView.trailingAnchor.constraint(equalTo: trailingAnchor)
-        }
         let collectionViewConstraints: [NSLayoutConstraint] = [
             collectionViewHeight,
-            collectionViewLeading,
-            collectionViewTrailing,
+            collectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: T.Spacing.Vertical(size: .small))
         ]
         NSLayoutConstraint.activate(collectionViewConstraints)
